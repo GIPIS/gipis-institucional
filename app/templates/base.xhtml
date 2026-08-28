@@ -140,8 +140,8 @@
                         </div>
                     </div>
                 </a>
-                <div class="hidden lg:block border-l border-slate-200 dark:border-slate-700 h-8 mx-4"></div>
-                <div class="hidden lg:block">
+                <div class="hidden 2xl:block border-l border-slate-200 dark:border-slate-700 h-8 mx-4"></div>
+                <div class="hidden 2xl:block">
                     <p
                         class="text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400 leading-tight">
                         {{ _('Grupo de Investigación en Procesamiento de la Información y Sensores') }}</p>
@@ -149,9 +149,7 @@
                 </div>
             </div>
 
-            <nav class="hidden xl:flex items-center space-x-8 font-medium text-sm">
-                <a class="nav-link {% if request.endpoint == 'main.home' %}text-primary{% else %}hover:text-primary{% endif %}"
-                    href="{{ url_for('main.home') }}">{{ _('Inicio') }}</a>
+            <nav class="hidden lg:flex items-center space-x-6 xl:space-x-8 font-medium text-sm">
                 <a class="nav-link {% if request.endpoint == 'main.novedades' %}text-primary{% else %}hover:text-primary{% endif %}"
                     href="{{ url_for('main.novedades') }}">{{ _('Novedades') }}</a>
                 <a class="nav-link {% if request.endpoint == 'main.equipo' %}text-primary{% else %}hover:text-primary{% endif %}"
@@ -166,42 +164,32 @@
                     href="{{ url_for('main.contacto') }}">{{ _('Contacto') }}</a>
             </nav>
 
-            <div class="flex items-center gap-4">
-                <!-- Selector de idioma -->
-                <div class="flex items-center text-xs font-bold rounded-md overflow-hidden border border-slate-200 dark:border-slate-700">
-                    <a href="{{ url_for('main.set_language', code='es') }}"
-                        class="px-2 py-1.5 transition-colors {% if current_lang == 'es' %}bg-primary text-white{% else %}text-slate-500 hover:text-primary{% endif %}">ES</a>
-                    <a href="{{ url_for('main.set_language', code='en') }}"
-                        class="px-2 py-1.5 transition-colors {% if current_lang == 'en' %}bg-primary text-white{% else %}text-slate-500 hover:text-primary{% endif %}">EN</a>
-                </div>
+            <div class="flex items-center gap-1">
+                <!-- Idioma: un solo botón que ofrece el idioma alternativo -->
+                <a href="{{ url_for('main.set_language', code='en' if current_lang == 'es' else 'es') }}"
+                    class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-primary transition-colors"
+                    title="{{ _('Cambiar idioma') }}">{{ 'EN' if current_lang == 'es' else 'ES' }}</a>
                 <button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    title="{{ _('Cambiar tema') }}"
                     onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('gipis-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')">
                     <span class="material-symbols-outlined text-slate-500 dark:text-slate-400">dark_mode</span>
                 </button>
                 {% if current_user.is_authenticated %}
-                <a class="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm transition-all shadow-md shadow-primary/20"
-                    href="{{ url_for('auth.dashboard') }}">
-                    <span class="material-symbols-outlined text-sm">account_circle</span>
-                    {{ _('Mi Perfil') }}
-                </a>
-                {% else %}
-                <a class="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md font-medium text-sm transition-all shadow-md shadow-primary/20"
-                    href="{{ url_for('auth.login') }}">
-                    <span class="material-symbols-outlined text-sm">login</span>
-                    {{ _('Ingresar') }}
+                <a class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    href="{{ url_for('auth.dashboard') }}" title="{{ _('Mi Perfil') }}">
+                    <span class="material-symbols-outlined text-primary">account_circle</span>
                 </a>
                 {% endif %}
-                <button class="xl:hidden p-2" id="mobileMenuBtn">
+                <button class="lg:hidden p-2" id="mobileMenuBtn">
                     <span class="material-symbols-outlined">menu</span>
                 </button>
             </div>
         </div>
 
         <!-- Mobile Menu -->
-        <div class="xl:hidden hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800"
+        <div class="lg:hidden hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800"
             id="mobileMenu">
             <nav class="container mx-auto px-6 py-4 flex flex-col space-y-4 font-medium text-sm">
-                <a class="hover:text-primary" href="{{ url_for('main.home') }}">{{ _('Inicio') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.novedades') }}">{{ _('Novedades') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.equipo') }}">{{ _('Grupo') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.investigacion') }}">{{ _('Investigación') }}</a>
@@ -282,8 +270,21 @@
                 </div>
             </div>
             <div
-                class="pt-8 border-t border-slate-800 text-center text-xs font-medium text-slate-500 uppercase tracking-widest">
+                class="pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3 text-xs font-medium text-slate-500 uppercase tracking-widest">
                 <p>{{ _('© 2026 GIPIS | Facultad de Ingeniería | Universidad Nacional de la Patagonia San Juan Bosco') }}</p>
+                {% if current_user.is_authenticated %}
+                <a class="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
+                    href="{{ url_for('auth.dashboard') }}">
+                    <span class="material-symbols-outlined text-sm">account_circle</span>
+                    {{ _('Mi Perfil') }}
+                </a>
+                {% else %}
+                <a class="inline-flex items-center gap-1.5 hover:text-primary transition-colors"
+                    href="{{ url_for('auth.login') }}">
+                    <span class="material-symbols-outlined text-sm">login</span>
+                    {{ _('Acceso miembros') }}
+                </a>
+                {% endif %}
             </div>
         </div>
     </footer>

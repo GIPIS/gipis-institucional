@@ -2,6 +2,7 @@
 {% from "pages/divulgacion/_componentes.xhtml" import bloque_pregunta,
     quiero_saber_mas, tarjeta_aplicacion, demostrador, experiencia_relacionada
     with context %}
+{% from "pages/divulgacion/_iconos.xhtml" import icono %}
 
 {% block title %}{{ _('Comunicaciones acústicas subacuáticas') }}{% endblock %}
 {% block meta_description %}{{ _('¿Cómo se comunican los equipos bajo el agua? Descubrí cómo transformamos un mensaje digital en una señal acústica, la transmitimos y recuperamos la información. Divulgación GIPIS.') }}{% endblock %}
@@ -18,10 +19,8 @@
                 <span class="material-symbols-outlined text-[10px]">chevron_right</span>
                 <span class="text-primary">{{ _('Comunicaciones acústicas') }}</span>
             </nav>
-            <div class="flex items-center gap-3 mb-4">
-                <span class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                    <span class="material-symbols-outlined">{{ topic.icon }}</span>
-                </span>
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-primary shrink-0">{{ icono(topic.icon, 'w-14 h-14') }}</span>
                 <h1 class="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-white">
                     {{ _('Comunicaciones acústicas subacuáticas') }}</h1>
             </div>

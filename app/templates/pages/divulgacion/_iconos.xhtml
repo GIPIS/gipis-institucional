@@ -54,6 +54,117 @@
     <rect x="27" y="38" width="10" height="7" rx="1.5" />
     <path d="M22,41 h-4 M46,41 h-4" />
     <path d="M27,52 h10 l-1.5,5 h-7 z" />
+    {% elif name == 'acustica' %}
+    {# Comunicaciones acústicas: dos transductores enfrentados con frentes
+       de onda bajo la línea de flotación #}
+    <path d="M6,12 q4,-4 8,0 t8,0 t8,0 t8,0 t8,0 t8,0 t8,0" />
+    <rect x="6" y="33" width="6" height="14" rx="2" />
+    <path d="M12,36 l6,-4 v12 l-6,-4 z" />
+    <path d="M24,37 a6,6 0 0 1 0,10" />
+    <path d="M29,34 a9,9 0 0 1 0,16" />
+    <path d="M52,36 l-6,-4 v12 l6,-4 z" />
+    <rect x="52" y="33" width="6" height="14" rx="2" />
+    {% elif name == 'iot' %}
+    {# IoT: nodo central con antena irradiando, enlazado a nodos remotos #}
+    <circle cx="32" cy="40" r="5" />
+    <path d="M32,35 v-9" />
+    <circle cx="32" cy="23" r="2" />
+    <path d="M24,20 a11,11 0 0 1 16,0" />
+    <path d="M20,14 a17,17 0 0 1 24,0" />
+    <circle cx="13" cy="53" r="3.5" />
+    <circle cx="51" cy="53" r="3.5" />
+    <path d="M28,43 l-11,8 M36,43 l11,8" stroke-dasharray="3 3" />
+    {% elif name == 'sensores' %}
+    {# Estación de sensores: instrumento con antena y termómetro #}
+    <path d="M8,54 h48" />
+    <path d="M24,54 v-22" />
+    <rect x="17" y="22" width="14" height="10" rx="2" />
+    <path d="M24,22 v-6" />
+    <circle cx="24" cy="13" r="1.5" />
+    <path d="M30,10 a8,8 0 0 1 3,6" />
+    <rect x="42" y="26" width="5" height="16" rx="2.5" />
+    <circle cx="44.5" cy="47" r="4" />
+    <path d="M50,29 h3 M50,34 h3 M50,39 h3" />
+    {% elif name == 'oceano' %}
+    {# Observar el océano: embarcación con instrumental sumergido #}
+    <path d="M4,32 q4,-4 8,0 t8,0 M46,32 q4,-4 8,0 t8,0" />
+    <path d="M16,32 h30 l-6,9 h-19 z" />
+    <rect x="25" y="23" width="11" height="9" rx="1.5" />
+    <path d="M30,23 v-9 h6" />
+    <path d="M36,41 v10" stroke-dasharray="3 3" />
+    <rect x="32.5" y="51" width="7" height="8" rx="1.5" />
+    {% elif name == 'tierra' %}
+    {# Observación de la Tierra: satélite con paneles sobre el planeta #}
+    <rect x="26" y="11" width="12" height="10" rx="2" />
+    <rect x="10" y="13.5" width="11" height="5" rx="1" />
+    <rect x="43" y="13.5" width="11" height="5" rx="1" />
+    <path d="M21,16 h5 M38,16 h5" />
+    <path d="M32,21 v5" />
+    <path d="M27,31 a7,7 0 0 0 10,0" />
+    <path d="M23,37 a12,12 0 0 0 18,0" />
+    <path d="M6,58 a30,30 0 0 1 52,0" />
+    <path d="M22,52 q4,-3 8,0 q4,3 8,0" />
+    {% elif name == 'senales' %}
+    {# Procesamiento de señales: pantalla con señal analógica y digital #}
+    <rect x="8" y="14" width="48" height="32" rx="3" />
+    <path d="M26,46 l-2,7 M38,46 l2,7 M20,53 h24" />
+    <path d="M13,30 h5 q3,-13 6,0 q3,13 6,0 h4 v-8 h6 v8 h11" />
+    {% elif name == 'embebidos' %}
+    {# Sistemas embebidos: microcontrolador con pines y núcleo #}
+    <rect x="20" y="20" width="24" height="24" rx="3" />
+    <rect x="28" y="28" width="8" height="8" rx="1" />
+    <path d="M26,20 v-6 M32,20 v-6 M38,20 v-6" />
+    <path d="M26,44 v6 M32,44 v6 M38,44 v6" />
+    <path d="M20,26 h-6 M20,32 h-6 M20,38 h-6" />
+    <path d="M44,26 h6 M44,32 h6 M44,38 h6" />
+    {% elif name == 'drones' %}
+    {# Dron cuadricóptero fotografiando el terreno #}
+    <rect x="26" y="21" width="12" height="7" rx="2" />
+    <path d="M26,23 l-8,-3 M38,23 l8,-3" />
+    <path d="M12,17 h12 M18,17 v3 M40,17 h12 M46,17 v3" />
+    <circle cx="32" cy="31" r="2.5" />
+    <path d="M29,34 l-8,13 M35,34 l8,13" stroke-dasharray="3 3" />
+    <rect x="18" y="49" width="28" height="9" rx="1.5" />
+    <path d="M23,55 l4,-4 l4,4" />
+    <circle cx="39" cy="53" r="1.5" />
+    {% elif name == 'ia' %}
+    {# IA y datos: red de nodos en capas #}
+    <circle cx="14" cy="20" r="4" />
+    <circle cx="14" cy="44" r="4" />
+    <circle cx="32" cy="13" r="4" />
+    <circle cx="32" cy="32" r="4" />
+    <circle cx="32" cy="51" r="4" />
+    <circle cx="50" cy="32" r="5" />
+    <path d="M18,19 l10,-5 M18,22 l10,8 M18,42 l10,-8 M18,45 l10,5" />
+    <path d="M36,15 l10,14 M36,32 h9 M36,49 l10,-14" />
+    {% elif name == 'academica' %}
+    {# Redes académicas: edificio universitario enlazado a nodos remotos #}
+    <path d="M20,25 l12,-8 l12,8 z" />
+    <path d="M18,25 h28" />
+    <path d="M23,29 v12 M32,29 v12 M41,29 v12" />
+    <path d="M20,45 h24 M17,49 h30" />
+    <circle cx="8" cy="14" r="3" />
+    <circle cx="56" cy="14" r="3" />
+    <path d="M11,15.5 l9,4 M53,15.5 l-9,4" stroke-dasharray="3 3" />
+    {% elif name == 'transferencia' %}
+    {# Transferencia industrial: fábrica, engranaje e intercambio #}
+    <path d="M8,52 v-15 l8,6 v-6 l8,6 v-6 l8,6 v15 z" />
+    <path d="M11,37 v-9 h5 v9" />
+    <path d="M5,52 h30" />
+    <circle cx="46" cy="24" r="6" />
+    <circle cx="46" cy="24" r="2" />
+    <path d="M46,15 v-3 M46,33 v3 M37,24 h-3 M55,24 h3 M39.6,17.6 l-2.1,-2.1 M52.4,30.4 l2.1,2.1 M52.4,17.6 l2.1,-2.1 M39.6,30.4 l-2.1,2.1" />
+    <path d="M38,44 h16 M50,41 l4,3 l-4,3" />
+    <path d="M54,52 h-16 M42,49 l-4,3 l4,3" />
+    {% elif name == 'conjuntos' %}
+    {# Proyectos conjuntos: dos partes detrás de un mismo proyecto #}
+    <circle cx="14" cy="32" r="4.5" />
+    <path d="M6,47 a8,8 0 0 1 16,0" />
+    <circle cx="50" cy="32" r="4.5" />
+    <path d="M42,47 a8,8 0 0 1 16,0" />
+    <path d="M32,47 v-25" />
+    <path d="M32,22 h11 v8 h-11" />
+    <path d="M21,41 l8,3 M43,41 l-8,3" stroke-dasharray="3 3" />
     {% elif name == 'infraestructura' %}
     {# Infraestructura submarina: estructura con válvula sobre ducto en
        el lecho marino, con supervisión acústica #}
