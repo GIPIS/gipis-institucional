@@ -168,6 +168,25 @@ def linea_detalle(line_id):
     return render_template('pages/linea.xhtml', line=line, sections=sections)
 
 
+@bp.route('/divulgacion')
+def divulgacion():
+    """Portada de Divulgación: todas las temáticas y su estado"""
+    from app.divulgacion import TOPICS
+    return render_template('pages/divulgacion.xhtml', topics=TOPICS)
+
+
+@bp.route('/divulgacion/<slug>')
+def divulgacion_experiencia(slug):
+    """Experiencia de divulgación. Las temáticas en desarrollo no tienen
+    página propia (sus tarjetas tampoco enlazan acá): 404."""
+    from flask import abort
+    from app.divulgacion import get_topic
+    topic = get_topic(slug)
+    if topic is None or topic['status'] == 'development':
+        abort(404)
+    return render_template(f'pages/divulgacion/{topic["slug"]}.xhtml', topic=topic)
+
+
 @bp.route('/cooperacion')
 def cooperacion():
     """Cooperación Científica e Industrial"""
@@ -204,9 +223,14 @@ def sitemap():
 
     urls = []
     for endpoint in ('main.home', 'main.equipo', 'main.investigacion',
-                     'main.produccion', 'main.cooperacion', 'main.novedades',
-                     'main.contacto'):
+                     'main.produccion', 'main.divulgacion', 'main.cooperacion',
+                     'main.novedades', 'main.contacto'):
         urls.append((url_for(endpoint, _external=True), None))
+
+    from app.divulgacion import available_topics
+    for topic in available_topics():
+        urls.append((url_for('main.divulgacion_experiencia', slug=topic['slug'],
+                             _external=True), None))
 
     for member in Member.query.filter(Member.is_active.is_(True),
                                       Member.category_id.isnot(None)).all():

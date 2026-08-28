@@ -1,0 +1,70 @@
+{#
+  Íconos "wire" de la sección Divulgación: dibujo a línea, minimalista
+  pero descriptivo (estilo infografía técnica). Heredan el color del
+  contenedor vía currentColor; usarlos dentro de un elemento con
+  text-primary (o el color que corresponda).
+#}
+
+{% macro icono(name, class='w-14 h-14') %}
+<svg viewBox="0 0 64 64" class="{{ class }}" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+    xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    {% if name == 'rov' %}
+    {# Vehículo submarino operado remotamente: casco, visor, propulsor,
+       umbilical y burbujas #}
+    <rect x="12" y="26" width="30" height="16" rx="8" />
+    <circle cx="22" cy="34" r="4" />
+    <circle cx="49" cy="34" r="6" />
+    <path d="M49,28 v12 M43,34 h12" />
+    <path d="M20,26 C18,16 30,12 40,8" />
+    <path d="M18,46 v3 M36,46 v3 M16,49 h22" />
+    <circle cx="52" cy="18" r="2" />
+    <circle cx="57" cy="11" r="1.5" />
+    {% elif name == 'boya' %}
+    {# Boya oceanográfica: mástil con antena, casco en la línea de
+       flotación y fondeo con sensor #}
+    <path d="M4,34 q4,-4 8,0 t8,0 M40,34 q4,-4 8,0 t8,0" />
+    <path d="M24,34 l3,9 h10 l3,-9 z" />
+    <path d="M32,28 v-12" />
+    <circle cx="32" cy="13" r="2.5" />
+    <path d="M39,10 a9,9 0 0 1 3,6 M25,10 a9,9 0 0 0 -3,6" />
+    <rect x="27" y="28" width="10" height="6" rx="1" />
+    <path d="M32,43 v11" stroke-dasharray="3 3" />
+    <circle cx="32" cy="50" r="2" />
+    <path d="M28,58 h8 l-1,3 h-6 z" />
+    {% elif name == 'baliza' %}
+    {# Posicionamiento: baliza acústica en el fondo, frentes de onda y
+       embarcación en superficie #}
+    <path d="M6,56 h52" />
+    <path d="M26,56 l6,-13 M38,56 l-6,-13" />
+    <circle cx="32" cy="40" r="3" />
+    <path d="M25,32 a10,10 0 0 1 14,0" />
+    <path d="M21,26 a15,15 0 0 1 22,0" />
+    <path d="M17,20 a20,20 0 0 1 30,0" />
+    <path d="M24,8 h16 l-4,5 h-9 z" />
+    <path d="M30,8 v-3" />
+    {% elif name == 'monitoreo' %}
+    {# Monitoreo ambiental: línea de fondeo con flotador, sensores y
+       lastre #}
+    <path d="M8,14 q4,-4 8,0 t8,0 M40,14 q4,-4 8,0 t8,0" />
+    <circle cx="32" cy="14" r="4" />
+    <path d="M32,18 v34" />
+    <rect x="27" y="24" width="10" height="7" rx="1.5" />
+    <path d="M22,27 h-4 M46,27 h-4" />
+    <rect x="27" y="38" width="10" height="7" rx="1.5" />
+    <path d="M22,41 h-4 M46,41 h-4" />
+    <path d="M27,52 h10 l-1.5,5 h-7 z" />
+    {% elif name == 'infraestructura' %}
+    {# Infraestructura submarina: estructura con válvula sobre ducto en
+       el lecho marino, con supervisión acústica #}
+    <path d="M4,52 h56" />
+    <path d="M4,47 h20 M40,47 h20" />
+    <rect x="24" y="33" width="16" height="14" rx="1" />
+    <path d="M24,47 l16,-14 M40,47 l-16,-14" />
+    <path d="M32,33 v-6" />
+    <circle cx="32" cy="23" r="3.5" />
+    <path d="M32,19.5 v-3 M28.5,23 h-3 M35.5,23 h3" />
+    <path d="M24,12 a11,11 0 0 1 16,0" stroke-dasharray="3 3" />
+    {% endif %}
+</svg>
+{% endmacro %}

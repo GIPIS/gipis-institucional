@@ -1,0 +1,177 @@
+{#
+  Componentes reutilizables de la sección Divulgación.
+  Cada experiencia se arma combinando estos macros; incorporar una
+  temática nueva es cargar contenido, no rediseñar la estructura.
+#}
+
+{# Tarjeta de temática para la portada: enlaza solo si está disponible #}
+{% macro tarjeta_tematica(topic) %}
+{% if topic.status != 'development' %}
+<a href="{{ url_for('main.divulgacion_experiencia', slug=topic.slug) }}"
+    class="group bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-100 dark:border-slate-800 hover:shadow-lg hover:border-primary/40 transition-all flex flex-col">
+    <span class="w-12 h-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4">
+        <span class="material-symbols-outlined">{{ topic.icon }}</span>
+    </span>
+    <h3 class="font-display text-lg font-bold text-slate-900 dark:text-white mb-2">{{ _(topic.title) }}</h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 flex-grow">{{ _(topic.question) }}</p>
+    <span class="inline-flex items-center gap-1 text-sm font-bold text-primary">
+        {{ _('Explorar') }}
+        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+    </span>
+</a>
+{% else %}
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-100 dark:border-slate-800 flex flex-col">
+    <span class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 flex items-center justify-center mb-4">
+        <span class="material-symbols-outlined">{{ topic.icon }}</span>
+    </span>
+    <h3 class="font-display text-lg font-bold text-slate-900 dark:text-white mb-2">{{ _(topic.title) }}</h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 flex-grow">{{ _(topic.question) }}</p>
+    <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+        <span class="material-symbols-outlined text-sm">construction</span>
+        {{ _('En desarrollo') }}
+    </span>
+</div>
+{% endif %}
+{% endmacro %}
+
+
+{# Bloque de pregunta disparadora: título con ícono + contenido libre #}
+{% macro bloque_pregunta(icon, question) %}
+<section class="py-14 border-b border-slate-100 dark:border-slate-800 last:border-0">
+    <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-start gap-3 mb-6">
+        <span class="material-symbols-outlined text-primary text-3xl mt-0.5">{{ icon }}</span>
+        <span>{{ question }}</span>
+    </h2>
+    <div class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
+        {{ caller() }}
+    </div>
+</section>
+{% endmacro %}
+
+
+{# Flujo explicativo: etapas con ícono, apilado en móvil y horizontal en desktop.
+   steps: lista de (icono, etiqueta) #}
+{% macro flujo_explicativo(steps) %}
+<div class="my-8 flex flex-col md:flex-row md:flex-wrap md:items-center gap-2 md:gap-3">
+    {% for icon, label in steps %}
+    <div class="flex items-center gap-2 md:gap-3">
+        <div class="flex items-center gap-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5 shadow-sm">
+            <span class="material-symbols-outlined text-primary text-xl">{{ icon }}</span>
+            <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ label }}</span>
+        </div>
+        {% if not loop.last %}
+        <span class="material-symbols-outlined text-slate-300 dark:text-slate-600 rotate-90 md:rotate-0 ml-5 md:ml-0">arrow_forward</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+
+{# "Quiero saber más": segundo nivel desplegable que no interrumpe el recorrido #}
+{% macro quiero_saber_mas(title=None) %}
+<details class="group mt-8 bg-blue-50/60 dark:bg-slate-800/60 border border-blue-100 dark:border-slate-700 rounded-xl overflow-hidden">
+    <summary class="flex items-center gap-3 px-6 py-4 cursor-pointer select-none font-bold text-slate-800 dark:text-slate-100 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-primary">school</span>
+        {{ title or _('Quiero saber más') }}
+        <span class="material-symbols-outlined ml-auto text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+    </summary>
+    <div class="px-6 pb-6 space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
+        {{ caller() }}
+    </div>
+</details>
+{% endmacro %}
+
+
+{# Tarjeta de aplicación (sección "¿Para qué sirve?"), con ícono wire #}
+{% from "pages/divulgacion/_iconos.xhtml" import icono %}
+{% macro tarjeta_aplicacion(icon, title, text) %}
+<div class="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-100 dark:border-slate-800">
+    <span class="text-primary mb-3 block">{{ icono(icon) }}</span>
+    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-2">{{ title }}</h3>
+    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{{ text }}</p>
+</div>
+{% endmacro %}
+
+
+{# Experiencia presencial con el demostrador. La página pública solo la
+   describe: el acceso es local y nunca se sugiere operación por Internet. #}
+{% macro demostrador(demo_url=None) %}
+<div class="my-6 bg-gradient-to-br from-primary/5 to-primary/10 dark:from-slate-800 dark:to-slate-800/60 border-2 border-dashed border-primary/40 rounded-2xl p-6 md:p-8">
+    <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-primary text-3xl">science</span>
+        <h3 class="font-display text-xl font-bold text-slate-900 dark:text-white">
+            {{ _('¿Estás en una muestra? Probá nuestro demostrador') }}</h3>
+    </div>
+    <div class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
+        {{ caller() }}
+    </div>
+    {% if demo_url %}
+    <a href="{{ demo_url }}"
+        class="mt-6 inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition-all shadow-md shadow-primary/20">
+        <span class="material-symbols-outlined">smartphone</span>
+        {{ _('Acceder al demostrador') }}
+    </a>
+    {% endif %}
+    <p class="mt-4 flex items-start gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <span class="material-symbols-outlined text-base text-amber-500">info</span>
+        {{ _('Esta función requiere estar presencialmente junto al demostrador y conectado a su red local.') }}
+    </p>
+</div>
+{% endmacro %}
+
+
+{# Cierre: próxima experiencia relacionada #}
+{% macro experiencia_relacionada(related) %}
+<div class="mt-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-6 flex items-start gap-4">
+    <span class="material-symbols-outlined text-primary text-2xl mt-1">explore</span>
+    <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">{{ _('Próxima experiencia') }}</p>
+        <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _(related.title) }}</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-2">{{ _(related.question) }}</p>
+        {% if related.status == 'development' %}
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+            <span class="material-symbols-outlined text-sm">construction</span>
+            {{ _('En desarrollo') }}
+        </span>
+        {% else %}
+        <a href="{{ url_for('main.divulgacion_experiencia', slug=related.slug) }}"
+            class="inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+            {{ _('Explorar') }}
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+
+{# Identificación institucional común al cierre de cada experiencia #}
+{% macro identidad_gipis() %}
+<section class="py-14">
+    <div class="bg-secondary dark:bg-slate-900 rounded-2xl p-8 md:p-10 text-center">
+        <p class="font-display text-xl md:text-2xl font-bold text-white mb-3">
+            {{ _('Tecnología, ciencia e ingeniería desde la Patagonia') }}</p>
+        <p class="text-sm text-slate-300 max-w-2xl mx-auto mb-1">
+            {{ _('Grupo de Investigación en Procesamiento de la Información y Sensores') }} – GIPIS</p>
+        <p class="text-xs text-slate-400 mb-8">{{ _('Facultad de Ingeniería') }} ·
+            {{ _('Universidad Nacional de la Patagonia San Juan Bosco') }}</p>
+        <div class="flex flex-wrap justify-center gap-3">
+            <a href="{{ url_for('main.equipo') }}"
+                class="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all">
+                {{ _('Conocé GIPIS') }}
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <a href="{{ url_for('main.investigacion') }}"
+                class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all">
+                {{ _('Conocé nuestros proyectos') }}
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <a href="{{ url_for('main.divulgacion') }}"
+                class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all">
+                {{ _('Volver a Divulgación') }}
+            </a>
+        </div>
+    </div>
+</section>
+{% endmacro %}

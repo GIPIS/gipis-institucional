@@ -70,3 +70,4 @@ CurriculumVitae.pdf
 # Imágenes subidas desde el panel (viven en el volumen del server)
 app/static/img/news/
 app/static/img/partners/
+docker-compose.local.override.yml

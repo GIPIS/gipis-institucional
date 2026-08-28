@@ -1,0 +1,39 @@
+{% extends "base.xhtml" %}
+{% from "pages/divulgacion/_componentes.xhtml" import tarjeta_tematica with context %}
+
+{% block title %}{{ _('Divulgación') }}{% endblock %}
+{% block meta_description %}{{ _('Divulgación GIPIS: ciencia y tecnología para explorar. Experiencias y contenidos didácticos sobre las áreas de trabajo del grupo, para estudiantes y la comunidad.') }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-white dark:bg-slate-900 py-20 border-b border-slate-100 dark:border-slate-800">
+    <div class="container mx-auto px-6">
+        <div class="max-w-3xl">
+            <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                <a class="hover:text-primary transition-colors" href="{{ url_for('main.home') }}">{{ _('Inicio') }}</a>
+                <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                <span class="text-primary">{{ _('Divulgación') }}</span>
+            </nav>
+            <h1 class="font-display text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+                {{ _('Ciencia y tecnología para explorar') }}</h1>
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                {{ _('Un espacio del GIPIS para acercar la ingeniería, la ciencia y la tecnología a estudiantes y a la comunidad.') }}
+            </p>
+            <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                {{ _('A través de experiencias, demostraciones y contenidos interactivos buscamos mostrar de manera sencilla cómo funcionan algunas de las tecnologías con las que trabajamos y para qué pueden utilizarse.') }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Temáticas -->
+<section class="py-24 bg-background-light dark:bg-slate-950 transition-colors duration-300">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {% for topic in topics %}
+            {{ tarjeta_tematica(topic) }}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -158,6 +158,8 @@
                     href="{{ url_for('main.equipo') }}">{{ _('Grupo') }}</a>
                 <a class="nav-link {% if request.endpoint == 'main.investigacion' %}text-primary{% else %}hover:text-primary{% endif %}"
                     href="{{ url_for('main.investigacion') }}">{{ _('Investigación') }}</a>
+                <a class="nav-link {% if request.endpoint in ('main.divulgacion', 'main.divulgacion_experiencia') %}text-primary{% else %}hover:text-primary{% endif %}"
+                    href="{{ url_for('main.divulgacion') }}">{{ _('Divulgación') }}</a>
                 <a class="nav-link {% if request.endpoint == 'main.cooperacion' %}text-primary{% else %}hover:text-primary{% endif %}"
                     href="{{ url_for('main.cooperacion') }}">{{ _('Cooperación') }}</a>
                 <a class="nav-link {% if request.endpoint == 'main.contacto' %}text-primary{% else %}hover:text-primary{% endif %}"
@@ -203,6 +205,7 @@
                 <a class="hover:text-primary" href="{{ url_for('main.novedades') }}">{{ _('Novedades') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.equipo') }}">{{ _('Grupo') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.investigacion') }}">{{ _('Investigación') }}</a>
+                <a class="hover:text-primary" href="{{ url_for('main.divulgacion') }}">{{ _('Divulgación') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.cooperacion') }}">{{ _('Cooperación') }}</a>
                 <a class="hover:text-primary" href="{{ url_for('main.contacto') }}">{{ _('Contacto') }}</a>
             </nav>

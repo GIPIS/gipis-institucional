@@ -171,6 +171,197 @@ TRANSLATIONS = {
     'Redes inteligentes': 'Smart grids',
     'Volver a Líneas de Investigación': 'Back to Research Lines',
 
+    # --- Divulgación ---
+    'Divulgación': 'Outreach',
+    'Ciencia y tecnología para explorar': 'Science and technology to explore',
+    'Divulgación GIPIS: ciencia y tecnología para explorar. Experiencias y contenidos didácticos sobre las áreas de trabajo del grupo, para estudiantes y la comunidad.':
+        'GIPIS Outreach: science and technology to explore. Experiences and educational content about the group’s areas of work, for students and the community.',
+    'Un espacio del GIPIS para acercar la ingeniería, la ciencia y la tecnología a estudiantes y a la comunidad.':
+        'A GIPIS space to bring engineering, science and technology closer to students and the community.',
+    'A través de experiencias, demostraciones y contenidos interactivos buscamos mostrar de manera sencilla cómo funcionan algunas de las tecnologías con las que trabajamos y para qué pueden utilizarse.':
+        'Through experiences, demonstrations and interactive content we aim to show in a simple way how some of the technologies we work with function and what they can be used for.',
+    'Explorar': 'Explore',
+    'En desarrollo': 'In development',
+    'Próxima experiencia': 'Next experience',
+    'Quiero saber más': 'I want to know more',
+    'Tecnología, ciencia e ingeniería desde la Patagonia':
+        'Technology, science and engineering from Patagonia',
+    'Conocé GIPIS': 'Meet GIPIS',
+    'Conocé nuestros proyectos': 'Explore our projects',
+    'Volver a Divulgación': 'Back to Outreach',
+    # Temáticas (títulos y preguntas de las tarjetas)
+    'Comunicaciones acústicas subacuáticas': 'Underwater acoustic communications',
+    '¿Cómo se comunican los equipos bajo el agua?': 'How do devices communicate underwater?',
+    'Comunicaciones inalámbricas e IoT': 'Wireless communications and IoT',
+    '¿Cómo conectamos sensores y dispositivos a distancia?':
+        'How do we connect sensors and devices remotely?',
+    'Sensores y monitoreo ambiental': 'Sensors and environmental monitoring',
+    '¿Cómo medimos lo que ocurre en nuestro ambiente?':
+        'How do we measure what happens in our environment?',
+    'Tecnologías para observar el océano': 'Technologies for observing the ocean',
+    '¿Cómo podemos conocer lo que ocurre en el mar?':
+        'How can we know what is happening in the sea?',
+    'Observación de la Tierra': 'Earth observation',
+    '¿Cómo podemos estudiar el territorio y el océano desde el espacio?':
+        'How can we study the land and the ocean from space?',
+    'Procesamiento digital de señales': 'Digital signal processing',
+    '¿Cómo extraemos información útil de una señal?':
+        'How do we extract useful information from a signal?',
+    'Sistemas embebidos': 'Embedded systems',
+    '¿Qué hay detrás de un dispositivo electrónico inteligente?':
+        'What is behind a smart electronic device?',
+    'Drones y procesamiento de imágenes': 'Drones and image processing',
+    '¿Qué información podemos obtener observando desde el aire?':
+        'What information can we obtain by observing from the air?',
+    'Inteligencia Artificial y datos': 'Artificial Intelligence and data',
+    '¿Cómo transformamos datos en información útil?':
+        'How do we turn data into useful information?',
+    'Posicionamiento acústico': 'Acoustic positioning',
+    '¿Podemos utilizar el sonido para localizar un dispositivo bajo el agua?':
+        'Can we use sound to locate a device underwater?',
+    # Experiencia: comunicaciones acústicas
+    'Comunicaciones acústicas': 'Acoustic communications',
+    '¿Cómo se comunican los equipos bajo el agua? Descubrí cómo transformamos un mensaje digital en una señal acústica, la transmitimos y recuperamos la información. Divulgación GIPIS.':
+        'How do devices communicate underwater? Discover how we turn a digital message into an acoustic signal, transmit it and recover the information. GIPIS Outreach.',
+    'En nuestra vida cotidiana utilizamos Wi-Fi, Bluetooth, telefonía celular y otras tecnologías inalámbricas para comunicarnos. Pero ¿qué ocurre cuando queremos comunicarnos debajo del agua?':
+        'In everyday life we use Wi-Fi, Bluetooth, cell phones and other wireless technologies to communicate. But what happens when we want to communicate underwater?',
+    'En el medio acuático, y especialmente en el agua de mar, las ondas electromagnéticas utilizadas habitualmente para las comunicaciones inalámbricas se atenúan rápidamente.':
+        'In aquatic environments, and especially in seawater, the electromagnetic waves normally used for wireless communications are quickly attenuated.',
+    'Una de las principales alternativas para transmitir información a distancia en ambientes subacuáticos es utilizar ondas acústicas.':
+        'One of the main alternatives for transmitting information over distance in underwater environments is to use acoustic waves.',
+    'En esta experiencia vas a descubrir cómo podemos transformar un mensaje digital en una señal acústica, transmitirlo y recuperar nuevamente la información.':
+        'In this experience you will discover how we can turn a digital message into an acoustic signal, transmit it and recover the information again.',
+    '¿Por qué no usamos Wi-Fi bajo el agua?': 'Why don’t we use Wi-Fi underwater?',
+    'Las tecnologías inalámbricas que utilizamos habitualmente emplean ondas electromagnéticas. En el agua, especialmente en agua de mar, estas señales se atenúan fuertemente y su alcance se reduce.':
+        'The wireless technologies we normally use rely on electromagnetic waves. In water, especially seawater, these signals are strongly attenuated and their range is reduced.',
+    'El sonido puede propagarse a distancias considerablemente mayores. Por esta razón, las ondas acústicas constituyen una de las principales alternativas para establecer comunicaciones subacuáticas.':
+        'Sound can travel considerably longer distances. For this reason, acoustic waves are one of the main alternatives for underwater communications.',
+    'En el aire': 'In the air',
+    'Bajo el agua': 'Underwater',
+    'Ondas electromagnéticas': 'Electromagnetic waves',
+    'Wi-Fi / Bluetooth / LoRa': 'Wi-Fi / Bluetooth / LoRa',
+    'Antena': 'Antenna',
+    'Información digital': 'Digital information',
+    'Ondas acústicas': 'Acoustic waves',
+    'Comunicación acústica': 'Acoustic communication',
+    'Transductor acústico': 'Acoustic transducer',
+    'Información transportada mediante sonido': 'Information carried by sound',
+    '¿Qué es una onda acústica?': 'What is an acoustic wave?',
+    'El sonido es una onda mecánica y necesita un medio material para propagarse, como el aire o el agua.':
+        'Sound is a mechanical wave and needs a material medium to propagate, such as air or water.',
+    'En el agua de mar, el sonido se propaga aproximadamente a 1500 metros por segundo, aunque su velocidad depende de factores como la temperatura, la salinidad y la presión.':
+        'In seawater, sound travels at roughly 1500 meters per second, although its speed depends on factors such as temperature, salinity and pressure.',
+    'Un transmisor genera una onda acústica que se propaga por el agua hasta un receptor':
+        'A transmitter generates an acoustic wave that propagates through the water to a receiver',
+    'El transmisor genera una onda acústica que se propaga por el agua hasta el receptor, a ~1500 m/s.':
+        'The transmitter generates an acoustic wave that propagates through the water to the receiver, at ~1500 m/s.',
+    'AGUA': 'WATER',
+    'Esquema del demostrador: el mensaje se codifica, se transmite como sonido a través del agua y se decodifica en el receptor':
+        'Demonstrator diagram: the message is encoded, transmitted as sound through the water and decoded at the receiver',
+    'El viaje de la información en el demostrador: el mensaje se codifica, se transmite como sonido a través del agua y se decodifica en el receptor.':
+        'The information’s journey through the demonstrator: the message is encoded, transmitted as sound through the water and decoded at the receiver.',
+    'Algunas magnitudes que caracterizan a una onda acústica y a su propagación en el agua:':
+        'Some quantities that characterize an acoustic wave and its propagation in water:',
+    'Frecuencia': 'Frequency',
+    'cantidad de oscilaciones por segundo, medida en hertz (Hz).':
+        'number of oscillations per second, measured in hertz (Hz).',
+    'Longitud de onda': 'Wavelength',
+    'distancia entre dos crestas consecutivas de la onda.':
+        'distance between two consecutive crests of the wave.',
+    'Velocidad de propagación': 'Propagation speed',
+    'en el mar, cercana a 1500 m/s; varía con la temperatura, la salinidad y la presión.':
+        'in the sea, close to 1500 m/s; it varies with temperature, salinity and pressure.',
+    'Atenuación': 'Attenuation',
+    'pérdida de energía de la señal a medida que se propaga.':
+        'loss of signal energy as it propagates.',
+    'Ruido': 'Noise',
+    'sonidos del ambiente (olas, embarcaciones, fauna marina) que se mezclan con la señal.':
+        'sounds from the environment (waves, vessels, marine life) that mix with the signal.',
+    'Reflexiones': 'Reflections',
+    'rebotes de la señal en la superficie y el fondo del mar.':
+        'the signal bouncing off the sea surface and the seabed.',
+    'Propagación multicamino': 'Multipath propagation',
+    'la señal llega al receptor por varios caminos a la vez, con distintos retardos.':
+        'the signal reaches the receiver through several paths at once, with different delays.',
+    '¿Cómo convertimos una palabra en sonido?': 'How do we turn a word into sound?',
+    'Para transmitir información, primero convertimos el mensaje en datos digitales.':
+        'To transmit information, we first convert the message into digital data.',
+    'Esos datos pueden utilizarse para modificar una señal mediante un proceso denominado modulación.':
+        'That data can be used to modify a signal through a process called modulation.',
+    'La señal resultante se transmite a través del agua. En el receptor se realiza el proceso inverso para recuperar la información enviada.':
+        'The resulting signal is transmitted through the water. At the receiver, the inverse process recovers the information that was sent.',
+    'Mensaje': 'Message',
+    'Datos': 'Data',
+    'Modulación': 'Modulation',
+    'Señal acústica': 'Acoustic signal',
+    'Agua': 'Water',
+    'Recepción': 'Reception',
+    'Decodificación': 'Decoding',
+    'La palabra se convierte en bits y los bits modulan una onda acústica que transporta el mensaje':
+        'The word is converted into bits and the bits modulate an acoustic wave that carries the message',
+    'El ejemplo con la letra H (01001000): cada bit modifica la frecuencia de la onda — eso es la modulación, y así la información viaja en el sonido.':
+        'The example with the letter H (01001000): each bit changes the frequency of the wave — that is modulation, and that is how information travels in sound.',
+    'Del concepto a una experiencia real': 'From concept to a real experience',
+    'En GIPIS desarrollamos un demostrador que permite observar de manera sencilla cómo funciona una comunicación acústica.':
+        'At GIPIS we developed a demonstrator that lets you easily observe how an acoustic communication works.',
+    'Un microcontrolador recibe una palabra ingresada desde una interfaz web, la codifica y genera la señal correspondiente para realizar la transmisión acústica. En el otro extremo, el sistema receptor procesa la señal para recuperar la información transmitida.':
+        'A microcontroller receives a word entered through a web interface, encodes it and generates the corresponding signal for the acoustic transmission. At the other end, the receiving system processes the signal to recover the transmitted information.',
+    'Interfaz web': 'Web interface',
+    'Micro-': 'Micro-',
+    'controlador': 'controller',
+    'Microcontrolador': 'Microcontroller',
+    'Transmisor': 'Transmitter',
+    'Receptor': 'Receiver',
+    'En una misma experiencia intervienen electrónica, programación, sistemas digitales, telecomunicaciones y procesamiento de señales.':
+        'A single experience brings together electronics, programming, digital systems, telecommunications and signal processing.',
+    '¿Estás en una muestra? Probá nuestro demostrador':
+        'Are you at an exhibit? Try our demonstrator',
+    'Si estás participando de una muestra o actividad de GIPIS y tenés el demostrador frente a vos, podés probarlo.':
+        'If you are taking part in a GIPIS exhibit or activity and the demonstrator is in front of you, you can try it.',
+    'Escribí una palabra, transmitila y observá cómo la información se transforma en una señal acústica y llega al receptor.':
+        'Type a word, transmit it and watch how the information turns into an acoustic signal and reaches the receiver.',
+    '¿Cómo participar?': 'How to take part?',
+    'Conectate a la red indicada en el demostrador.':
+        'Connect to the network indicated on the demonstrator.',
+    'Accedé a la interfaz mediante el código QR.': 'Access the interface via the QR code.',
+    'Escribí una palabra.': 'Type a word.',
+    'Presioná «Transmitir».': 'Press “Transmit”.',
+    'Observá qué sucede durante la transmisión y qué información llega al receptor.':
+        'Watch what happens during the transmission and what information reaches the receiver.',
+    'Acceder al demostrador': 'Access the demonstrator',
+    'Esta función requiere estar presencialmente junto al demostrador y conectado a su red local.':
+        'This feature requires being physically next to the demonstrator and connected to its local network.',
+    '¿Para qué sirven las comunicaciones acústicas subacuáticas?':
+        'What are underwater acoustic communications used for?',
+    'Vehículos submarinos': 'Underwater vehicles',
+    'Permiten intercambiar información con robots y vehículos utilizados para explorar ambientes subacuáticos.':
+        'They allow exchanging information with robots and vehicles used to explore underwater environments.',
+    'Permiten comunicar instrumentos y sensores utilizados para estudiar el océano.':
+        'They allow communicating with instruments and sensors used to study the ocean.',
+    'Posicionamiento y navegación': 'Positioning and navigation',
+    'Las señales satelitales de posicionamiento no están disponibles normalmente bajo el agua. Las señales acústicas pueden utilizarse para desarrollar sistemas de localización y navegación subacuática.':
+        'Satellite positioning signals are normally unavailable underwater. Acoustic signals can be used to develop underwater localization and navigation systems.',
+    'Monitoreo ambiental': 'Environmental monitoring',
+    'Permiten obtener y transmitir información proveniente de sensores instalados en ambientes acuáticos.':
+        'They allow obtaining and transmitting information from sensors deployed in aquatic environments.',
+    'Infraestructura submarina': 'Underwater infrastructure',
+    'Pueden utilizarse para comunicación y supervisión de dispositivos e instalaciones ubicados bajo el agua.':
+        'They can be used to communicate with and supervise devices and installations located underwater.',
+    'Detrás de una comunicación acústica subacuática hay una cadena de conceptos que podés seguir profundizando:':
+        'Behind an underwater acoustic communication there is a chain of concepts you can keep exploring:',
+    'Propagación': 'Propagation',
+    'Multicamino': 'Multipath',
+    'Codificación': 'Coding',
+    'Detección': 'Detection',
+    'Procesamiento digital': 'Digital processing',
+    'Este material también puede servir de apoyo para estudiantes universitarios de ingeniería.':
+        'This material can also support university engineering students.',
+    '¿Sabías que el GPS tampoco funciona normalmente debajo del agua?':
+        'Did you know that GPS doesn’t normally work underwater either?',
+    'Las señales provenientes de los satélites de posicionamiento no penetran suficientemente en el agua como para permitir el funcionamiento convencional de un receptor sumergido.':
+        'Signals from positioning satellites do not penetrate water deeply enough for a submerged receiver to work conventionally.',
+    'Entonces aparece otro desafío:': 'So another challenge appears:',
+
     # --- Cooperación ---
     'Cooperación científica e industrial del GIPIS. Vínculos con el sector productivo, convenios de investigación y transferencia tecnológica desde la Patagonia.':
         'Scientific and industrial cooperation at GIPIS. Ties with the productive sector, research agreements, and technology transfer from Patagonia.',
