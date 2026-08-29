@@ -22,6 +22,20 @@ TRANSLATIONS = {
     'Contacto': 'Contact',
     'Ingresar': 'Sign in',
     'Acceso miembros': 'Members sign in',
+    'Boya oceanográfica del GIPIS fondeada en el mar':
+        'GIPIS oceanographic buoy moored at sea',
+    'Actividades de divulgación del GIPIS: charlas en aulas, visitas de escuelas, transmisiones y pósters científicos':
+        'GIPIS outreach activities: classroom talks, school visits, live streams and scientific posters',
+    'La ronda de café y el trabajo en el taller del GIPIS':
+        'The coffee round and workshop time at GIPIS',
+    'Armado de circuitos electrónicos en el laboratorio del GIPIS':
+        'Building electronic circuits at the GIPIS lab',
+    'Visitantes llegando a la Facultad de Ingeniería de la UNPSJB':
+        'Visitors arriving at the UNPSJB Faculty of Engineering',
+    'Fondeo de la boya oceanográfica del GIPIS':
+        'Deployment of the GIPIS oceanographic buoy',
+    'Fondeo de la boya del GIPIS junto a una embarcación de la Armada Argentina':
+        'Deployment of the GIPIS buoy alongside an Argentine Navy boat',
     'Cambiar idioma': 'Change language',
     'Cambiar tema': 'Toggle theme',
     'Grupo': 'Team',
