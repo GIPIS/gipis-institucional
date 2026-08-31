@@ -1,7 +1,7 @@
 {% extends "base.xhtml" %}
 {% from "pages/divulgacion/_componentes.xhtml" import bloque_pregunta,
-    quiero_saber_mas, tarjeta_aplicacion, demostrador, experiencia_relacionada
-    with context %}
+    quiero_saber_mas, tarjeta_aplicacion, demostrador, experiencia_relacionada,
+    flujo_explicativo with context %}
 {% from "pages/divulgacion/_iconos.xhtml" import icono %}
 
 {% block title %}{{ _('Comunicaciones acústicas subacuáticas') }}{% endblock %}
@@ -199,6 +199,64 @@
             </div>
             <p class="text-xs text-slate-400 dark:text-slate-500 -mt-4 mb-4">
                 {{ _('El ejemplo con la letra H (01001000): cada bit modifica la frecuencia de la onda — eso es la modulación, y así la información viaja en el sonido.') }}</p>
+            {% endcall %}
+
+            <!-- Bloque 3b: robustez con espectro ensanchado (DSSS) -->
+            {% call bloque_pregunta('shield', _('¿Cómo hacemos la comunicación más robusta?')) %}
+            <p>{{ _('Para aumentar la robustez frente al ruido y a las perturbaciones del canal utilizamos espectro ensanchado por secuencia directa (DSSS). Cada dato se representa mediante una secuencia conocida de elementos más cortos, llamados chips.') }}</p>
+            <p>{{ _('El receptor conoce esa misma secuencia y utiliza un correlador para buscarla dentro de la señal recibida.') }}</p>
+
+            {{ flujo_explicativo([
+                ('code', _('Codificación DSSS')),
+                ('tune', _('Modulador')),
+                ('waves', _('Canal acústico')),
+                ('graphic_eq', _('Demodulador')),
+                ('query_stats', _('Correlador')),
+                ('check_circle', _('Detección')),
+            ]) }}
+
+            <!-- Correlación interactiva: la referencia se desliza sobre la señal recibida -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <p class="font-bold text-slate-900 dark:text-white mb-1">{{ _('El receptor busca una secuencia conocida') }}</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">{{ _('La ventana representa el correlador desplazándose sobre la señal recibida.') }}</p>
+                    <div class="relative h-[92px] border-y border-slate-200 dark:border-slate-700 overflow-hidden">
+                        <span id="dsss-window-label" class="absolute top-1 whitespace-nowrap text-primary text-[11px] font-bold">{{ _('secuencia de referencia') }}</span>
+                        <div id="dsss-rx" class="absolute inset-x-0 top-[30px] grid grid-cols-[repeat(19,minmax(0,1fr))] gap-[3px]"></div>
+                        <div id="dsss-window" class="absolute top-[23px] h-[48px] border-2 border-primary rounded-lg pointer-events-none transition-[left] duration-300 ease-out"></div>
+                    </div>
+                    <div class="flex items-center flex-wrap gap-3 mt-4">
+                        <button type="button" id="dsss-play"
+                            class="border border-primary text-primary hover:bg-primary/10 rounded-lg px-3 py-2 text-sm font-bold transition-colors">&#9654; {{ _('Ver correlación') }}</button>
+                        <input id="dsss-shift" type="range" min="0" max="12" value="0"
+                            class="flex-1 min-w-[140px] max-w-[300px] accent-primary"
+                            aria-label="{{ _('Desplazamiento del correlador') }}">
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <p class="font-bold text-slate-900 dark:text-white mb-1">{{ _('Resultado de la correlación') }}</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">{{ _('Cuando la referencia se alinea con la secuencia recibida aparece un pico.') }}</p>
+                    <canvas id="dsss-canvas" width="460" height="200" class="block w-full h-[190px]"></canvas>
+                    <p class="text-sm mt-1">{{ _('Correlación en la posición actual:') }}
+                        <span id="dsss-value" class="font-bold text-primary">0</span></p>
+                </div>
+            </div>
+
+            <div class="mt-6 border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 text-sm leading-relaxed">
+                {{ _('Al combinar la información distribuida en varios chips, la señal deseada se refuerza en el correlador mientras que el ruido no correlacionado tiende a combinarse de forma menos coherente. Esta es una de las razones por las que DSSS puede mejorar la detección en un canal acústico afectado por ruido e interferencias.') }}
+            </div>
+
+            {% call quiero_saber_mas() %}
+            <p>{{ _('El diseño de secuencias es una parte importante de los sistemas de espectro ensanchado. Se buscan secuencias con buenas propiedades de autocorrelación, para reconocer con claridad cuándo una señal está correctamente alineada, y de correlación cruzada, para poder distinguir distintas secuencias entre sí. Algunas son:') }}</p>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong>Barker:</strong> {{ _('son secuencias binarias cortas caracterizadas por tener lóbulos laterales de autocorrelación muy bajos. Esto genera un pico de correlación claramente distinguible y las hace especialmente útiles para detección, sincronización y estimación del instante de llegada de una señal. Sólo existen para determinadas longitudes cortas.') }}</li>
+                <li><strong>{{ _('Pares de secuencias complementarias (Golay)') }}:</strong> {{ _('están formados por dos secuencias cuyas autocorrelaciones aperiódicas se complementan. Al sumar los resultados de correlación de ambas, sus lóbulos laterales se cancelan idealmente y queda un único pico central. Son particularmente interesantes en sistemas de medición, estimación de canal y detección.') }}</li>
+                <li><strong>Zadoff&#8211;Chu:</strong> {{ _('son secuencias complejas de amplitud constante que presentan autocorrelación periódica ideal. Diferentes desplazamientos cíclicos pueden conservar muy buenas propiedades de separación, lo que permite utilizarlas para sincronización, identificación y acceso de múltiples usuarios. Además, su envolvente constante resulta atractiva para sistemas de transmisión.') }}</li>
+                <li><strong>Kasami:</strong> {{ _('constituyen familias de secuencias binarias diseñadas para presentar valores reducidos y controlados de correlación cruzada. Esto permite asignar distintas secuencias a diferentes transmisores o señales y luego distinguirlas en el receptor. Son de interés en sistemas de espectro ensanchado y acceso múltiple.') }}</li>
+                <li><strong>Gold:</strong> {{ _('son familias extensas de secuencias binarias que ofrecen un buen compromiso entre cantidad de códigos disponibles y propiedades de correlación cruzada. Pueden generarse de manera eficiente mediante registros de desplazamiento y permiten identificar numerosos usuarios utilizando secuencias diferentes. Por este motivo han sido ampliamente utilizadas en sistemas de espectro ensanchado.') }}</li>
+                <li><strong>{{ _('Secuencias de máxima longitud (m-sequences)') }}:</strong> {{ _('son secuencias pseudoaleatorias binarias generadas mediante registros de desplazamiento con realimentación lineal. Poseen una autocorrelación periódica muy favorable y pueden generarse con circuitos o algoritmos relativamente simples. Además, sirven como base para construir otras familias de secuencias, como Gold y Kasami.') }}</li>
+            </ul>
+            {% endcall %}
             {% endcall %}
 
             <!-- Bloque 4: el demostrador GIPIS -->
@@ -460,6 +518,150 @@
             delay: anime.stagger(180),
             duration: 250
         }, '-=200');
+})();
+</script>
+<!-- Correlación DSSS interactiva (vanilla JS; colores según tema claro/oscuro) -->
+<script>
+(function () {
+    var ref = [1, 1, 1, -1, -1, 1, -1];
+    var rx = [-1, 1, -1, -1, 1, -1].concat(ref, [1, -1, 1, -1, -1, 1]);
+
+    var track = document.getElementById('dsss-rx');
+    var slider = document.getElementById('dsss-shift');
+    var windowEl = document.getElementById('dsss-window');
+    var labelEl = document.getElementById('dsss-window-label');
+    var valueEl = document.getElementById('dsss-value');
+    var playBtn = document.getElementById('dsss-play');
+    var canvas = document.getElementById('dsss-canvas');
+    if (!track || !canvas) return;
+    var ctx = canvas.getContext('2d');
+
+    var PLAY = '▶ {{ _('Ver correlación') }}';
+    var PAUSE = '⏸ {{ _('Pausar') }}';
+    var REPLAY = '↻ {{ _('Repetir') }}';
+    var LBL_Y = '{{ _('correlación') }}';
+    var LBL_X = '{{ _('desplazamiento') }}';
+    var ACCENT = '#5B9BD5';
+
+    // Secuencia recibida: barra arriba = +1, barra abajo = -1
+    rx.forEach(function (v) {
+        var chip = document.createElement('div');
+        chip.className = 'relative h-[34px] rounded-[3px] bg-slate-200 dark:bg-slate-700';
+        var bar = document.createElement('div');
+        bar.className = 'absolute left-[18%] right-[18%] h-[3px] rounded bg-slate-500 dark:bg-slate-300';
+        bar.style.top = v > 0 ? '30%' : '68%';
+        chip.appendChild(bar);
+        track.appendChild(chip);
+    });
+
+    slider.max = rx.length - ref.length;
+
+    function corrAt(k) {
+        var sum = 0;
+        for (var i = 0; i < ref.length; i++) sum += ref[i] * rx[k + i];
+        return sum;
+    }
+
+    var correlation = [];
+    for (var k = 0; k <= Number(slider.max); k++) correlation.push(corrAt(k));
+
+    function drawGraph(active) {
+        var ink = document.documentElement.classList.contains('dark')
+            ? '226,232,240' : '15,23,42';
+        var W = canvas.width, H = canvas.height;
+        var p = { l: 30, r: 15, t: 16, b: 28 };
+        var iw = W - p.l - p.r, ih = H - p.t - p.b;
+        var maxAbs = Math.max.apply(null, correlation.map(Math.abs).concat([1]));
+        var y0 = p.t + ih / 2;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Eje horizontal
+        ctx.strokeStyle = 'rgba(' + ink + ',.18)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.l, y0);
+        ctx.lineTo(W - p.r, y0);
+        ctx.stroke();
+
+        // Curva guía que permite percibir mejor el pico de correlación
+        ctx.beginPath();
+        correlation.forEach(function (v, i) {
+            var x = p.l + i * iw / (correlation.length - 1);
+            var y = y0 - (v / maxAbs) * (ih * .42);
+            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.strokeStyle = 'rgba(91,155,213,.25)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        correlation.forEach(function (v, i) {
+            var x = p.l + i * iw / (correlation.length - 1);
+            var y = y0 - (v / maxAbs) * (ih * .42);
+
+            ctx.strokeStyle = i === active ? ACCENT : 'rgba(' + ink + ',.3)';
+            ctx.lineWidth = i === active ? 4 : 1.6;
+            ctx.beginPath();
+            ctx.moveTo(x, y0);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+
+            ctx.fillStyle = i === active ? ACCENT : 'rgba(' + ink + ',.42)';
+            ctx.beginPath();
+            ctx.arc(x, y, i === active ? 4.5 : 2.2, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        ctx.fillStyle = 'rgba(' + ink + ',.6)';
+        ctx.font = '12px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(LBL_Y, 4, 14);
+        ctx.textAlign = 'right';
+        ctx.fillText(LBL_X, W - 4, H - 6);
+        ctx.textAlign = 'left';
+    }
+
+    function update() {
+        var k = Number(slider.value);
+        var left = (k / rx.length) * 100;
+        windowEl.style.left = left + '%';
+        windowEl.style.width = (ref.length / rx.length) * 100 + '%';
+        labelEl.style.left = 'min(' + left + '%, calc(100% - 150px))';
+        valueEl.textContent = Math.round(corrAt(k));
+        drawGraph(k);
+    }
+
+    slider.addEventListener('input', update);
+
+    var timer = null;
+    playBtn.addEventListener('click', function () {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+            playBtn.textContent = PLAY;
+            return;
+        }
+        slider.value = 0;
+        update();
+        playBtn.textContent = PAUSE;
+        timer = setInterval(function () {
+            var next = Number(slider.value) + 1;
+            if (next > Number(slider.max)) {
+                clearInterval(timer);
+                timer = null;
+                playBtn.textContent = REPLAY;
+                return;
+            }
+            slider.value = next;
+            update();
+        }, 420);
+    });
+
+    // Redibujar el gráfico cuando cambia el tema claro/oscuro
+    new MutationObserver(function () { drawGraph(Number(slider.value)); })
+        .observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+    update();
 })();
 </script>
 {% endblock %}

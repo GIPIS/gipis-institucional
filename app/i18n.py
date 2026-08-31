@@ -379,6 +379,51 @@ TRANSLATIONS = {
         'Signals from positioning satellites do not penetrate water deeply enough for a submerged receiver to work conventionally.',
     'Entonces aparece otro desafío:': 'So another challenge appears:',
 
+    # Experiencia acústica: robustez con DSSS
+    '¿Cómo hacemos la comunicación más robusta?':
+        'How do we make the communication more robust?',
+    'Para aumentar la robustez frente al ruido y a las perturbaciones del canal utilizamos espectro ensanchado por secuencia directa (DSSS). Cada dato se representa mediante una secuencia conocida de elementos más cortos, llamados chips.':
+        'To increase robustness against noise and channel disturbances we use direct-sequence spread spectrum (DSSS). Each data symbol is represented by a known sequence of shorter elements, called chips.',
+    'El receptor conoce esa misma secuencia y utiliza un correlador para buscarla dentro de la señal recibida.':
+        'The receiver knows that same sequence and uses a correlator to search for it within the received signal.',
+    'Codificación DSSS': 'DSSS coding',
+    'Modulador': 'Modulator',
+    'Canal acústico': 'Acoustic channel',
+    'Demodulador': 'Demodulator',
+    'Correlador': 'Correlator',
+    'El receptor busca una secuencia conocida': 'The receiver searches for a known sequence',
+    'La ventana representa el correlador desplazándose sobre la señal recibida.':
+        'The window represents the correlator sliding over the received signal.',
+    'secuencia de referencia': 'reference sequence',
+    'Ver correlación': 'Run correlation',
+    'Pausar': 'Pause',
+    'Repetir': 'Replay',
+    'Desplazamiento del correlador': 'Correlator shift',
+    'Resultado de la correlación': 'Correlation result',
+    'Cuando la referencia se alinea con la secuencia recibida aparece un pico.':
+        'When the reference lines up with the received sequence, a peak appears.',
+    'Correlación en la posición actual:': 'Correlation at the current position:',
+    'correlación': 'correlation',
+    'desplazamiento': 'shift',
+    'Al combinar la información distribuida en varios chips, la señal deseada se refuerza en el correlador mientras que el ruido no correlacionado tiende a combinarse de forma menos coherente. Esta es una de las razones por las que DSSS puede mejorar la detección en un canal acústico afectado por ruido e interferencias.':
+        'By combining the information spread across several chips, the desired signal is reinforced in the correlator, while uncorrelated noise tends to combine less coherently. This is one of the reasons why DSSS can improve detection in an acoustic channel affected by noise and interference.',
+    'El diseño de secuencias es una parte importante de los sistemas de espectro ensanchado. Se buscan secuencias con buenas propiedades de autocorrelación, para reconocer con claridad cuándo una señal está correctamente alineada, y de correlación cruzada, para poder distinguir distintas secuencias entre sí. Algunas son:':
+        'Sequence design is an important part of spread-spectrum systems. Sequences are sought with good autocorrelation properties, to clearly recognize when a signal is correctly aligned, and good cross-correlation properties, to tell different sequences apart. Some of them are:',
+    'son secuencias binarias cortas caracterizadas por tener lóbulos laterales de autocorrelación muy bajos. Esto genera un pico de correlación claramente distinguible y las hace especialmente útiles para detección, sincronización y estimación del instante de llegada de una señal. Sólo existen para determinadas longitudes cortas.':
+        'short binary sequences characterized by very low autocorrelation sidelobes. This produces a clearly distinguishable correlation peak and makes them especially useful for detection, synchronization and estimating the arrival time of a signal. They only exist for certain short lengths.',
+    'Pares de secuencias complementarias (Golay)': 'Complementary sequence pairs (Golay)',
+    'están formados por dos secuencias cuyas autocorrelaciones aperiódicas se complementan. Al sumar los resultados de correlación de ambas, sus lóbulos laterales se cancelan idealmente y queda un único pico central. Son particularmente interesantes en sistemas de medición, estimación de canal y detección.':
+        'formed by two sequences whose aperiodic autocorrelations complement each other. When the correlation results of both are added, their sidelobes ideally cancel out, leaving a single central peak. They are particularly interesting for measurement systems, channel estimation and detection.',
+    'son secuencias complejas de amplitud constante que presentan autocorrelación periódica ideal. Diferentes desplazamientos cíclicos pueden conservar muy buenas propiedades de separación, lo que permite utilizarlas para sincronización, identificación y acceso de múltiples usuarios. Además, su envolvente constante resulta atractiva para sistemas de transmisión.':
+        'complex constant-amplitude sequences with ideal periodic autocorrelation. Different cyclic shifts can preserve very good separation properties, which allows using them for synchronization, identification and multi-user access. In addition, their constant envelope is attractive for transmission systems.',
+    'constituyen familias de secuencias binarias diseñadas para presentar valores reducidos y controlados de correlación cruzada. Esto permite asignar distintas secuencias a diferentes transmisores o señales y luego distinguirlas en el receptor. Son de interés en sistemas de espectro ensanchado y acceso múltiple.':
+        'families of binary sequences designed to exhibit low, controlled cross-correlation values. This allows assigning different sequences to different transmitters or signals and then telling them apart at the receiver. They are of interest in spread-spectrum and multiple-access systems.',
+    'son familias extensas de secuencias binarias que ofrecen un buen compromiso entre cantidad de códigos disponibles y propiedades de correlación cruzada. Pueden generarse de manera eficiente mediante registros de desplazamiento y permiten identificar numerosos usuarios utilizando secuencias diferentes. Por este motivo han sido ampliamente utilizadas en sistemas de espectro ensanchado.':
+        'large families of binary sequences that offer a good trade-off between the number of available codes and cross-correlation properties. They can be generated efficiently with shift registers and allow identifying many users through different sequences. For this reason they have been widely used in spread-spectrum systems.',
+    'Secuencias de máxima longitud (m-sequences)': 'Maximum length sequences (m-sequences)',
+    'son secuencias pseudoaleatorias binarias generadas mediante registros de desplazamiento con realimentación lineal. Poseen una autocorrelación periódica muy favorable y pueden generarse con circuitos o algoritmos relativamente simples. Además, sirven como base para construir otras familias de secuencias, como Gold y Kasami.':
+        'binary pseudo-random sequences generated with linear-feedback shift registers. They have very favorable periodic autocorrelation and can be generated with relatively simple circuits or algorithms. They also serve as the basis for building other sequence families, such as Gold and Kasami.',
+
     # --- Cooperación ---
     'Cooperación científica e industrial del GIPIS. Vínculos con el sector productivo, convenios de investigación y transferencia tecnológica desde la Patagonia.':
         'Scientific and industrial cooperation at GIPIS. Ties with the productive sector, research agreements, and technology transfer from Patagonia.',
