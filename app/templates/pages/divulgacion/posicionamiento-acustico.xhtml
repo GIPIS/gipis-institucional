@@ -1,0 +1,1027 @@
+{% extends "base.xhtml" %}
+{% from "pages/divulgacion/_componentes.xhtml" import bloque_pregunta,
+    quiero_saber_mas, tarjeta_aplicacion, demostrador, demostrador_futuro,
+    experiencia_relacionada, flujo_explicativo with context %}
+{% from "pages/divulgacion/_iconos.xhtml" import icono %}
+
+{% block title %}{{ _('Posicionamiento acústico subacuático') }}{% endblock %}
+{% block meta_description %}{{ _('¿Cómo sabemos dónde está un equipo debajo del agua? Descubrí cómo el sonido permite medir distancias y estimar la posición de dispositivos sumergidos. Divulgación GIPIS.') }}{% endblock %}
+
+{% block content %}
+<!-- Hero de la experiencia -->
+<section class="bg-white dark:bg-slate-900 py-20 border-b border-slate-100 dark:border-slate-800">
+    <div class="container mx-auto px-6">
+        <div class="max-w-3xl">
+            <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
+                <a class="hover:text-primary transition-colors" href="{{ url_for('main.home') }}">{{ _('Inicio') }}</a>
+                <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                <a class="hover:text-primary transition-colors" href="{{ url_for('main.divulgacion') }}">{{ _('Divulgación') }}</a>
+                <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+                <span class="text-primary">{{ _('Posicionamiento acústico') }}</span>
+            </nav>
+            <div class="flex items-center gap-4 mb-4">
+                <span class="text-primary shrink-0">{{ icono(topic.icon, 'w-14 h-14') }}</span>
+                <h1 class="font-display text-3xl md:text-5xl font-bold text-slate-900 dark:text-white">
+                    {{ _('Posicionamiento acústico subacuático') }}</h1>
+            </div>
+            <p class="font-display text-xl md:text-2xl font-bold text-primary mb-8">
+                {{ _('¿Cómo sabemos dónde está un equipo debajo del agua?') }}</p>
+            <div class="space-y-4 text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p>{{ _('En superficie podemos utilizar sistemas de posicionamiento satelital como GPS para conocer nuestra ubicación. Pero ¿qué ocurre cuando un sensor, un instrumento o un robot se sumerge?') }}</p>
+                <p>{{ _('Las señales utilizadas por los sistemas satelitales de posicionamiento no penetran suficientemente en el agua para permitir el funcionamiento convencional de un receptor sumergido.') }}</p>
+                <p>{{ _('Entonces aparece otro desafío:') }}</p>
+                <p class="font-display text-xl md:text-2xl font-bold text-slate-900 dark:text-white border-l-4 border-primary pl-4">
+                    {{ _('¿Cómo podemos localizar un dispositivo debajo del agua?') }}</p>
+                <p>{{ _('Una de las principales alternativas consiste en utilizar señales acústicas.') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-6 bg-background-light dark:bg-slate-950 transition-colors duration-300">
+    <div class="container mx-auto px-6">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- Bloque 1: el problema -->
+            {% call bloque_pregunta('satellite_alt', _('¿Por qué no podemos usar GPS bajo el agua?')) %}
+            <p>{{ _('Los sistemas de posicionamiento satelital utilizan señales electromagnéticas transmitidas desde satélites.') }}</p>
+            <p>{{ _('Estas señales se atenúan rápidamente al ingresar al agua, especialmente en agua de mar. Por esta razón, un receptor sumergido normalmente no puede utilizarlas directamente para determinar su posición.') }}</p>
+
+            <!-- Comparación superficie / bajo el agua -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-sm">
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <p class="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-slate-400 text-base">sunny</span>
+                        {{ _('En superficie') }}
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">satellite_alt</span>{{ _('Satélites') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">settings_input_antenna</span>{{ _('Señales electromagnéticas') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">smartphone</span>{{ _('Receptor GPS') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-emerald-500 text-lg">location_on</span><span class="font-semibold text-slate-800 dark:text-slate-200">{{ _('Posición') }}</span></li>
+                    </ul>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <p class="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-slate-400 text-base">water</span>
+                        {{ _('Bajo el agua') }}
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">satellite_alt</span>{{ _('Satélites') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">settings_input_antenna</span>{{ _('Señales electromagnéticas') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-red-500 text-lg">close</span>{{ _('El agua las atenúa') }}</li>
+                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-slate-400 text-lg">smart_toy</span><span class="text-slate-500 dark:text-slate-400">{{ _('El dispositivo sumergido no conoce su posición') }}</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="font-bold text-slate-800 dark:text-slate-200 mt-6">
+                {{ _('Si no podemos recibir las señales de los satélites, ¿qué podemos utilizar?') }}</p>
+            <div class="flex items-center gap-4 bg-primary/5 dark:bg-slate-800/60 border border-primary/20 dark:border-slate-700 rounded-xl p-5">
+                <span class="material-symbols-outlined text-primary text-4xl">volume_up</span>
+                <div>
+                    <p class="font-display text-lg font-bold text-slate-900 dark:text-white">{{ _('Sonido') }}</p>
+                    <p class="text-sm">{{ _('El sonido se propaga muy bien en el agua.') }}</p>
+                </div>
+            </div>
+            {% endcall %}
+
+            <!-- Bloque 2: por qué sonido -->
+            {% call bloque_pregunta('graphic_eq', _('¿Por qué podemos utilizar sonido?')) %}
+            <p>{{ _('A diferencia de las señales electromagnéticas utilizadas por GPS, las ondas acústicas pueden propagarse a distancias útiles debajo del agua.') }}</p>
+            <p>{{ _('Esta característica hace que el sonido sea una herramienta especialmente interesante para comunicación, detección y posicionamiento subacuático.') }}</p>
+            <a href="{{ url_for('main.divulgacion_experiencia', slug='comunicaciones-acusticas') }}"
+                class="group mt-2 flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-lg rounded-xl p-5 transition-all">
+                <span class="text-primary shrink-0">{{ icono('acustica', 'w-12 h-12') }}</span>
+                <div class="flex-grow">
+                    <p class="text-sm text-slate-600 dark:text-slate-400">{{ _('¿Querés saber cómo enviamos información utilizando sonido?') }}</p>
+                    <p class="font-display font-bold text-slate-900 dark:text-white">{{ _('Comunicaciones acústicas subacuáticas') }}</p>
+                </div>
+                <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+            {% endcall %}
+
+            <!-- Bloque 3: velocidad del sonido (interacción 1: aire vs agua) -->
+            {% call bloque_pregunta('speed', _('¿Qué tan rápido viaja el sonido?')) %}
+            <p>{{ _('El sonido no se propaga a la misma velocidad en todos los medios. Veamos cuánto recorre en un segundo en el aire y en el agua de mar.') }}</p>
+
+            <div class="my-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <div class="flex items-center justify-between gap-3 mb-5">
+                    <p class="font-bold text-slate-900 dark:text-white">{{ _('Un segundo de viaje') }}</p>
+                    <button type="button" id="vel-play"
+                        class="border border-primary text-primary hover:bg-primary/10 rounded-lg px-3 py-2 text-sm font-bold transition-colors whitespace-nowrap">&#9654; {{ _('Ver 1 segundo') }}</button>
+                </div>
+                <!-- Aire -->
+                <div class="mb-5">
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="flex items-center gap-1.5 font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-base text-slate-400">air</span>{{ _('Aire') }} · &#8776; 340 m/s</span>
+                        <span id="vel-aire-d" class="font-mono font-bold text-primary">0 m</span>
+                    </div>
+                    <div class="relative h-9 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                        <div id="vel-aire-bar" class="absolute inset-y-0 left-0 bg-primary/25 rounded-lg" style="width:0%"></div>
+                        <span id="vel-aire-icon" class="absolute top-1/2 -translate-y-1/2 material-symbols-outlined text-primary" style="left:2px">volume_up</span>
+                    </div>
+                </div>
+                <!-- Agua de mar -->
+                <div>
+                    <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="flex items-center gap-1.5 font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                            <span class="material-symbols-outlined text-base text-slate-400">water</span>{{ _('Agua de mar') }} · &#8776; 1500 m/s</span>
+                        <span id="vel-agua-d" class="font-mono font-bold text-primary">0 m</span>
+                    </div>
+                    <div class="relative h-9 rounded-lg bg-sky-100 dark:bg-slate-800 overflow-hidden">
+                        <div id="vel-agua-bar" class="absolute inset-y-0 left-0 bg-primary/40 rounded-lg" style="width:0%"></div>
+                        <span id="vel-agua-icon" class="absolute top-1/2 -translate-y-1/2 material-symbols-outlined text-primary" style="left:2px">volume_up</span>
+                    </div>
+                </div>
+                <div class="flex justify-between text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-1.5 px-0.5">
+                    <span>0 m</span><span>500 m</span><span>1000 m</span><span>1500 m</span>
+                </div>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mt-3">
+                    {{ _('La animación reproduce un segundo en cámara lenta. Ambas señales parten al mismo tiempo.') }}</p>
+            </div>
+
+            <div class="border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 font-semibold text-slate-800 dark:text-slate-200">
+                {{ _('En el agua de mar, el sonido se propaga aproximadamente 4,4 veces más rápido que en el aire.') }}
+            </div>
+            {% endcall %}
+
+            <!-- Bloque 4: el océano cambia -->
+            {% call bloque_pregunta('thermostat', _('¿La velocidad del sonido en el mar es siempre la misma?')) %}
+            <p>{{ _('No. 1500 m/s es un valor aproximado que resulta muy útil para comprender cómo funciona el posicionamiento acústico.') }}</p>
+            <p>{{ _('En el océano, la velocidad del sonido depende principalmente de la temperatura, la salinidad y la presión, esta última relacionada con la profundidad.') }}</p>
+
+            <div class="grid grid-cols-3 gap-3 my-6">
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4 text-center">
+                    <span class="material-symbols-outlined text-primary text-3xl">device_thermostat</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white mt-1">{{ _('Temperatura') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4 text-center">
+                    <span class="material-symbols-outlined text-primary text-3xl">grain</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white mt-1">{{ _('Salinidad') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4 text-center">
+                    <span class="material-symbols-outlined text-primary text-3xl">compress</span>
+                    <p class="text-sm font-bold text-slate-900 dark:text-white mt-1">{{ _('Profundidad / presión') }}</p>
+                </div>
+            </div>
+            <p>{{ _('En sistemas reales, conocer con mayor precisión la velocidad del sonido permite mejorar la estimación de las distancias y, por lo tanto, de la posición.') }}</p>
+
+            {% call quiero_saber_mas(_('Quiero saber más: perfiles de velocidad del sonido')) %}
+            <p>{{ _('La velocidad del sonido aumenta con la temperatura, con la salinidad y con la presión. Como estas magnitudes cambian con la profundidad, la velocidad también lo hace: a esa variación se la llama perfil de velocidad del sonido.') }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-5 items-center">
+                <svg viewBox="0 0 200 220" class="w-full max-w-[200px] mx-auto" xmlns="http://www.w3.org/2000/svg"
+                    font-family="Inter, sans-serif" role="img"
+                    aria-label="{{ _('Perfil típico: la velocidad disminuye con la profundidad en la termoclina y luego aumenta por la presión') }}">
+                    <path d="M30,20 v180 M30,200 h150" fill="none" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" />
+                    <path d="M120,22 c-10,25 -50,40 -55,70 c-3,25 8,60 25,105" fill="none" stroke="#5B9BD5" stroke-width="3" stroke-linecap="round" />
+                    <g font-size="10" class="fill-slate-500 dark:fill-slate-400">
+                        <text x="105" y="214">{{ _('velocidad') }} &#8594;</text>
+                        <text x="12" y="118" transform="rotate(-90 12,118)" text-anchor="middle">{{ _('profundidad') }} &#8594;</text>
+                        <text x="128" y="36">{{ _('superficie') }}</text>
+                        <text x="40" y="70">{{ _('termoclina') }}</text>
+                        <text x="72" y="112">{{ _('mínimo') }}</text>
+                        <text x="110" y="180">{{ _('presión') }}</text>
+                    </g>
+                </svg>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>{{ _('Cerca de la superficie, el agua es más cálida y el sonido viaja más rápido.') }}</li>
+                    <li>{{ _('En la termoclina, la temperatura baja rápidamente y la velocidad disminuye.') }}</li>
+                    <li>{{ _('A mayor profundidad, el aumento de la presión vuelve a incrementar la velocidad.') }}</li>
+                    <li>{{ _('Estas variaciones curvan las trayectorias del sonido. Los sistemas de posicionamiento de precisión miden el perfil de velocidad para corregir sus estimaciones.') }}</li>
+                </ul>
+            </div>
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Bloque 5: por qué el sonido sirve para posicionarnos -->
+            {% call bloque_pregunta('timer', _('¿Por qué el sonido es atractivo para posicionarnos?')) %}
+            <p>{{ _('Las ondas acústicas pueden propagarse a distancias útiles debajo del agua. Además, conocemos aproximadamente su velocidad y podemos medir cuánto tarda una señal en viajar entre dos puntos.') }}</p>
+            <p>{{ _('Esto nos permite utilizar el tiempo de propagación para obtener información sobre la distancia recorrida.') }}</p>
+
+            {{ flujo_explicativo([
+                ('volume_up', _('Señal')),
+                ('timer', _('Tiempo')),
+                ('straighten', _('Distancia')),
+                ('location_on', _('Posición')),
+            ]) }}
+
+            <div class="border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 font-semibold text-slate-800 dark:text-slate-200">
+                {{ _('Si medimos cuánto tarda el sonido, podemos estimar cuánto recorrió.') }}
+            </div>
+
+            <!-- Curiosidad: sonido vs ondas electromagnéticas -->
+            <div class="mt-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <p class="font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-primary">psychology_alt</span>{{ _('¿Sabías que el sonido es mucho más lento?') }}</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm mb-3">
+                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <span class="material-symbols-outlined text-amber-500 text-2xl">bolt</span>
+                        <div><p class="text-xs uppercase tracking-widest text-slate-400">{{ _('Onda electromagnética') }}</p>
+                            <p class="font-mono font-bold text-slate-900 dark:text-white">&#8776; 300.000 km/s</p></div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <span class="material-symbols-outlined text-primary text-2xl">volume_up</span>
+                        <div><p class="text-xs uppercase tracking-widest text-slate-400">{{ _('Sonido en agua de mar') }}</p>
+                            <p class="font-mono font-bold text-slate-900 dark:text-white">&#8776; 1,5 km/s</p></div>
+                    </div>
+                </div>
+                <p class="text-sm">{{ _('El sonido es aproximadamente 200.000 veces más lento. Para posicionamiento esta diferencia es una ventaja: los tiempos de propagación acústica son mucho mayores y resultan más fáciles de medir. Por ejemplo, una señal acústica tarda unos 67 milisegundos en recorrer 100 metros de agua.') }}</p>
+            </div>
+            {% endcall %}
+
+            <!-- Bloque 6: del tiempo a la distancia (interacción 2: slider) -->
+            {% call bloque_pregunta('straighten', _('¿Podemos medir una distancia utilizando sonido?')) %}
+            <p>{{ _('Si conocemos aproximadamente la velocidad con la que se propaga el sonido y medimos cuánto tarda una señal en viajar entre dos puntos, podemos estimar la distancia recorrida.') }}</p>
+
+            {{ flujo_explicativo([
+                ('volume_up', _('Transmisión')),
+                ('waves', _('Propagación')),
+                ('mic', _('Recepción')),
+                ('timer', _('Medimos el tiempo')),
+                ('straighten', _('Estimamos la distancia')),
+            ]) }}
+
+            <p class="font-display text-lg font-bold text-slate-900 dark:text-white text-center bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 py-4">
+                {{ _('Distancia') }} &#8776; {{ _('velocidad') }} &#215; {{ _('tiempo') }}</p>
+
+            <p class="font-bold text-slate-800 dark:text-slate-200 mt-6">{{ _('Probemos con un ejemplo') }}</p>
+            <p>{{ _('Supongamos que una señal acústica tarda 0,1 segundos en viajar entre un transmisor y un receptor. Considerando una velocidad aproximada del sonido de 1500 m/s:') }}</p>
+            <p class="font-mono text-center text-slate-800 dark:text-slate-200">1500 m/s &#215; 0,1 s = 150 m</p>
+
+            <div class="my-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <p class="font-bold text-slate-900 dark:text-white mb-1">{{ _('Movete en el tiempo') }}</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">{{ _('Deslizá el control para cambiar el tiempo de propagación y observá la distancia estimada.') }}</p>
+                <svg id="td-escena" viewBox="0 0 320 100" class="w-full max-w-lg mx-auto block" xmlns="http://www.w3.org/2000/svg"
+                    font-family="Inter, sans-serif" aria-hidden="true">
+                    <!-- Transmisor -->
+                    <g fill="none" stroke="#5B9BD5" stroke-width="1.8" stroke-linejoin="round">
+                        <rect x="10" y="32" width="8" height="20" rx="2" />
+                        <path d="M18,36 l8,-5 v22 l-8,-5 z" />
+                    </g>
+                    <path d="M32,36 a8,8 0 0 1 0,12" fill="none" stroke="#5B9BD5" stroke-width="1.8" stroke-linecap="round" />
+                    <path d="M37,33 a12,12 0 0 1 0,18" fill="none" stroke="#5B9BD5" stroke-width="1.8" stroke-linecap="round" opacity="0.6" />
+                    <path d="M42,30 a16,16 0 0 1 0,24" fill="none" stroke="#5B9BD5" stroke-width="1.8" stroke-linecap="round" opacity="0.3" />
+                    <!-- Receptor (se desplaza) -->
+                    <g id="td-rx" fill="none" stroke="#5B9BD5" stroke-width="1.8" stroke-linejoin="round" class="transition-transform duration-200 ease-out">
+                        <path d="M0,36 l-8,-5 v22 l8,-5 z" />
+                        <rect x="0" y="32" width="8" height="20" rx="2" />
+                    </g>
+                    <!-- Cota de distancia -->
+                    <g class="stroke-slate-400 dark:stroke-slate-500" stroke-width="1" fill="none">
+                        <path id="td-cota-linea" d="M14,72 H160" />
+                        <path d="M14,68 v8" />
+                        <path id="td-cota-fin" d="M160,68 v8" />
+                    </g>
+                    <text id="td-cota-texto" x="87" y="90" font-size="10" font-weight="700" text-anchor="middle" fill="#5B9BD5">150 m</text>
+                    <text x="4" y="22" font-size="8" font-weight="600" class="fill-slate-500 dark:fill-slate-400">{{ _('Transmisor') }}</text>
+                    <text id="td-rx-label" x="160" y="22" font-size="8" font-weight="600" text-anchor="middle" class="fill-slate-500 dark:fill-slate-400">{{ _('Receptor') }}</text>
+                </svg>
+                <label class="block mt-2">
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">{{ _('Tiempo de propagación') }}</span>
+                    <input id="td-slider" type="range" min="0.02" max="0.30" step="0.01" value="0.10"
+                        class="w-full accent-primary mt-1" aria-label="{{ _('Tiempo de propagación') }}">
+                </label>
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-4 text-center">
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <span class="material-symbols-outlined text-slate-400">timer</span>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">{{ _('Tiempo') }}</p>
+                        <p id="td-tiempo" class="font-mono font-bold text-slate-900 dark:text-white">0,10 s</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <span class="material-symbols-outlined text-slate-400">volume_up</span>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">{{ _('Velocidad') }}</p>
+                        <p class="font-mono font-bold text-slate-900 dark:text-white">1500 m/s</p>
+                    </div>
+                    <div class="bg-primary/10 dark:bg-slate-800 rounded-lg p-3 border border-primary/30">
+                        <span class="material-symbols-outlined text-primary">straighten</span>
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">{{ _('Distancia') }}</p>
+                        <p id="td-dist" class="font-mono font-bold text-primary">150 m</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 font-semibold text-slate-800 dark:text-slate-200">
+                {{ _('Cuanto mayor es el tiempo de propagación, mayor es la distancia recorrida.') }}
+            </div>
+
+            <!-- Aclaración: ida vs ida y vuelta -->
+            <p class="font-bold text-slate-800 dark:text-slate-200 mt-8 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">psychology_alt</span>
+                {{ _('¿Siempre usamos directamente distancia = velocidad × tiempo?') }}</p>
+            <p>{{ _('Depende de cómo se realice la medición.') }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <div class="flex items-center justify-center gap-2 text-primary mb-3">
+                        <span class="material-symbols-outlined">speaker</span>
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                        <span class="material-symbols-outlined">mic</span>
+                    </div>
+                    <p class="font-bold text-slate-900 dark:text-white mb-1">{{ _('Un solo viaje') }}</p>
+                    <p>{{ _('Se mide el tiempo que tarda una señal en viajar desde un transmisor hasta un receptor.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                    <div class="flex items-center justify-center gap-2 text-primary mb-3">
+                        <span class="material-symbols-outlined">speaker</span>
+                        <span class="material-symbols-outlined">sync_alt</span>
+                        <span class="material-symbols-outlined">sensors</span>
+                    </div>
+                    <p class="font-bold text-slate-900 dark:text-white mb-1">{{ _('Ida y vuelta') }}</p>
+                    <p>{{ _('Se transmite una señal, se recibe una respuesta y se mide el tiempo asociado al recorrido de ida y vuelta.') }}</p>
+                </div>
+            </div>
+            <p>{{ _('Por eso debemos conocer cómo funciona el sistema antes de convertir el tiempo medido en una distancia.') }}</p>
+
+            {% call quiero_saber_mas(_('Quiero saber más: TOA, TDOA y ranging')) %}
+            <ul class="list-disc pl-5 space-y-3">
+                <li><strong>{{ _('Ranging (medición de distancia)') }}:</strong> {{ _('es la estimación de la distancia entre dos puntos a partir de una señal acústica. Puede hacerse en un solo sentido, si transmisor y receptor comparten una referencia de tiempo, o en ida y vuelta, cuando el dispositivo responde a una interrogación. En el segundo caso, el tiempo medido incluye dos recorridos y el retardo de respuesta del equipo, que debe descontarse.') }}</li>
+                <li><strong>TOA &#8212; Time of Arrival:</strong> {{ _('se utiliza el instante de llegada de la señal a cada receptor. Si se conoce el instante de transmisión, la diferencia entre ambos es el tiempo de propagación y, con la velocidad del sonido, se obtiene la distancia. Requiere que los relojes de transmisor y receptores estén sincronizados.') }}</li>
+                <li><strong>TDOA &#8212; Time Difference of Arrival:</strong> {{ _('se utilizan las diferencias entre los instantes de llegada a distintos receptores, sin necesidad de conocer cuándo se transmitió la señal. Cada diferencia de tiempo define una hipérbola de posiciones posibles; la intersección de varias hipérbolas estima la posición. Solo requiere sincronizar los receptores entre sí.') }}</li>
+            </ul>
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Bloque 7: de la distancia a la posición -->
+            {% call bloque_pregunta('my_location', _('Una distancia no alcanza para saber dónde estamos')) %}
+            <p>{{ _('Supongamos que sabemos que el dispositivo se encuentra a 100 metros de una referencia A. ¿Sabemos exactamente dónde está?') }}</p>
+
+            <div class="my-6 rounded-xl border border-slate-100 dark:border-slate-800 bg-gradient-to-b from-sky-50 to-blue-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden"
+                role="img" aria-label="{{ _('Una referencia A y varios dispositivos posibles ubicados sobre un círculo, todos a 100 metros de A') }}">
+                <svg viewBox="0 0 600 260" class="w-full block" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+                    <defs>
+                        <g id="dispositivo-posible" fill="none" stroke="#5B9BD5" stroke-width="2.5" stroke-linejoin="round">
+                            <rect x="-11" y="-6" width="22" height="12" rx="6" />
+                            <circle cx="-3" cy="0" r="2" />
+                            <path d="M11,0 h5" />
+                        </g>
+                    </defs>
+                    <circle cx="300" cy="130" r="100" fill="none" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                    <path d="M300,130 L370.7,59.3" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="1.5" stroke-dasharray="3 3" />
+                    <text x="345" y="88" font-size="12" font-weight="700" fill="#5B9BD5" text-anchor="middle">100 m</text>
+                    <circle cx="300" cy="130" r="9" fill="#5B9BD5" />
+                    <text x="300" y="134" font-size="11" font-weight="700" fill="white" text-anchor="middle">A</text>
+                    <use href="#dispositivo-posible" transform="translate(370.7,59.3)" />
+                    <use href="#dispositivo-posible" transform="translate(200,130)" />
+                    <use href="#dispositivo-posible" transform="translate(350,216.6)" />
+                    <use href="#dispositivo-posible" transform="translate(400,130)" />
+                    <use href="#dispositivo-posible" transform="translate(229.3,59.3)" />
+                    <use href="#dispositivo-posible" transform="translate(250,216.6)" />
+                    <text x="300" y="248" font-size="12" font-weight="600" text-anchor="middle" class="fill-slate-500 dark:fill-slate-400">{{ _('Todos estos dispositivos están a 100 m de A') }}</text>
+                </svg>
+            </div>
+            <p class="font-semibold text-slate-800 dark:text-slate-200">{{ _('No. Puede encontrarse en muchos lugares diferentes situados a la misma distancia.') }}</p>
+            <p class="font-bold text-slate-800 dark:text-slate-200">{{ _('¿Qué pasa si agregamos más referencias?') }}</p>
+            {% endcall %}
+
+            <!-- Bloque 8: varias referencias (animación guiada de trilateración) -->
+            {% call bloque_pregunta('hub', _('Combinemos mediciones')) %}
+            <p>{{ _('Si conocemos la ubicación de varias referencias y estimamos la distancia del dispositivo respecto de cada una, podemos combinar las mediciones para determinar su posición.') }}</p>
+
+            <div class="my-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <p class="font-bold text-slate-900 dark:text-white">{{ _('Encontrando el punto') }}</p>
+                    <div class="flex flex-wrap items-center gap-2" role="group" aria-label="{{ _('Cantidad de referencias') }}">
+                        <button type="button" data-tri-paso="1" class="tri-paso rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors">1</button>
+                        <button type="button" data-tri-paso="2" class="tri-paso rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors">2</button>
+                        <button type="button" data-tri-paso="3" class="tri-paso rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm font-bold text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary transition-colors">3</button>
+                        <button type="button" id="tri-play" class="border border-primary text-primary hover:bg-primary/10 rounded-lg px-3 py-1.5 text-sm font-bold transition-colors">&#9654; {{ _('Ver animación') }}</button>
+                    </div>
+                </div>
+                <div class="rounded-xl bg-gradient-to-b from-sky-50 to-blue-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
+                    <svg id="tri-escena" viewBox="0 0 600 360" class="w-full block" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif">
+                        <!-- Círculos de distancia (aparecen por paso) -->
+                        <circle class="tri-circulo" data-paso="1" cx="170" cy="120" r="165.5" fill="#5B9BD5" fill-opacity="0.06" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <circle class="tri-circulo" data-paso="2" cx="490" cy="120" r="183.8" fill="#5B9BD5" fill-opacity="0.06" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <circle class="tri-circulo" data-paso="3" cx="300" cy="300" r="111.8" fill="#5B9BD5" fill-opacity="0.06" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <!-- Candidatos: con 2 referencias quedan dos puntos posibles -->
+                        <g class="tri-candidato" data-paso="2">
+                            <circle cx="320" cy="50" r="7" fill="none" stroke="#5B9BD5" stroke-width="2" />
+                            <text x="334" y="55" font-size="11" font-weight="600" class="fill-slate-500 dark:fill-slate-400">?</text>
+                            <circle cx="320" cy="190" r="7" fill="none" stroke="#5B9BD5" stroke-width="2" />
+                            <text x="334" y="195" font-size="11" font-weight="600" class="fill-slate-500 dark:fill-slate-400">?</text>
+                        </g>
+                        <!-- Referencias -->
+                        <g class="tri-ref" data-paso="1">
+                            <circle cx="170" cy="120" r="10" fill="#5B9BD5" />
+                            <text x="170" y="124" font-size="11" font-weight="700" fill="white" text-anchor="middle">A</text>
+                        </g>
+                        <g class="tri-ref" data-paso="2">
+                            <circle cx="490" cy="120" r="10" fill="#5B9BD5" />
+                            <text x="490" y="124" font-size="11" font-weight="700" fill="white" text-anchor="middle">B</text>
+                        </g>
+                        <g class="tri-ref" data-paso="3">
+                            <circle cx="300" cy="300" r="10" fill="#5B9BD5" />
+                            <text x="300" y="304" font-size="11" font-weight="700" fill="white" text-anchor="middle">C</text>
+                        </g>
+                        <!-- Dispositivo encontrado -->
+                        <g id="tri-hallado" class="tri-hallado">
+                            <circle cx="320" cy="190" r="16" fill="none" stroke="#10B981" stroke-width="2" class="tri-pulso" />
+                            <g transform="translate(320,190)" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linejoin="round">
+                                <rect x="-11" y="-6" width="22" height="12" rx="6" />
+                                <circle cx="-3" cy="0" r="2" />
+                                <path d="M11,0 h5" />
+                            </g>
+                            <text x="320" y="228" font-size="13" font-weight="700" fill="#10B981" text-anchor="middle">{{ _('¡Encontramos el dispositivo!') }}</text>
+                        </g>
+                    </svg>
+                </div>
+                <p id="tri-texto" class="text-sm mt-3 min-h-[2.5rem]"></p>
+            </div>
+
+            {{ flujo_explicativo([
+                ('hub', _('Referencias conocidas')),
+                ('timer', _('Medimos tiempos')),
+                ('straighten', _('Estimamos distancias')),
+                ('calculate', _('Combinamos las mediciones')),
+                ('location_on', _('Estimamos la posición')),
+            ]) }}
+
+            <p>{{ _('Cada medición de distancia limita los lugares donde podría encontrarse el dispositivo. Al combinar varias distancias podemos encontrar una posición compatible con ellas.') }}</p>
+            <div class="border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 text-slate-800 dark:text-slate-200">
+                {{ _('Este principio se denomina') }} <strong>{{ _('trilateración') }}</strong>.
+            </div>
+
+            {% call quiero_saber_mas(_('Quiero saber más: trilateración, multilateración y geometría')) %}
+            <ul class="list-disc pl-5 space-y-3">
+                <li><strong>{{ _('Trilateración') }}:</strong> {{ _('en el plano, cada distancia a una referencia define una circunferencia de posiciones posibles; dos circunferencias se cortan en hasta dos puntos y una tercera resuelve la ambigüedad. En tres dimensiones las circunferencias pasan a ser esferas y hacen falta al menos cuatro referencias, salvo que se conozca la profundidad del dispositivo, por ejemplo con un sensor de presión.') }}</li>
+                <li><strong>{{ _('Multilateración') }}:</strong> {{ _('las mediciones reales tienen error, así que los círculos rara vez se cortan exactamente en un punto. Cuando hay más mediciones que incógnitas, se busca la posición que mejor se ajusta a todas ellas, por ejemplo mediante mínimos cuadrados. Más referencias permiten mejorar la estimación y detectar mediciones incorrectas.') }}</li>
+                <li><strong>{{ _('Sincronización') }}:</strong> {{ _('medir un tiempo de propagación exige saber cuándo partió la señal y cuándo llegó. Un error de un milisegundo en el reloj equivale a un error de 1,5 metros en la distancia. Por eso los sistemas utilizan relojes de precisión, respuestas de ida y vuelta o diferencias de tiempo (TDOA) que no dependen del reloj del dispositivo.') }}</li>
+                <li><strong>{{ _('Geometría') }}:</strong> {{ _('la posición relativa de las referencias influye en la calidad de la estimación. Si las referencias están alineadas o muy próximas entre sí, los círculos se cortan en ángulos muy pequeños y un error pequeño en las distancias se traduce en un error grande en la posición. Esta amplificación se cuantifica con la dilución de precisión (DOP).') }}</li>
+            </ul>
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Bloque 9: interacción 3 — ¿dónde está el dispositivo? -->
+            {% call bloque_pregunta('ads_click', _('¿Dónde está el dispositivo?')) %}
+            <p>{{ _('Tres referencias A, B y C conocen su posición. Movés el dispositivo y las distancias cambian; escondés el dispositivo y las distancias te dicen dónde está.') }}</p>
+
+            <div class="my-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                    <div class="inline-flex rounded-lg border border-slate-200 dark:border-slate-700 p-1" role="group" aria-label="{{ _('Modo') }}">
+                        <button type="button" id="pos-modo-ver" class="pos-modo rounded-md px-3 py-1.5 text-sm font-bold transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-base">visibility</span>{{ _('Ver') }}</button>
+                        <button type="button" id="pos-modo-encontrar" class="pos-modo rounded-md px-3 py-1.5 text-sm font-bold transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-base">target</span>{{ _('Encontrar') }}</button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="pos-revelar" class="border border-primary text-primary hover:bg-primary/10 rounded-lg px-3 py-1.5 text-sm font-bold transition-colors" hidden>{{ _('Revelar') }}</button>
+                        <button type="button" id="pos-nuevo" class="border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary rounded-lg px-3 py-1.5 text-sm font-bold transition-colors" hidden>&#8635; {{ _('Otro dispositivo') }}</button>
+                    </div>
+                </div>
+                <div class="rounded-xl bg-gradient-to-b from-sky-50 to-blue-100 dark:from-slate-800 dark:to-slate-900 overflow-hidden">
+                    <svg id="pos-escena" viewBox="0 0 600 400" class="w-full block cursor-crosshair select-none" style="touch-action:none"
+                        xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif"
+                        aria-label="{{ _('Superficie con tres referencias y un dispositivo móvil') }}">
+                        <circle id="pos-cA" cx="90" cy="80" r="0" fill="#5B9BD5" fill-opacity="0.05" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <circle id="pos-cB" cx="510" cy="90" r="0" fill="#5B9BD5" fill-opacity="0.05" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <circle id="pos-cC" cx="300" cy="340" r="0" fill="#5B9BD5" fill-opacity="0.05" stroke="#5B9BD5" stroke-width="2" stroke-dasharray="6 5" />
+                        <g id="pos-lineas" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="1.5" stroke-dasharray="3 3">
+                            <line id="pos-lA" x1="90" y1="80" x2="0" y2="0" />
+                            <line id="pos-lB" x1="510" y1="90" x2="0" y2="0" />
+                            <line id="pos-lC" x1="300" y1="340" x2="0" y2="0" />
+                        </g>
+                        <g>
+                            <circle cx="90" cy="80" r="11" fill="#5B9BD5" />
+                            <text x="90" y="84" font-size="11" font-weight="700" fill="white" text-anchor="middle">A</text>
+                            <circle cx="510" cy="90" r="11" fill="#5B9BD5" />
+                            <text x="510" y="94" font-size="11" font-weight="700" fill="white" text-anchor="middle">B</text>
+                            <circle cx="300" cy="340" r="11" fill="#5B9BD5" />
+                            <text x="300" y="344" font-size="11" font-weight="700" fill="white" text-anchor="middle">C</text>
+                        </g>
+                        <!-- Intento del visitante (modo Encontrar) -->
+                        <g id="pos-intento" hidden>
+                            <circle r="9" fill="none" stroke="#F59E0B" stroke-width="2.5" />
+                            <path d="M-13,0 h8 M5,0 h8 M0,-13 v8 M0,5 v8" stroke="#F59E0B" stroke-width="2.5" />
+                        </g>
+                        <!-- Dispositivo -->
+                        <g id="pos-dispositivo" style="cursor:grab">
+                            <circle r="22" fill="#5B9BD5" fill-opacity="0.12" />
+                            <g fill="none" stroke="#5B9BD5" stroke-width="2.5" stroke-linejoin="round">
+                                <rect x="-11" y="-6" width="22" height="12" rx="6" />
+                                <circle cx="-3" cy="0" r="2" />
+                                <path d="M11,0 h5" />
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <div class="grid grid-cols-3 gap-2 sm:gap-3 mt-4 text-center">
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">A &#8594; {{ _('dispositivo') }}</p>
+                        <p id="pos-dA" class="font-mono font-bold text-slate-900 dark:text-white">&#8212;</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">B &#8594; {{ _('dispositivo') }}</p>
+                        <p id="pos-dB" class="font-mono font-bold text-slate-900 dark:text-white">&#8212;</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-3">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400">C &#8594; {{ _('dispositivo') }}</p>
+                        <p id="pos-dC" class="font-mono font-bold text-slate-900 dark:text-white">&#8212;</p>
+                    </div>
+                </div>
+                <p id="pos-texto" class="text-sm mt-3 min-h-[2.5rem]"></p>
+            </div>
+
+            <div class="border-l-4 border-primary bg-primary/5 dark:bg-slate-800/60 rounded-r-xl p-4 font-semibold text-slate-800 dark:text-slate-200">
+                {{ _('La posición determina las distancias, y las distancias nos permiten estimar la posición.') }}
+            </div>
+            {% endcall %}
+
+            <!-- Bloque 10: el mar complica -->
+            {% call bloque_pregunta('waves', _('¿Es tan sencillo en el océano?')) %}
+            <p>{{ _('El mar hace las cosas un poco más difíciles. Algunos de los factores que intervienen:') }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">device_thermostat</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Velocidad del sonido') }}</h3>
+                    <p class="text-sm">{{ _('La velocidad depende de la temperatura, la salinidad y la presión.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">landscape</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Reflexiones') }}</h3>
+                    <p class="text-sm">{{ _('La señal puede reflejarse en la superficie, el fondo y otras estructuras.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">alt_route</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Multicamino') }}</h3>
+                    <p class="text-sm">{{ _('Una misma señal puede llegar siguiendo diferentes trayectorias.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">volume_up</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Ruido') }}</h3>
+                    <p class="text-sm">{{ _('Olas, embarcaciones, fauna y otros equipos generan sonidos.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">schedule</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Sincronización') }}</h3>
+                    <p class="text-sm">{{ _('Para medir tiempos con precisión necesitamos referencias temporales adecuadas.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-100 dark:border-slate-800">
+                    <span class="material-symbols-outlined text-primary text-3xl mb-2 block">architecture</span>
+                    <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _('Geometría') }}</h3>
+                    <p class="text-sm">{{ _('La posición relativa de las referencias influye en la calidad de la estimación.') }}</p>
+                </div>
+            </div>
+
+            {% call quiero_saber_mas(_('Quiero saber más: ¿cómo se implementan estos sistemas? LBL, SBL y USBL')) %}
+            <p>{{ _('Existen diferentes formas de posicionarnos acústicamente. Se diferencian, sobre todo, en cuán separadas están las referencias entre sí (la «línea de base»).') }}</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4">
+                    <svg viewBox="0 0 200 120" class="w-full mb-3" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" aria-hidden="true">
+                        <path d="M0,20 q10,-6 20,0 t20,0 t20,0 t20,0 t20,0 t20,0 t20,0 t20,0 t20,0 t20,0" fill="none" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" />
+                        <path d="M0,110 h200" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" />
+                        <g fill="#5B9BD5"><circle cx="25" cy="100" r="7" /><circle cx="175" cy="100" r="7" /><circle cx="60" cy="40" r="7" /><circle cx="150" cy="45" r="7" /></g>
+                        <g font-size="8" font-weight="700" fill="white" text-anchor="middle"><text x="25" y="103">A</text><text x="175" y="103">B</text><text x="60" y="43">C</text><text x="150" y="48">D</text></g>
+                        <g fill="none" stroke="#5B9BD5" stroke-width="1.5" stroke-dasharray="3 3"><path d="M25,100 L100,70 M175,100 L100,70 M60,40 L100,70 M150,45 L100,70" /></g>
+                        <g transform="translate(100,70)" fill="none" stroke="#10B981" stroke-width="2" stroke-linejoin="round"><rect x="-9" y="-5" width="18" height="10" rx="5" /><circle cx="-2.5" cy="0" r="1.5" /><path d="M9,0 h4" /></g>
+                    </svg>
+                    <p class="font-bold text-slate-900 dark:text-white">LBL &#8212; Long Baseline</p>
+                    <p class="text-xs uppercase tracking-widest text-slate-400 mb-2">{{ _('Referencias distribuidas') }}</p>
+                    <p class="text-sm">{{ _('Utiliza varias referencias acústicas separadas entre sí y ubicadas en posiciones conocidas dentro o alrededor de la zona de operación, por ejemplo balizas fondeadas. Es la configuración de mayor precisión, a costa de desplegar y calibrar las referencias.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4">
+                    <svg viewBox="0 0 200 120" class="w-full mb-3" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" aria-hidden="true">
+                        <path d="M0,30 q10,-6 20,0 t20,0 M160,30 q10,-6 20,0 t20,0" fill="none" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" />
+                        <path d="M40,30 h120 l-14,16 h-92 z" fill="none" class="stroke-slate-500 dark:stroke-slate-400" stroke-width="2" stroke-linejoin="round" />
+                        <g fill="#5B9BD5"><circle cx="60" cy="50" r="5" /><circle cx="100" cy="50" r="5" /><circle cx="140" cy="50" r="5" /></g>
+                        <g fill="none" stroke="#5B9BD5" stroke-width="1.5" stroke-dasharray="3 3"><path d="M60,50 L110,100 M100,50 L110,100 M140,50 L110,100" /></g>
+                        <g transform="translate(110,100)" fill="none" stroke="#10B981" stroke-width="2" stroke-linejoin="round"><rect x="-9" y="-5" width="18" height="10" rx="5" /><circle cx="-2.5" cy="0" r="1.5" /><path d="M9,0 h4" /></g>
+                    </svg>
+                    <p class="font-bold text-slate-900 dark:text-white">SBL &#8212; Short Baseline</p>
+                    <p class="text-xs uppercase tracking-widest text-slate-400 mb-2">{{ _('Referencias próximas entre sí') }}</p>
+                    <p class="text-sm">{{ _('Utiliza varios elementos acústicos separados por distancias relativamente pequeñas, normalmente instalados sobre una misma plataforma, como el casco de una embarcación. No hace falta fondear balizas, pero la precisión depende del tamaño de la plataforma.') }}</p>
+                </div>
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-4">
+                    <svg viewBox="0 0 200 120" class="w-full mb-3" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" aria-hidden="true">
+                        <path d="M0,30 q10,-6 20,0 t20,0 M160,30 q10,-6 20,0 t20,0" fill="none" class="stroke-slate-300 dark:stroke-slate-600" stroke-width="1.5" />
+                        <path d="M40,30 h120 l-14,16 h-92 z" fill="none" class="stroke-slate-500 dark:stroke-slate-400" stroke-width="2" stroke-linejoin="round" />
+                        <rect x="92" y="46" width="16" height="10" rx="2" fill="#5B9BD5" />
+                        <path d="M100,56 L130,100" fill="none" stroke="#5B9BD5" stroke-width="1.5" stroke-dasharray="3 3" />
+                        <path d="M100,56 v30" fill="none" class="stroke-slate-400 dark:stroke-slate-500" stroke-width="1" stroke-dasharray="2 2" />
+                        <path d="M100,76 a20,20 0 0 0 13,17" fill="none" stroke="#F59E0B" stroke-width="1.5" />
+                        <text x="118" y="80" font-size="9" fill="#F59E0B" font-weight="700">&#952;</text>
+                        <g transform="translate(130,100)" fill="none" stroke="#10B981" stroke-width="2" stroke-linejoin="round"><rect x="-9" y="-5" width="18" height="10" rx="5" /><circle cx="-2.5" cy="0" r="1.5" /><path d="M9,0 h4" /></g>
+                    </svg>
+                    <p class="font-bold text-slate-900 dark:text-white">USBL &#8212; Ultra-Short Baseline</p>
+                    <p class="text-xs uppercase tracking-widest text-slate-400 mb-2">{{ _('Un arreglo acústico compacto') }}</p>
+                    <p class="text-sm">{{ _('Utiliza varios elementos acústicos integrados en un arreglo compacto, generalmente instalado en una embarcación o plataforma. Las diferencias observadas entre las señales recibidas por cada elemento permiten obtener la dirección desde la que llega la señal; combinada con una estimación de distancia, determina la posición.') }}</p>
+                </div>
+            </div>
+            {{ flujo_explicativo([
+                ('directions_boat', _('Embarcación')),
+                ('sensors', _('Arreglo USBL')),
+                ('waves', _('Canal acústico')),
+                ('smart_toy', _('Dispositivo')),
+                ('architecture', _('Dirección + distancia')),
+                ('location_on', _('Posición')),
+            ]) }}
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Bloque 11: comunicación y posicionamiento (interacción 4) -->
+            {% call bloque_pregunta('link', _('Dos problemas que tienen mucho en común')) %}
+            <p>{{ _('Para comunicarnos y para posicionarnos debajo del agua necesitamos realizar muchas operaciones similares: generamos una señal, la transmitimos, atraviesa el canal acústico, la recibimos y finalmente la procesamos.') }}</p>
+            <p>{{ _('Lo que cambia es la información que queremos obtener.') }}</p>
+
+            {{ flujo_explicativo([
+                ('computer', _('Generación')),
+                ('volume_up', _('Transmisión')),
+                ('waves', _('Canal acústico')),
+                ('mic', _('Recepción')),
+                ('query_stats', _('Detección / correlación')),
+            ]) }}
+
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
+                <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">{{ _('¿Qué queremos obtener?') }}</p>
+                <div class="grid grid-cols-2 gap-2 mb-4" role="group">
+                    <button type="button" id="cp-btn-com" class="cp-btn rounded-lg border px-3 py-2.5 text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">chat_bubble</span>{{ _('Comunicaciones') }}</button>
+                    <button type="button" id="cp-btn-pos" class="cp-btn rounded-lg border px-3 py-2.5 text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-base">location_on</span>{{ _('Posicionamiento') }}</button>
+                </div>
+                <div id="cp-panel-com">
+                    <div class="flex items-center justify-center gap-3 py-3">
+                        <span class="font-mono text-sm text-primary">01001000&#8230;</span>
+                        <span class="material-symbols-outlined text-slate-400">arrow_forward</span>
+                        <span class="font-display font-bold text-slate-900 dark:text-white tracking-widest">HOLA</span>
+                    </div>
+                    <p class="text-sm text-center">{{ _('Recuperamos la información transmitida.') }}</p>
+                    <p class="text-center mt-3">
+                        <a href="{{ url_for('main.divulgacion_experiencia', slug='comunicaciones-acusticas') }}" class="inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span>{{ _('Comunicaciones acústicas subacuáticas') }}</a></p>
+                </div>
+                <div id="cp-panel-pos" hidden>
+                    <div class="flex items-center justify-center flex-wrap gap-2 py-3 text-sm font-bold text-slate-800 dark:text-slate-200">
+                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-base">timer</span>{{ _('tiempo') }}</span>
+                        <span class="material-symbols-outlined text-slate-400 text-base">arrow_forward</span>
+                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-base">straighten</span>{{ _('distancia') }}</span>
+                        <span class="material-symbols-outlined text-slate-400 text-base">arrow_forward</span>
+                        <span class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-base">location_on</span>{{ _('posición') }}</span>
+                    </div>
+                    <p class="text-sm text-center">{{ _('Medimos cuándo llegó la señal, estimamos la distancia y combinamos varias mediciones para estimar la posición.') }}</p>
+                </div>
+            </div>
+            {% endcall %}
+
+            <!-- Bloque 12: detección de la señal -->
+            {% call bloque_pregunta('search', _('¿Cómo sabemos cuándo llegó la señal?')) %}
+            <p>{{ _('Para medir cuánto tardó una señal necesitamos determinar cuándo llegó al receptor.') }}</p>
+            <p>{{ _('Una posibilidad consiste en transmitir una señal conocida y buscarla posteriormente dentro de la señal recibida. El procesamiento digital de señales nos ayuda a detectar esa señal incluso cuando existe ruido.') }}</p>
+
+            {{ flujo_explicativo([
+                ('volume_up', _('Señal conocida')),
+                ('waves', _('Propagación')),
+                ('noise_aware', _('Señal + ruido')),
+                ('query_stats', _('Detección')),
+                ('timer', _('Tiempo')),
+                ('straighten', _('Distancia')),
+            ]) }}
+
+            <a href="{{ url_for('main.divulgacion_experiencia', slug='comunicaciones-acusticas') }}#correlacion"
+                class="group flex items-center gap-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 hover:shadow-lg rounded-xl p-5 transition-all">
+                <span class="material-symbols-outlined text-primary text-3xl shrink-0">query_stats</span>
+                <div class="flex-grow">
+                    <p class="font-display font-bold text-slate-900 dark:text-white">{{ _('Probá el correlador interactivo') }}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">{{ _('En la experiencia de Comunicaciones acústicas podés deslizar la secuencia de referencia sobre la señal recibida y ver aparecer el pico de correlación.') }}</p>
+                </div>
+                <span class="material-symbols-outlined text-primary group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+
+            {% call quiero_saber_mas(_('Quiero saber más: correlación y estimación del instante de llegada')) %}
+            <p>{{ _('El receptor calcula la correlación entre la señal recibida y una copia de la señal transmitida (un filtro adaptado). El resultado presenta un pico en el instante en que ambas se alinean; la posición de ese pico es la estimación del tiempo de llegada.') }}</p>
+            <ul class="list-disc pl-5 space-y-2">
+                <li>{{ _('Cuanto mayor es el ancho de banda de la señal, más angosto es el pico de correlación y más precisa es la estimación del instante de llegada.') }}</li>
+                <li>{{ _('Las secuencias con buena autocorrelación, como las utilizadas en espectro ensanchado, producen picos nítidos con lóbulos laterales bajos.') }}</li>
+                <li>{{ _('En un canal con multicamino aparecen varios picos: normalmente interesa el primero, que corresponde al camino directo.') }}</li>
+                <li>{{ _('Un error de un milisegundo en el instante de llegada se traduce en un error de aproximadamente 1,5 metros en la distancia estimada.') }}</li>
+            </ul>
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Aplicaciones -->
+            {% call bloque_pregunta('public', _('¿Para qué sirve el posicionamiento acústico?')) %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {{ tarjeta_aplicacion('rov', _('Robots submarinos'),
+                    _('Localizar y seguir vehículos submarinos durante sus misiones.')) }}
+                {{ tarjeta_aplicacion('boya', _('Instrumentación oceanográfica'),
+                    _('Conocer la posición de sensores e instrumentos utilizados para estudiar el océano.')) }}
+                {{ tarjeta_aplicacion('oceano', _('Operaciones desde embarcaciones'),
+                    _('Seguir dispositivos desplegados desde una embarcación.')) }}
+                {{ tarjeta_aplicacion('ciencia', _('Investigación científica'),
+                    _('Relacionar una medición realizada bajo el agua con el lugar donde fue obtenida.')) }}
+                {{ tarjeta_aplicacion('infraestructura', _('Infraestructura submarina'),
+                    _('Localizar equipos y asistir en tareas de inspección, instalación o recuperación.')) }}
+            </div>
+
+            {% call quiero_saber_mas() %}
+            <p>{{ _('Detrás de un sistema de posicionamiento acústico hay una cadena de conceptos que podés seguir profundizando:') }}</p>
+            <p class="font-semibold text-slate-800 dark:text-slate-200">
+                {{ _('Velocidad del sonido') }} → TOA / TDOA → {{ _('Correlación') }} → Ranging →
+                {{ _('Trilateración') }} → {{ _('Multilateración') }} → {{ _('Sincronización') }} →
+                {{ _('Geometría') }} → LBL / SBL / USBL</p>
+            <p>{{ _('Este material también puede servir de apoyo para estudiantes universitarios de ingeniería.') }}</p>
+            {% endcall %}
+            {% endcall %}
+
+            <!-- Futuro demostrador -->
+            {% call bloque_pregunta('science', _('Del concepto a una experiencia real')) %}
+            {% if topic.demo_url %}
+            {% call demostrador(topic.demo_url) %}
+            <p>{{ _('Si estás participando de una muestra o actividad de GIPIS y tenés el demostrador frente a vos, podés probarlo.') }}</p>
+            {% endcall %}
+            {% else %}
+            {% call demostrador_futuro(_('Experimentá con el posicionamiento acústico')) %}
+            <p>{{ _('Estamos desarrollando nuevas experiencias para mostrar cómo las señales acústicas pueden utilizarse no solo para transmitir información, sino también para estimar la posición de dispositivos debajo del agua.') }}</p>
+            {% endcall %}
+            {% endif %}
+            {% endcall %}
+
+            <!-- Cierre -->
+            {% call bloque_pregunta('waves', _('Del mensaje a la posición')) %}
+            <p>{{ _('El sonido nos permite resolver diferentes desafíos debajo del agua. Podemos utilizar señales acústicas para transmitir información, pero también para medir distancias y estimar posiciones.') }}</p>
+            <p>{{ _('Para hacerlo necesitamos comprender cómo se propaga el sonido, medir tiempos, detectar señales y procesar la información recibida.') }}</p>
+            <p>{{ _('Así, electrónica, telecomunicaciones y procesamiento digital de señales se combinan para desarrollar herramientas que nos ayudan a explorar y comprender el ambiente subacuático.') }}</p>
+            {{ experiencia_relacionada(topic.related, _('Experiencia anterior')) }}
+            <p class="mt-4">
+                <a href="{{ url_for('main.divulgacion') }}" class="inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span>{{ _('Volver a Divulgación') }}</a></p>
+            {% endcall %}
+
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Trilateración guiada: cada elemento aparece según el paso activo */
+    .tri-circulo, .tri-ref, .tri-candidato, .tri-hallado {
+        opacity: 0;
+        transition: opacity .5s ease;
+    }
+    #tri-escena[data-paso="1"] [data-paso="1"],
+    #tri-escena[data-paso="2"] [data-paso="1"],
+    #tri-escena[data-paso="2"] [data-paso="2"],
+    #tri-escena[data-paso="3"] [data-paso="1"],
+    #tri-escena[data-paso="3"] [data-paso="2"],
+    #tri-escena[data-paso="3"] [data-paso="3"] { opacity: 1; }
+    #tri-escena[data-paso="3"] .tri-candidato { opacity: 0; }
+    #tri-escena[data-paso="3"] .tri-hallado { opacity: 1; }
+    .tri-pulso { transform-origin: 320px 190px; animation: tri-pulso 1.6s ease-out infinite; }
+    @keyframes tri-pulso {
+        0% { transform: scale(.6); opacity: 1; }
+        100% { transform: scale(2.2); opacity: 0; }
+    }
+    .tri-paso[aria-pressed="true"], .pos-modo[aria-pressed="true"], .cp-btn[aria-pressed="true"] {
+        background-color: #5B9BD5; border-color: #5B9BD5; color: #fff;
+    }
+    .cp-btn { border-color: #E2E8F0; color: #475569; }
+    .dark .cp-btn { border-color: #334155; color: #CBD5E1; }
+    @media (prefers-reduced-motion: reduce) {
+        .tri-pulso { animation: none; }
+        .tri-circulo, .tri-ref, .tri-candidato, .tri-hallado { transition: none; }
+    }
+</style>
+
+<script>
+(function () {
+    var LOCALE = '{{ 'en-US' if current_lang == 'en' else 'es-AR' }}';
+    var reducida = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function fmt(n, d) {
+        return n.toLocaleString(LOCALE, { minimumFractionDigits: d, maximumFractionDigits: d });
+    }
+
+    /* ---------- 1. Aire vs agua: un segundo de viaje ---------- */
+    (function () {
+        var btn = document.getElementById('vel-play');
+        if (!btn) return;
+        var V_AIRE = 340, V_AGUA = 1500, DURACION = 2200; // ms de animación para 1 s real
+        var aireBar = document.getElementById('vel-aire-bar'), aguaBar = document.getElementById('vel-agua-bar');
+        var aireIco = document.getElementById('vel-aire-icon'), aguaIco = document.getElementById('vel-agua-icon');
+        var aireD = document.getElementById('vel-aire-d'), aguaD = document.getElementById('vel-agua-d');
+        var PLAY = '▶ {{ _('Ver 1 segundo') }}', REPLAY = '↻ {{ _('Repetir') }}';
+        var corriendo = false, reproducido = false;
+
+        function pintar(t) { // t en segundos (0..1)
+            var pa = (V_AIRE * t) / V_AGUA * 100, pg = t * 100;
+            aireBar.style.width = pa + '%';
+            aguaBar.style.width = pg + '%';
+            aireIco.style.left = 'calc(' + pa + '% - ' + (pa > 2 ? 22 : 0) + 'px)';
+            aguaIco.style.left = 'calc(' + pg + '% - ' + (pg > 2 ? 22 : 0) + 'px)';
+            aireD.textContent = fmt(Math.round(V_AIRE * t), 0) + ' m';
+            aguaD.textContent = fmt(Math.round(V_AGUA * t), 0) + ' m';
+        }
+        function reproducir() {
+            if (corriendo) return;
+            corriendo = true; reproducido = true;
+            if (reducida) { pintar(1); corriendo = false; btn.textContent = REPLAY; return; }
+            var t0 = null;
+            function paso(ts) {
+                if (t0 === null) t0 = ts;
+                var t = Math.min((ts - t0) / DURACION, 1);
+                pintar(t);
+                if (t < 1) requestAnimationFrame(paso);
+                else { corriendo = false; btn.textContent = REPLAY; }
+            }
+            requestAnimationFrame(paso);
+        }
+        btn.textContent = PLAY;
+        btn.addEventListener('click', reproducir);
+        // Se reproduce sola la primera vez que entra en pantalla
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries, obs) {
+                if (entries[0].isIntersecting && !reproducido) { reproducir(); obs.disconnect(); }
+            }, { threshold: 0.6 }).observe(btn.closest('div.my-6'));
+        }
+        pintar(0);
+    })();
+
+    /* ---------- 2. Tiempo → distancia ---------- */
+    (function () {
+        var slider = document.getElementById('td-slider');
+        if (!slider) return;
+        var V = 1500, T_MAX = 0.30, X0 = 14, X_MAX = 306;
+        var rx = document.getElementById('td-rx'), rxLabel = document.getElementById('td-rx-label');
+        var cotaLinea = document.getElementById('td-cota-linea'), cotaFin = document.getElementById('td-cota-fin');
+        var cotaTexto = document.getElementById('td-cota-texto');
+        var outT = document.getElementById('td-tiempo'), outD = document.getElementById('td-dist');
+        function update() {
+            var t = Number(slider.value), d = V * t;
+            var x = X0 + (t / T_MAX) * (X_MAX - X0);
+            rx.setAttribute('transform', 'translate(' + x + ',0)');
+            rxLabel.setAttribute('x', x);
+            rxLabel.style.opacity = x < 80 ? '0' : '1';
+            cotaLinea.setAttribute('d', 'M' + X0 + ',72 H' + x);
+            cotaFin.setAttribute('d', 'M' + x + ',68 v8');
+            cotaTexto.setAttribute('x', (X0 + x) / 2);
+            cotaTexto.textContent = fmt(Math.round(d), 0) + ' m';
+            outT.textContent = fmt(t, 2) + ' s';
+            outD.textContent = fmt(Math.round(d), 0) + ' m';
+        }
+        slider.addEventListener('input', update);
+        update();
+    })();
+
+    /* ---------- 3. Trilateración guiada ---------- */
+    (function () {
+        var escena = document.getElementById('tri-escena');
+        if (!escena) return;
+        var texto = document.getElementById('tri-texto');
+        var botones = document.querySelectorAll('.tri-paso');
+        var play = document.getElementById('tri-play');
+        var TEXTOS = {
+            1: '{{ _('Con una referencia, el dispositivo puede estar en cualquier punto del círculo.') }}',
+            2: '{{ _('Con dos referencias quedan solo dos puntos posibles.') }}',
+            3: '{{ _('La tercera referencia resuelve la ambigüedad: hay un único punto compatible con las tres distancias.') }}'
+        };
+        var timer = null;
+        function irA(paso) {
+            escena.setAttribute('data-paso', paso);
+            texto.textContent = TEXTOS[paso];
+            botones.forEach(function (b) { b.setAttribute('aria-pressed', String(Number(b.dataset.triPaso) === paso)); });
+        }
+        function detener() { if (timer) { clearTimeout(timer); timer = null; } }
+        botones.forEach(function (b) {
+            b.addEventListener('click', function () { detener(); irA(Number(b.dataset.triPaso)); });
+        });
+        play.addEventListener('click', function () {
+            detener();
+            var paso = 1;
+            irA(paso);
+            var intervalo = reducida ? 2500 : 1800;
+            (function siguiente() {
+                timer = setTimeout(function () {
+                    paso += 1;
+                    irA(paso);
+                    if (paso < 3) siguiente();
+                }, intervalo);
+            })();
+        });
+        irA(1);
+    })();
+
+    /* ---------- 4. ¿Dónde está el dispositivo? (Ver / Encontrar) ---------- */
+    (function () {
+        var svg = document.getElementById('pos-escena');
+        if (!svg) return;
+        var M_POR_PX = 0.25; // escala: 600 px = 150 m
+        var REFS = { A: [90, 80], B: [510, 90], C: [300, 340] };
+        var LIM = { x0: 24, x1: 576, y0: 24, y1: 376 };
+        var disp = document.getElementById('pos-dispositivo');
+        var intento = document.getElementById('pos-intento');
+        var texto = document.getElementById('pos-texto');
+        var btnVer = document.getElementById('pos-modo-ver'), btnEnc = document.getElementById('pos-modo-encontrar');
+        var btnRevelar = document.getElementById('pos-revelar'), btnNuevo = document.getElementById('pos-nuevo');
+        var salida = { A: document.getElementById('pos-dA'), B: document.getElementById('pos-dB'), C: document.getElementById('pos-dC') };
+        var T = {
+            ver: '{{ _('Arrastrá el dispositivo (o tocá la superficie) y observá cómo cambian las tres distancias.') }}',
+            encontrar: '{{ _('El dispositivo está escondido. Tocá la superficie donde creés que está: los tres círculos te dan la pista.') }}',
+            acierto: '{{ _('¡Lo encontraste! Error:') }}',
+            lejos: '{{ _('Estás a') }}',
+            pista: '{{ _('del dispositivo. Buscá el punto donde se cruzan los tres círculos.') }}',
+            revelado: '{{ _('Ahí estaba. Tu estimación quedó a') }}'
+        };
+        var pos = { x: 320, y: 190 }, modo = 'ver', revelado = false, arrastrando = false;
+
+        function distancia(ref) {
+            var dx = pos.x - REFS[ref][0], dy = pos.y - REFS[ref][1];
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+        function pintar() {
+            disp.setAttribute('transform', 'translate(' + pos.x + ',' + pos.y + ')');
+            ['A', 'B', 'C'].forEach(function (r) {
+                var d = distancia(r);
+                document.getElementById('pos-c' + r).setAttribute('r', d);
+                var l = document.getElementById('pos-l' + r);
+                l.setAttribute('x2', pos.x); l.setAttribute('y2', pos.y);
+                salida[r].textContent = fmt(Math.round(d * M_POR_PX), 0) + ' m';
+            });
+            var visible = (modo === 'ver' || revelado);
+            disp.style.opacity = visible ? '1' : '0';
+            document.getElementById('pos-lineas').style.opacity = visible ? '1' : '0';
+        }
+        function puntoSVG(ev) {
+            var pt = svg.createSVGPoint();
+            pt.x = ev.clientX; pt.y = ev.clientY;
+            var p = pt.matrixTransform(svg.getScreenCTM().inverse());
+            return { x: Math.min(LIM.x1, Math.max(LIM.x0, p.x)), y: Math.min(LIM.y1, Math.max(LIM.y0, p.y)) };
+        }
+        function setModo(m) {
+            modo = m; revelado = false;
+            intento.hidden = true;
+            btnVer.setAttribute('aria-pressed', String(m === 'ver'));
+            btnEnc.setAttribute('aria-pressed', String(m === 'encontrar'));
+            btnRevelar.hidden = btnNuevo.hidden = (m === 'ver');
+            btnRevelar.disabled = false;
+            if (m === 'encontrar') esconder(); else { texto.textContent = T.ver; pintar(); }
+        }
+        function esconder() {
+            revelado = false; intento.hidden = true; btnRevelar.disabled = false;
+            // Posición al azar, lejos de los bordes y de las referencias
+            var ok = false;
+            while (!ok) {
+                pos = { x: 100 + Math.random() * 400, y: 70 + Math.random() * 250 };
+                ok = ['A', 'B', 'C'].every(function (r) { return distancia(r) > 60; });
+            }
+            texto.textContent = T.encontrar;
+            pintar();
+        }
+        function intentar(p) {
+            intento.hidden = false;
+            intento.setAttribute('transform', 'translate(' + p.x + ',' + p.y + ')');
+            var err = Math.sqrt(Math.pow(p.x - pos.x, 2) + Math.pow(p.y - pos.y, 2)) * M_POR_PX;
+            if (err <= 6) {
+                revelado = true; btnRevelar.disabled = true;
+                texto.innerHTML = '<span class="font-bold text-emerald-600 dark:text-emerald-400">' + T.acierto + ' ' + fmt(err, 1) + ' m</span>';
+            } else {
+                texto.textContent = T.lejos + ' ' + fmt(err, 0) + ' m ' + T.pista;
+            }
+            pintar();
+        }
+
+        svg.addEventListener('pointerdown', function (ev) {
+            ev.preventDefault();
+            var p = puntoSVG(ev);
+            if (modo === 'ver') {
+                pos = p; arrastrando = true; pintar();
+                svg.setPointerCapture(ev.pointerId);
+            } else if (!revelado) {
+                intentar(p);
+            }
+        });
+        svg.addEventListener('pointermove', function (ev) {
+            if (!arrastrando) return;
+            pos = puntoSVG(ev); pintar();
+        });
+        ['pointerup', 'pointercancel'].forEach(function (e) {
+            svg.addEventListener(e, function () { arrastrando = false; });
+        });
+        btnVer.addEventListener('click', function () { setModo('ver'); });
+        btnEnc.addEventListener('click', function () { setModo('encontrar'); });
+        btnNuevo.addEventListener('click', esconder);
+        btnRevelar.addEventListener('click', function () {
+            revelado = true; btnRevelar.disabled = true;
+            if (!intento.hidden) {
+                var m = /translate\(([-\d.]+),([-\d.]+)\)/.exec(intento.getAttribute('transform'));
+                var err = Math.sqrt(Math.pow(Number(m[1]) - pos.x, 2) + Math.pow(Number(m[2]) - pos.y, 2)) * M_POR_PX;
+                texto.textContent = T.revelado + ' ' + fmt(err, 0) + ' m.';
+            }
+            pintar();
+        });
+        setModo('ver');
+    })();
+
+    /* ---------- 5. Comunicación vs posicionamiento ---------- */
+    (function () {
+        var bCom = document.getElementById('cp-btn-com'), bPos = document.getElementById('cp-btn-pos');
+        if (!bCom) return;
+        var pCom = document.getElementById('cp-panel-com'), pPos = document.getElementById('cp-panel-pos');
+        function elegir(pos) {
+            bCom.setAttribute('aria-pressed', String(!pos));
+            bPos.setAttribute('aria-pressed', String(pos));
+            pCom.hidden = pos; pPos.hidden = !pos;
+        }
+        bCom.addEventListener('click', function () { elegir(false); });
+        bPos.addEventListener('click', function () { elegir(true); });
+        elegir(false);
+    })();
+})();
+</script>
+{% endblock %}

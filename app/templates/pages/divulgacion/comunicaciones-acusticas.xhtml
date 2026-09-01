@@ -202,7 +202,7 @@
             {% endcall %}
 
             <!-- Bloque 3b: robustez con espectro ensanchado (DSSS) -->
-            {% call bloque_pregunta('shield', _('¿Cómo hacemos la comunicación más robusta?')) %}
+            {% call bloque_pregunta('shield', _('¿Cómo hacemos la comunicación más robusta?'), id='correlacion') %}
             <p>{{ _('Para aumentar la robustez frente al ruido y a las perturbaciones del canal utilizamos espectro ensanchado por secuencia directa (DSSS). Cada dato se representa mediante una secuencia conocida de elementos más cortos, llamados chips.') }}</p>
             <p>{{ _('El receptor conoce esa misma secuencia y utiliza un correlador para buscarla dentro de la señal recibida.') }}</p>
 

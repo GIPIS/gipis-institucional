@@ -27,9 +27,28 @@ TOPICS = [
         'demo_url': None,
         # Cierre de la experiencia: próxima temática relacionada.
         'related': {
-            'title': 'Posicionamiento acústico',
+            'slug': 'posicionamiento-acustico',
+            'title': 'Posicionamiento acústico subacuático',
             'question': '¿Podemos utilizar el sonido para localizar un dispositivo bajo el agua?',
-            'status': 'development',
+            'status': 'available',
+        },
+    },
+    {
+        'slug': 'posicionamiento-acustico',
+        'icon': 'baliza',
+        'title': 'Posicionamiento acústico subacuático',
+        'question': '¿Cómo sabemos dónde está un equipo debajo del agua?',
+        'status': 'available',
+        # Todavía no existe demostrador físico: la página muestra el
+        # bloque "en desarrollo" (demostrador_futuro). Cuando haya equipo,
+        # cargar la URL local y usar demostrador(topic.demo_url).
+        'demo_url': None,
+        # Cierre: vuelve a la primera experiencia (segundo capítulo de la colección).
+        'related': {
+            'slug': 'comunicaciones-acusticas',
+            'title': 'Comunicaciones acústicas subacuáticas',
+            'question': '¿Cómo enviamos información bajo el agua?',
+            'status': 'available',
         },
     },
     {

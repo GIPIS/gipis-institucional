@@ -32,8 +32,8 @@
 
 
 {# Bloque de pregunta disparadora: título con ícono + contenido libre #}
-{% macro bloque_pregunta(icon, question) %}
-<section class="py-14 border-b border-slate-100 dark:border-slate-800 last:border-0">
+{% macro bloque_pregunta(icon, question, id=None) %}
+<section class="py-14 border-b border-slate-100 dark:border-slate-800 last:border-0 scroll-mt-24"{% if id %} id="{{ id }}"{% endif %}>
     <h2 class="font-display text-2xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-start gap-3 mb-6">
         <span class="material-symbols-outlined text-primary text-3xl mt-0.5">{{ icon }}</span>
         <span>{{ question }}</span>
@@ -117,12 +117,32 @@
 {% endmacro %}
 
 
-{# Cierre: próxima experiencia relacionada #}
-{% macro experiencia_relacionada(related) %}
+{# Demostrador todavía inexistente: mismo estilo que demostrador(), sin
+   botón de acceso, con el estado "en desarrollo". Cuando exista el
+   equipo se reemplaza por demostrador(topic.demo_url). #}
+{% macro demostrador_futuro(title) %}
+<div class="my-6 bg-gradient-to-br from-primary/5 to-primary/10 dark:from-slate-800 dark:to-slate-800/60 border-2 border-dashed border-primary/40 rounded-2xl p-6 md:p-8">
+    <div class="flex items-center gap-3 mb-4">
+        <span class="material-symbols-outlined text-primary text-3xl">science</span>
+        <h3 class="font-display text-xl font-bold text-slate-900 dark:text-white">{{ title }}</h3>
+    </div>
+    <div class="space-y-4 text-slate-600 dark:text-slate-400 leading-relaxed">
+        {{ caller() }}
+    </div>
+    <p class="mt-6 inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/60 text-amber-700 dark:text-amber-300 rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest">
+        <span class="material-symbols-outlined text-base">construction</span>
+        {{ _('Experiencia en desarrollo') }}
+    </p>
+</div>
+{% endmacro %}
+
+
+{# Cierre: experiencia relacionada (por defecto, la próxima) #}
+{% macro experiencia_relacionada(related, label=None) %}
 <div class="mt-4 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl p-6 flex items-start gap-4">
     <span class="material-symbols-outlined text-primary text-2xl mt-1">explore</span>
     <div>
-        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">{{ _('Próxima experiencia') }}</p>
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">{{ label or _('Próxima experiencia') }}</p>
         <h3 class="font-display font-bold text-slate-900 dark:text-white mb-1">{{ _(related.title) }}</h3>
         <p class="text-sm text-slate-600 dark:text-slate-400 mb-2">{{ _(related.question) }}</p>
         {% if related.status == 'development' %}

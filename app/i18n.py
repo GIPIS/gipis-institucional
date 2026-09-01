@@ -424,6 +424,280 @@ TRANSLATIONS = {
     'son secuencias pseudoaleatorias binarias generadas mediante registros de desplazamiento con realimentación lineal. Poseen una autocorrelación periódica muy favorable y pueden generarse con circuitos o algoritmos relativamente simples. Además, sirven como base para construir otras familias de secuencias, como Gold y Kasami.':
         'binary pseudo-random sequences generated with linear-feedback shift registers. They have very favorable periodic autocorrelation and can be generated with relatively simple circuits or algorithms. They also serve as the basis for building other sequence families, such as Gold and Kasami.',
 
+    # Experiencia: posicionamiento acústico
+    'Posicionamiento acústico subacuático': 'Underwater acoustic positioning',
+    '¿Cómo sabemos dónde está un equipo debajo del agua?': 'How do we know where a device is underwater?',
+    '¿Cómo enviamos información bajo el agua?': 'How do we send information underwater?',
+    '¿Cómo sabemos dónde está un equipo debajo del agua? Descubrí cómo el sonido permite medir distancias y estimar la posición de dispositivos sumergidos. Divulgación GIPIS.':
+        'How do we know where a device is underwater? Discover how sound lets us measure distances and estimate the position of submerged devices. GIPIS Outreach.',
+    'En superficie podemos utilizar sistemas de posicionamiento satelital como GPS para conocer nuestra ubicación. Pero ¿qué ocurre cuando un sensor, un instrumento o un robot se sumerge?':
+        'At the surface we can use satellite positioning systems such as GPS to know our location. But what happens when a sensor, an instrument or a robot goes underwater?',
+    'Las señales utilizadas por los sistemas satelitales de posicionamiento no penetran suficientemente en el agua para permitir el funcionamiento convencional de un receptor sumergido.':
+        'The signals used by satellite positioning systems do not penetrate far enough into the water to allow a submerged receiver to work normally.',
+    '¿Cómo podemos localizar un dispositivo debajo del agua?': 'How can we locate a device underwater?',
+    'Una de las principales alternativas consiste en utilizar señales acústicas.':
+        'One of the main alternatives is to use acoustic signals.',
+    '¿Por qué no podemos usar GPS bajo el agua?': 'Why can’t we use GPS underwater?',
+    'Los sistemas de posicionamiento satelital utilizan señales electromagnéticas transmitidas desde satélites.':
+        'Satellite positioning systems use electromagnetic signals transmitted from satellites.',
+    'Estas señales se atenúan rápidamente al ingresar al agua, especialmente en agua de mar. Por esta razón, un receptor sumergido normalmente no puede utilizarlas directamente para determinar su posición.':
+        'These signals are quickly attenuated when they enter the water, especially seawater. For this reason, a submerged receiver normally cannot use them directly to determine its position.',
+    'En superficie': 'At the surface',
+    'Satélites': 'Satellites',
+    'Señales electromagnéticas': 'Electromagnetic signals',
+    'Receptor GPS': 'GPS receiver',
+    'Posición': 'Position',
+    'El agua las atenúa': 'The water attenuates them',
+    'El dispositivo sumergido no conoce su posición': 'The submerged device does not know its position',
+    'Si no podemos recibir las señales de los satélites, ¿qué podemos utilizar?':
+        'If we cannot receive the satellite signals, what can we use?',
+    'Sonido': 'Sound',
+    'El sonido se propaga muy bien en el agua.': 'Sound travels very well through water.',
+    '¿Por qué podemos utilizar sonido?': 'Why can we use sound?',
+    'A diferencia de las señales electromagnéticas utilizadas por GPS, las ondas acústicas pueden propagarse a distancias útiles debajo del agua.':
+        'Unlike the electromagnetic signals used by GPS, acoustic waves can travel useful distances underwater.',
+    'Esta característica hace que el sonido sea una herramienta especialmente interesante para comunicación, detección y posicionamiento subacuático.':
+        'This makes sound an especially interesting tool for underwater communication, detection and positioning.',
+    '¿Querés saber cómo enviamos información utilizando sonido?': 'Want to know how we send information using sound?',
+    '¿Qué tan rápido viaja el sonido?': 'How fast does sound travel?',
+    'El sonido no se propaga a la misma velocidad en todos los medios. Veamos cuánto recorre en un segundo en el aire y en el agua de mar.':
+        'Sound does not travel at the same speed in every medium. Let’s see how far it goes in one second through air and through seawater.',
+    'Un segundo de viaje': 'One second of travel',
+    'Ver 1 segundo': 'Play 1 second',
+    'Aire': 'Air',
+    'Agua de mar': 'Seawater',
+    'La animación reproduce un segundo en cámara lenta. Ambas señales parten al mismo tiempo.':
+        'The animation plays one second in slow motion. Both signals start at the same time.',
+    'En el agua de mar, el sonido se propaga aproximadamente 4,4 veces más rápido que en el aire.':
+        'In seawater, sound travels roughly 4.4 times faster than in air.',
+    '¿La velocidad del sonido en el mar es siempre la misma?': 'Is the speed of sound in the sea always the same?',
+    'No. 1500 m/s es un valor aproximado que resulta muy útil para comprender cómo funciona el posicionamiento acústico.':
+        'No. 1500 m/s is an approximate value that is very useful for understanding how acoustic positioning works.',
+    'En el océano, la velocidad del sonido depende principalmente de la temperatura, la salinidad y la presión, esta última relacionada con la profundidad.':
+        'In the ocean, the speed of sound depends mainly on temperature, salinity and pressure, the latter being related to depth.',
+    'Temperatura': 'Temperature',
+    'Salinidad': 'Salinity',
+    'Profundidad / presión': 'Depth / pressure',
+    'En sistemas reales, conocer con mayor precisión la velocidad del sonido permite mejorar la estimación de las distancias y, por lo tanto, de la posición.':
+        'In real systems, knowing the speed of sound more precisely improves the distance estimates and, therefore, the position.',
+    'Quiero saber más: perfiles de velocidad del sonido': 'I want to know more: sound speed profiles',
+    'La velocidad del sonido aumenta con la temperatura, con la salinidad y con la presión. Como estas magnitudes cambian con la profundidad, la velocidad también lo hace: a esa variación se la llama perfil de velocidad del sonido.':
+        'The speed of sound increases with temperature, salinity and pressure. Since these quantities change with depth, so does the speed: that variation is called the sound speed profile.',
+    'Perfil típico: la velocidad disminuye con la profundidad en la termoclina y luego aumenta por la presión':
+        'Typical profile: speed decreases with depth through the thermocline and then increases due to pressure',
+    'velocidad': 'speed',
+    'profundidad': 'depth',
+    'superficie': 'surface',
+    'termoclina': 'thermocline',
+    'mínimo': 'minimum',
+    'presión': 'pressure',
+    'Cerca de la superficie, el agua es más cálida y el sonido viaja más rápido.':
+        'Near the surface the water is warmer and sound travels faster.',
+    'En la termoclina, la temperatura baja rápidamente y la velocidad disminuye.':
+        'In the thermocline, temperature drops quickly and the speed decreases.',
+    'A mayor profundidad, el aumento de la presión vuelve a incrementar la velocidad.':
+        'Deeper down, the increase in pressure raises the speed again.',
+    'Estas variaciones curvan las trayectorias del sonido. Los sistemas de posicionamiento de precisión miden el perfil de velocidad para corregir sus estimaciones.':
+        'These variations bend the sound paths. Precision positioning systems measure the speed profile to correct their estimates.',
+    '¿Por qué el sonido es atractivo para posicionarnos?': 'Why is sound attractive for positioning?',
+    'Las ondas acústicas pueden propagarse a distancias útiles debajo del agua. Además, conocemos aproximadamente su velocidad y podemos medir cuánto tarda una señal en viajar entre dos puntos.':
+        'Acoustic waves can travel useful distances underwater. In addition, we know their speed approximately and we can measure how long a signal takes to travel between two points.',
+    'Esto nos permite utilizar el tiempo de propagación para obtener información sobre la distancia recorrida.':
+        'This lets us use the propagation time to obtain information about the distance travelled.',
+    'Señal': 'Signal',
+    'Tiempo': 'Time',
+    'Distancia': 'Distance',
+    'Si medimos cuánto tarda el sonido, podemos estimar cuánto recorrió.':
+        'If we measure how long the sound takes, we can estimate how far it travelled.',
+    '¿Sabías que el sonido es mucho más lento?': 'Did you know sound is much slower?',
+    'Onda electromagnética': 'Electromagnetic wave',
+    'Sonido en agua de mar': 'Sound in seawater',
+    'El sonido es aproximadamente 200.000 veces más lento. Para posicionamiento esta diferencia es una ventaja: los tiempos de propagación acústica son mucho mayores y resultan más fáciles de medir. Por ejemplo, una señal acústica tarda unos 67 milisegundos en recorrer 100 metros de agua.':
+        'Sound is roughly 200,000 times slower. For positioning this difference is an advantage: acoustic propagation times are much longer and easier to measure. For example, an acoustic signal takes about 67 milliseconds to travel 100 metres through water.',
+    '¿Podemos medir una distancia utilizando sonido?': 'Can we measure a distance using sound?',
+    'Si conocemos aproximadamente la velocidad con la que se propaga el sonido y medimos cuánto tarda una señal en viajar entre dos puntos, podemos estimar la distancia recorrida.':
+        'If we know approximately how fast sound travels and we measure how long a signal takes to go between two points, we can estimate the distance travelled.',
+    'Transmisión': 'Transmission',
+    'Medimos el tiempo': 'We measure the time',
+    'Estimamos la distancia': 'We estimate the distance',
+    'tiempo': 'time',
+    'Probemos con un ejemplo': 'Let’s try an example',
+    'Supongamos que una señal acústica tarda 0,1 segundos en viajar entre un transmisor y un receptor. Considerando una velocidad aproximada del sonido de 1500 m/s:':
+        'Suppose an acoustic signal takes 0.1 seconds to travel between a transmitter and a receiver. Taking an approximate speed of sound of 1500 m/s:',
+    'Movete en el tiempo': 'Move through time',
+    'Deslizá el control para cambiar el tiempo de propagación y observá la distancia estimada.':
+        'Drag the slider to change the propagation time and watch the estimated distance.',
+    'Tiempo de propagación': 'Propagation time',
+    'Velocidad': 'Speed',
+    'Cuanto mayor es el tiempo de propagación, mayor es la distancia recorrida.':
+        'The longer the propagation time, the greater the distance travelled.',
+    '¿Siempre usamos directamente distancia = velocidad × tiempo?': 'Do we always use distance = speed × time directly?',
+    'Depende de cómo se realice la medición.': 'It depends on how the measurement is made.',
+    'Un solo viaje': 'One-way trip',
+    'Se mide el tiempo que tarda una señal en viajar desde un transmisor hasta un receptor.':
+        'We measure the time a signal takes to travel from a transmitter to a receiver.',
+    'Ida y vuelta': 'Round trip',
+    'Se transmite una señal, se recibe una respuesta y se mide el tiempo asociado al recorrido de ida y vuelta.':
+        'A signal is transmitted, a reply is received and the time of the round trip is measured.',
+    'Por eso debemos conocer cómo funciona el sistema antes de convertir el tiempo medido en una distancia.':
+        'That is why we need to know how the system works before turning the measured time into a distance.',
+    'Quiero saber más: TOA, TDOA y ranging': 'I want to know more: TOA, TDOA and ranging',
+    'Ranging (medición de distancia)': 'Ranging (distance measurement)',
+    'es la estimación de la distancia entre dos puntos a partir de una señal acústica. Puede hacerse en un solo sentido, si transmisor y receptor comparten una referencia de tiempo, o en ida y vuelta, cuando el dispositivo responde a una interrogación. En el segundo caso, el tiempo medido incluye dos recorridos y el retardo de respuesta del equipo, que debe descontarse.':
+        'the estimation of the distance between two points from an acoustic signal. It can be one-way, if transmitter and receiver share a time reference, or two-way, when the device replies to an interrogation. In the second case the measured time includes two trips plus the reply delay of the equipment, which must be subtracted.',
+    'se utiliza el instante de llegada de la señal a cada receptor. Si se conoce el instante de transmisión, la diferencia entre ambos es el tiempo de propagación y, con la velocidad del sonido, se obtiene la distancia. Requiere que los relojes de transmisor y receptores estén sincronizados.':
+        'the arrival instant of the signal at each receiver is used. If the transmission instant is known, the difference between them is the propagation time and, with the speed of sound, the distance follows. It requires the transmitter and receiver clocks to be synchronized.',
+    'se utilizan las diferencias entre los instantes de llegada a distintos receptores, sin necesidad de conocer cuándo se transmitió la señal. Cada diferencia de tiempo define una hipérbola de posiciones posibles; la intersección de varias hipérbolas estima la posición. Solo requiere sincronizar los receptores entre sí.':
+        'the differences between the arrival instants at different receivers are used, without needing to know when the signal was transmitted. Each time difference defines a hyperbola of possible positions; the intersection of several hyperbolas estimates the position. Only the receivers need to be synchronized with each other.',
+    'Una distancia no alcanza para saber dónde estamos': 'One distance is not enough to know where we are',
+    'Supongamos que sabemos que el dispositivo se encuentra a 100 metros de una referencia A. ¿Sabemos exactamente dónde está?':
+        'Suppose we know the device is 100 metres from a reference A. Do we know exactly where it is?',
+    'Una referencia A y varios dispositivos posibles ubicados sobre un círculo, todos a 100 metros de A':
+        'A reference A and several possible devices placed on a circle, all 100 metres from A',
+    'Todos estos dispositivos están a 100 m de A': 'All these devices are 100 m from A',
+    'No. Puede encontrarse en muchos lugares diferentes situados a la misma distancia.':
+        'No. It could be in many different places at the same distance.',
+    '¿Qué pasa si agregamos más referencias?': 'What if we add more references?',
+    'Combinemos mediciones': 'Let’s combine measurements',
+    'Si conocemos la ubicación de varias referencias y estimamos la distancia del dispositivo respecto de cada una, podemos combinar las mediciones para determinar su posición.':
+        'If we know the location of several references and estimate the distance from the device to each one, we can combine the measurements to determine its position.',
+    'Encontrando el punto': 'Finding the point',
+    'Cantidad de referencias': 'Number of references',
+    'Ver animación': 'Play animation',
+    '¡Encontramos el dispositivo!': 'We found the device!',
+    'Referencias conocidas': 'Known references',
+    'Medimos tiempos': 'We measure times',
+    'Estimamos distancias': 'We estimate distances',
+    'Combinamos las mediciones': 'We combine the measurements',
+    'Estimamos la posición': 'We estimate the position',
+    'Cada medición de distancia limita los lugares donde podría encontrarse el dispositivo. Al combinar varias distancias podemos encontrar una posición compatible con ellas.':
+        'Each distance measurement narrows down where the device could be. By combining several distances we can find a position consistent with all of them.',
+    'Este principio se denomina': 'This principle is called',
+    'trilateración': 'trilateration',
+    'Quiero saber más: trilateración, multilateración y geometría': 'I want to know more: trilateration, multilateration and geometry',
+    'Trilateración': 'Trilateration',
+    'en el plano, cada distancia a una referencia define una circunferencia de posiciones posibles; dos circunferencias se cortan en hasta dos puntos y una tercera resuelve la ambigüedad. En tres dimensiones las circunferencias pasan a ser esferas y hacen falta al menos cuatro referencias, salvo que se conozca la profundidad del dispositivo, por ejemplo con un sensor de presión.':
+        'in the plane, each distance to a reference defines a circle of possible positions; two circles intersect in up to two points and a third one resolves the ambiguity. In three dimensions the circles become spheres and at least four references are needed, unless the depth of the device is known, for example from a pressure sensor.',
+    'Multilateración': 'Multilateration',
+    'las mediciones reales tienen error, así que los círculos rara vez se cortan exactamente en un punto. Cuando hay más mediciones que incógnitas, se busca la posición que mejor se ajusta a todas ellas, por ejemplo mediante mínimos cuadrados. Más referencias permiten mejorar la estimación y detectar mediciones incorrectas.':
+        'real measurements have errors, so the circles rarely intersect exactly at one point. When there are more measurements than unknowns, we look for the position that best fits all of them, for example by least squares. More references improve the estimate and help detect wrong measurements.',
+    'Sincronización': 'Synchronization',
+    'medir un tiempo de propagación exige saber cuándo partió la señal y cuándo llegó. Un error de un milisegundo en el reloj equivale a un error de 1,5 metros en la distancia. Por eso los sistemas utilizan relojes de precisión, respuestas de ida y vuelta o diferencias de tiempo (TDOA) que no dependen del reloj del dispositivo.':
+        'measuring a propagation time requires knowing when the signal left and when it arrived. A one-millisecond clock error equals a 1.5-metre error in distance. That is why systems use precision clocks, round-trip replies or time differences (TDOA) that do not depend on the device clock.',
+    'Geometría': 'Geometry',
+    'la posición relativa de las referencias influye en la calidad de la estimación. Si las referencias están alineadas o muy próximas entre sí, los círculos se cortan en ángulos muy pequeños y un error pequeño en las distancias se traduce en un error grande en la posición. Esta amplificación se cuantifica con la dilución de precisión (DOP).':
+        'the relative position of the references affects the quality of the estimate. If the references are aligned or very close together, the circles intersect at very small angles and a small error in the distances becomes a large error in the position. This amplification is quantified by the dilution of precision (DOP).',
+    '¿Dónde está el dispositivo?': 'Where is the device?',
+    'Tres referencias A, B y C conocen su posición. Movés el dispositivo y las distancias cambian; escondés el dispositivo y las distancias te dicen dónde está.':
+        'Three references A, B and C know their position. Move the device and the distances change; hide the device and the distances tell you where it is.',
+    'Modo': 'Mode',
+    'Ver': 'Watch',
+    'Encontrar': 'Find',
+    'Revelar': 'Reveal',
+    'Otro dispositivo': 'Another device',
+    'Superficie con tres referencias y un dispositivo móvil': 'Surface with three references and a movable device',
+    'dispositivo': 'device',
+    'La posición determina las distancias, y las distancias nos permiten estimar la posición.':
+        'The position determines the distances, and the distances let us estimate the position.',
+    '¿Es tan sencillo en el océano?': 'Is it that simple in the ocean?',
+    'El mar hace las cosas un poco más difíciles. Algunos de los factores que intervienen:':
+        'The sea makes things a little harder. Some of the factors involved:',
+    'Velocidad del sonido': 'Speed of sound',
+    'La velocidad depende de la temperatura, la salinidad y la presión.': 'The speed depends on temperature, salinity and pressure.',
+    'La señal puede reflejarse en la superficie, el fondo y otras estructuras.': 'The signal can bounce off the surface, the seabed and other structures.',
+    'Una misma señal puede llegar siguiendo diferentes trayectorias.': 'The same signal can arrive along different paths.',
+    'Olas, embarcaciones, fauna y otros equipos generan sonidos.': 'Waves, vessels, wildlife and other equipment produce sounds.',
+    'Para medir tiempos con precisión necesitamos referencias temporales adecuadas.': 'To measure times precisely we need suitable time references.',
+    'La posición relativa de las referencias influye en la calidad de la estimación.': 'The relative position of the references affects the quality of the estimate.',
+    'Quiero saber más: ¿cómo se implementan estos sistemas? LBL, SBL y USBL': 'I want to know more: how are these systems implemented? LBL, SBL and USBL',
+    'Existen diferentes formas de posicionarnos acústicamente. Se diferencian, sobre todo, en cuán separadas están las referencias entre sí (la «línea de base»).':
+        'There are different ways to position ourselves acoustically. They differ mainly in how far apart the references are (the “baseline”).',
+    'Referencias distribuidas': 'Distributed references',
+    'Utiliza varias referencias acústicas separadas entre sí y ubicadas en posiciones conocidas dentro o alrededor de la zona de operación, por ejemplo balizas fondeadas. Es la configuración de mayor precisión, a costa de desplegar y calibrar las referencias.':
+        'It uses several acoustic references spaced apart and placed at known positions within or around the operating area, such as moored beacons. It is the most precise configuration, at the cost of deploying and calibrating the references.',
+    'Referencias próximas entre sí': 'References close together',
+    'Utiliza varios elementos acústicos separados por distancias relativamente pequeñas, normalmente instalados sobre una misma plataforma, como el casco de una embarcación. No hace falta fondear balizas, pero la precisión depende del tamaño de la plataforma.':
+        'It uses several acoustic elements separated by relatively short distances, usually mounted on the same platform, such as the hull of a vessel. No beacons need to be moored, but precision depends on the size of the platform.',
+    'Un arreglo acústico compacto': 'A compact acoustic array',
+    'Utiliza varios elementos acústicos integrados en un arreglo compacto, generalmente instalado en una embarcación o plataforma. Las diferencias observadas entre las señales recibidas por cada elemento permiten obtener la dirección desde la que llega la señal; combinada con una estimación de distancia, determina la posición.':
+        'It uses several acoustic elements integrated into a compact array, usually installed on a vessel or platform. The differences observed between the signals received by each element give the direction the signal comes from; combined with a distance estimate, it determines the position.',
+    'Embarcación': 'Vessel',
+    'Arreglo USBL': 'USBL array',
+    'Dispositivo': 'Device',
+    'Dirección + distancia': 'Direction + distance',
+    'Dos problemas que tienen mucho en común': 'Two problems with a lot in common',
+    'Para comunicarnos y para posicionarnos debajo del agua necesitamos realizar muchas operaciones similares: generamos una señal, la transmitimos, atraviesa el canal acústico, la recibimos y finalmente la procesamos.':
+        'To communicate and to position ourselves underwater we need to perform many similar operations: we generate a signal, transmit it, it crosses the acoustic channel, we receive it and finally we process it.',
+    'Lo que cambia es la información que queremos obtener.': 'What changes is the information we want to obtain.',
+    'Generación': 'Generation',
+    'Detección / correlación': 'Detection / correlation',
+    '¿Qué queremos obtener?': 'What do we want to obtain?',
+    'Comunicaciones': 'Communications',
+    'Posicionamiento': 'Positioning',
+    'Recuperamos la información transmitida.': 'We recover the transmitted information.',
+    'distancia': 'distance',
+    'posición': 'position',
+    'Medimos cuándo llegó la señal, estimamos la distancia y combinamos varias mediciones para estimar la posición.':
+        'We measure when the signal arrived, estimate the distance and combine several measurements to estimate the position.',
+    '¿Cómo sabemos cuándo llegó la señal?': 'How do we know when the signal arrived?',
+    'Para medir cuánto tardó una señal necesitamos determinar cuándo llegó al receptor.':
+        'To measure how long a signal took we need to determine when it reached the receiver.',
+    'Una posibilidad consiste en transmitir una señal conocida y buscarla posteriormente dentro de la señal recibida. El procesamiento digital de señales nos ayuda a detectar esa señal incluso cuando existe ruido.':
+        'One option is to transmit a known signal and then search for it within the received signal. Digital signal processing helps us detect that signal even in the presence of noise.',
+    'Señal conocida': 'Known signal',
+    'Señal + ruido': 'Signal + noise',
+    'Probá el correlador interactivo': 'Try the interactive correlator',
+    'En la experiencia de Comunicaciones acústicas podés deslizar la secuencia de referencia sobre la señal recibida y ver aparecer el pico de correlación.':
+        'In the Acoustic communications experience you can slide the reference sequence over the received signal and watch the correlation peak appear.',
+    'Quiero saber más: correlación y estimación del instante de llegada': 'I want to know more: correlation and arrival-time estimation',
+    'El receptor calcula la correlación entre la señal recibida y una copia de la señal transmitida (un filtro adaptado). El resultado presenta un pico en el instante en que ambas se alinean; la posición de ese pico es la estimación del tiempo de llegada.':
+        'The receiver computes the correlation between the received signal and a copy of the transmitted one (a matched filter). The result shows a peak at the instant when both are aligned; the position of that peak is the arrival-time estimate.',
+    'Cuanto mayor es el ancho de banda de la señal, más angosto es el pico de correlación y más precisa es la estimación del instante de llegada.':
+        'The wider the bandwidth of the signal, the narrower the correlation peak and the more precise the arrival-time estimate.',
+    'Las secuencias con buena autocorrelación, como las utilizadas en espectro ensanchado, producen picos nítidos con lóbulos laterales bajos.':
+        'Sequences with good autocorrelation, such as those used in spread spectrum, produce sharp peaks with low sidelobes.',
+    'En un canal con multicamino aparecen varios picos: normalmente interesa el primero, que corresponde al camino directo.':
+        'In a multipath channel several peaks appear: usually the first one matters, as it corresponds to the direct path.',
+    'Un error de un milisegundo en el instante de llegada se traduce en un error de aproximadamente 1,5 metros en la distancia estimada.':
+        'A one-millisecond error in the arrival instant becomes an error of about 1.5 metres in the estimated distance.',
+    '¿Para qué sirve el posicionamiento acústico?': 'What is acoustic positioning used for?',
+    'Robots submarinos': 'Underwater robots',
+    'Localizar y seguir vehículos submarinos durante sus misiones.': 'Locating and tracking underwater vehicles during their missions.',
+    'Instrumentación oceanográfica': 'Oceanographic instrumentation',
+    'Conocer la posición de sensores e instrumentos utilizados para estudiar el océano.': 'Knowing the position of sensors and instruments used to study the ocean.',
+    'Operaciones desde embarcaciones': 'Vessel operations',
+    'Seguir dispositivos desplegados desde una embarcación.': 'Tracking devices deployed from a vessel.',
+    'Investigación científica': 'Scientific research',
+    'Relacionar una medición realizada bajo el agua con el lugar donde fue obtenida.': 'Linking an underwater measurement to the place where it was taken.',
+    'Localizar equipos y asistir en tareas de inspección, instalación o recuperación.': 'Locating equipment and assisting in inspection, installation or recovery tasks.',
+    'Detrás de un sistema de posicionamiento acústico hay una cadena de conceptos que podés seguir profundizando:':
+        'Behind an acoustic positioning system there is a chain of concepts you can keep exploring:',
+    'Correlación': 'Correlation',
+    'Experimentá con el posicionamiento acústico': 'Experiment with acoustic positioning',
+    'Estamos desarrollando nuevas experiencias para mostrar cómo las señales acústicas pueden utilizarse no solo para transmitir información, sino también para estimar la posición de dispositivos debajo del agua.':
+        'We are developing new experiences to show how acoustic signals can be used not only to transmit information but also to estimate the position of devices underwater.',
+    'Experiencia en desarrollo': 'Experience in development',
+    'Del mensaje a la posición': 'From the message to the position',
+    'El sonido nos permite resolver diferentes desafíos debajo del agua. Podemos utilizar señales acústicas para transmitir información, pero también para medir distancias y estimar posiciones.':
+        'Sound lets us solve different challenges underwater. We can use acoustic signals to transmit information, but also to measure distances and estimate positions.',
+    'Para hacerlo necesitamos comprender cómo se propaga el sonido, medir tiempos, detectar señales y procesar la información recibida.':
+        'To do so we need to understand how sound propagates, measure times, detect signals and process the received information.',
+    'Así, electrónica, telecomunicaciones y procesamiento digital de señales se combinan para desarrollar herramientas que nos ayudan a explorar y comprender el ambiente subacuático.':
+        'Thus electronics, telecommunications and digital signal processing come together to develop tools that help us explore and understand the underwater environment.',
+    'Experiencia anterior': 'Previous experience',
+    'Con una referencia, el dispositivo puede estar en cualquier punto del círculo.': 'With one reference, the device could be anywhere on the circle.',
+    'Con dos referencias quedan solo dos puntos posibles.': 'With two references only two possible points remain.',
+    'La tercera referencia resuelve la ambigüedad: hay un único punto compatible con las tres distancias.':
+        'The third reference resolves the ambiguity: there is a single point consistent with all three distances.',
+    'Arrastrá el dispositivo (o tocá la superficie) y observá cómo cambian las tres distancias.':
+        'Drag the device (or tap the surface) and watch how the three distances change.',
+    'El dispositivo está escondido. Tocá la superficie donde creés que está: los tres círculos te dan la pista.':
+        'The device is hidden. Tap the surface where you think it is: the three circles give you the clue.',
+    '¡Lo encontraste! Error:': 'You found it! Error:',
+    'Estás a': 'You are',
+    'del dispositivo. Buscá el punto donde se cruzan los tres círculos.': 'from the device. Look for the point where the three circles cross.',
+    'Ahí estaba. Tu estimación quedó a': 'There it was. Your guess was',
+
     # --- Cooperación ---
     'Cooperación científica e industrial del GIPIS. Vínculos con el sector productivo, convenios de investigación y transferencia tecnológica desde la Patagonia.':
         'Scientific and industrial cooperation at GIPIS. Ties with the productive sector, research agreements, and technology transfer from Patagonia.',
