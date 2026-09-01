@@ -442,13 +442,7 @@ TRANSLATIONS = {
         'Satellite positioning systems use electromagnetic signals transmitted from satellites.',
     'Estas señales se atenúan rápidamente al ingresar al agua, especialmente en agua de mar. Por esta razón, un receptor sumergido normalmente no puede utilizarlas directamente para determinar su posición.':
         'These signals are quickly attenuated when they enter the water, especially seawater. For this reason, a submerged receiver normally cannot use them directly to determine its position.',
-    'En superficie': 'At the surface',
-    'Satélites': 'Satellites',
-    'Señales electromagnéticas': 'Electromagnetic signals',
-    'Receptor GPS': 'GPS receiver',
     'Posición': 'Position',
-    'El agua las atenúa': 'The water attenuates them',
-    'El dispositivo sumergido no conoce su posición': 'The submerged device does not know its position',
     'Si no podemos recibir las señales de los satélites, ¿qué podemos utilizar?':
         'If we cannot receive the satellite signals, what can we use?',
     'Sonido': 'Sound',

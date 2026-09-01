@@ -47,34 +47,6 @@
             <p>{{ _('Los sistemas de posicionamiento satelital utilizan señales electromagnéticas transmitidas desde satélites.') }}</p>
             <p>{{ _('Estas señales se atenúan rápidamente al ingresar al agua, especialmente en agua de mar. Por esta razón, un receptor sumergido normalmente no puede utilizarlas directamente para determinar su posición.') }}</p>
 
-            <!-- Comparación superficie / bajo el agua -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-sm">
-                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
-                    <p class="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-widest mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-slate-400 text-base">sunny</span>
-                        {{ _('En superficie') }}
-                    </p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">satellite_alt</span>{{ _('Satélites') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">settings_input_antenna</span>{{ _('Señales electromagnéticas') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">smartphone</span>{{ _('Receptor GPS') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-emerald-500 text-lg">location_on</span><span class="font-semibold text-slate-800 dark:text-slate-200">{{ _('Posición') }}</span></li>
-                    </ul>
-                </div>
-                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-100 dark:border-slate-800 p-5">
-                    <p class="font-bold text-slate-900 dark:text-white uppercase text-xs tracking-widest mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-slate-400 text-base">water</span>
-                        {{ _('Bajo el agua') }}
-                    </p>
-                    <ul class="space-y-3">
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">satellite_alt</span>{{ _('Satélites') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-primary text-lg">settings_input_antenna</span>{{ _('Señales electromagnéticas') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-red-500 text-lg">close</span>{{ _('El agua las atenúa') }}</li>
-                        <li class="flex items-center gap-2.5"><span class="material-symbols-outlined text-slate-400 text-lg">smart_toy</span><span class="text-slate-500 dark:text-slate-400">{{ _('El dispositivo sumergido no conoce su posición') }}</span></li>
-                    </ul>
-                </div>
-            </div>
-
             <p class="font-bold text-slate-800 dark:text-slate-200 mt-6">
                 {{ _('Si no podemos recibir las señales de los satélites, ¿qué podemos utilizar?') }}</p>
             <div class="flex items-center gap-4 bg-primary/5 dark:bg-slate-800/60 border border-primary/20 dark:border-slate-700 rounded-xl p-5">
