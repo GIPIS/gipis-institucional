@@ -236,10 +236,14 @@ def _render_news_content(news_item, lang):
         img = images[index]
         caption = img.caption_en if (lang == 'en' and img.caption_en) else img.caption
         src = url_for('static', filename='img/' + img.path)
+        # Mismo recorte (16:10 + punto de foco) que el carrusel, así la foto
+        # se ve como en la vista previa del panel; el original queda a un clic.
         figure = (f'<figure class="news-inline-photo not-prose my-8">'
-                  f'<a href="{src}" target="_blank" rel="noopener">'
+                  f'<a href="{src}" target="_blank" rel="noopener" '
+                  f'class="block aspect-[16/10] rounded-xl overflow-hidden shadow-md bg-slate-900">'
                   f'<img src="{src}" alt="{escape(caption or news_item.title)}" '
-                  f'class="w-full h-auto rounded-xl shadow-md" loading="lazy"/></a>')
+                  f'class="w-full h-full object-cover" style="object-position: {img.position};" '
+                  f'loading="lazy"/></a>')
         if caption:
             figure += (f'<figcaption class="mt-3 text-sm text-slate-500 dark:text-slate-400 '
                        f'text-center">{escape(caption)}</figcaption>')
