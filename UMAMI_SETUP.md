@@ -109,3 +109,34 @@ Todo sin cookies y cumpliendo GDPR.
 - Verificar que `UMAMI_WEBSITE_ID` está configurado en el `.env`
 - Verificar con inspeccionar elemento que el script de Umami se carga en el HTML
 - Verificar en la consola del navegador que no hay errores 404 para `/umami/script.js`
+
+---
+
+## Imagen con subpath (`/umami`) — 2026-09-10
+
+La imagen oficial `ghcr.io/umami-software/umami` solo funciona en la raíz de un
+dominio: la interfaz pide sus assets en `/_next/...` y las rutas `/api/...`, `/login`,
+etc. desde la raíz, y en `gipis.unp.edu.ar` eso lo responde el sitio Flask con 404.
+Resultado: el tracking funciona (el script posta a `/umami/api/send`) pero el panel
+se ve **en blanco**.
+
+`BASE_PATH` en Umami es una variable **de compilación** (Next.js `basePath`), así que
+hay que construir la imagen propia. Se hace en una máquina con recursos (no en el
+server, que tiene 2 GB de RAM) y se sube con `docker save`/`docker load`:
+
+```bash
+git clone --depth 1 --branch v3.2.0 https://github.com/umami-software/umami.git
+cd umami
+docker build --build-arg BASE_PATH=/umami --build-arg DATABASE_TYPE=postgresql \
+  -t umami-gipis:3.2.0-umami-path .
+docker save umami-gipis:3.2.0-umami-path | gzip | \
+  tailscale ssh root@gipis 'gunzip | docker load'
+```
+
+Después, en el server: `docker compose up -d umami`. El compose ya no usa el
+middleware `stripprefix` (la imagen sirve todo bajo `/umami`). Para actualizar Umami,
+repetir con el tag nuevo y cambiar `UMAMI_IMAGE` (o el default en el compose).
+
+Panel: **https://gipis.unp.edu.ar/umami** — también enlazado desde el panel de
+administración del sitio ("Métricas de la web").
+

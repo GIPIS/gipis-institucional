@@ -1019,6 +1019,7 @@ TRANSLATIONS = {
     # Botones admin en páginas públicas
     'Gestionar novedades': 'Manage news',
     'Sin categoría': 'No category',
+    'Métricas de la web': 'Website analytics',
     'Editar novedad': 'Edit post',
     'Fotos': 'Photos',
     'Podés elegir varias a la vez. La primera de la galería es la portada; con más de una se muestra un carrusel.':

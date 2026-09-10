@@ -89,7 +89,10 @@ services:
   # UMAMI - Analytics (privacy-friendly)
   # ============================================
   umami:
-    image: ghcr.io/umami-software/umami:postgresql-latest
+    # Imagen propia compilada con BASE_PATH=/umami (la oficial solo sirve en la
+    # raíz del dominio: pide /_next/... y el sitio responde 404 → panel en blanco).
+    # Cómo generarla: ver UMAMI_SETUP.md, sección "Imagen con subpath".
+    image: ${UMAMI_IMAGE:-umami-gipis:3.2.0-umami-path}
     container_name: gipis-umami
     restart: unless-stopped
     environment:
@@ -105,10 +108,9 @@ services:
       - web-public
     labels:
       - "traefik.enable=true"
+      # Sin stripprefix: la imagen ya sirve todo bajo /umami (BASE_PATH)
       - "traefik.http.routers.umami.rule=Host(`${DOMAIN:-gipis.unp.edu.ar}`) && PathPrefix(`/umami`)"
       - "traefik.http.routers.umami.entrypoints=web"
-      - "traefik.http.middlewares.umami-strip.stripprefix.prefixes=/umami"
-      - "traefik.http.routers.umami.middlewares=umami-strip"
       - "traefik.http.services.umami.loadbalancer.server.port=3000"
 
   umami-db:

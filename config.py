@@ -4,6 +4,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///gipis.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    UMAMI_DASHBOARD_URL = os.environ.get('UMAMI_DASHBOARD_URL') or '/umami'  # panel de métricas (Umami)
     MAX_CONTENT_LENGTH = 25 * 1024 * 1024  # 25 MB max por request (varias fotos/adjuntos)
 
     # Cookies de sesión: SameSite mitiga CSRF en los POST; Secure solo
