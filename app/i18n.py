@@ -737,6 +737,19 @@ TRANSLATIONS = {
     'Anterior': 'Previous',
     'Siguiente': 'Next',
     'Paginación': 'Pagination',
+    'Cooperación académica': 'Academic cooperation',
+    'Cooperación científica': 'Scientific cooperation',
+    'Vinculación con empresas': 'Industry partnerships',
+    'Comunicación pública de la ciencia': 'Public science communication',
+    'Filtrar por categoría': 'Filter by category',
+    'Todas': 'All',
+    'No hay novedades en esta categoría.': 'There are no news in this category.',
+    'Galería de fotos': 'Photo gallery',
+    'Ver en tamaño completo': 'View full size',
+    'Foto anterior': 'Previous photo',
+    'Foto siguiente': 'Next photo',
+    'Foto': 'Photo',
+    'Archivos adjuntos': 'Attachments',
 
     # --- Producción científica ---
     'Producción Científica': 'Scientific Production',
@@ -999,6 +1012,21 @@ TRANSLATIONS = {
     'Todavía no hay novedades cargadas.': 'No news added yet.',
     # Botones admin en páginas públicas
     'Gestionar novedades': 'Manage news',
+    'Sin categoría': 'No category',
+    'Editar novedad': 'Edit post',
+    'Fotos': 'Photos',
+    'Podés elegir varias a la vez. La primera de la galería es la portada; con más de una se muestra un carrusel.':
+        'You can pick several at once. The first one in the gallery is the cover; with more than one a carousel is shown.',
+    'Se listan al pie de la novedad para descargar. Máximo 25 MB por envío.':
+        'Listed at the bottom of the post for download. Up to 25 MB per submission.',
+    'Para intercalar una foto de la galería entre párrafos, escribí [foto 2] (el número según el orden de la galería) en una línea aparte.':
+        'To place a gallery photo between paragraphs, write [photo 2] (the number follows the gallery order) on its own line.',
+    'Galería': 'Gallery',
+    '(orden 1 = portada; epígrafe opcional)': '(order 1 = cover; caption optional)',
+    'Orden': 'Order',
+    'Quitar': 'Remove',
+    'Epígrafe': 'Caption',
+    'Nombre visible': 'Display name',
     'Gestionar red de colaboración': 'Manage collaboration network',
     'Gestionar miembros': 'Manage members',
     'Gestionar investigación': 'Manage research',

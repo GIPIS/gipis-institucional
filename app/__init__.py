@@ -64,8 +64,8 @@ def create_app(config_class=Config):
     @app.errorhandler(413)
     def request_too_large(e):
         from flask import request, flash, redirect
-        flash('El archivo es demasiado grande (máximo 10 MB). '
-              'Reducí el tamaño de la imagen o PDF e intentá de nuevo.', 'error')
+        flash('Los archivos son demasiado grandes (máximo 25 MB por envío). '
+              'Reducí el tamaño o subilos en varias tandas.', 'error')
         return redirect(request.referrer or '/'), 303
     
     with app.app_context():

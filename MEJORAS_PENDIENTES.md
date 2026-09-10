@@ -12,6 +12,29 @@ de citas vía OpenAlex y botón "Citar (BibTeX)" por ítem.
 
 ---
 
+## 🗂️ Categorías fijas, galería y adjuntos en novedades — HECHO (2026-09-10)
+
+**Implementado**:
+- Categorías predefinidas (`app/news_meta.py`): Cooperación académica, Cooperación
+  científica, Vinculación con empresas, Comunicación pública de la ciencia. Se guardan
+  por clave en `News.category`, selector en el admin y filtro por categoría en
+  `/novedades?categoria=<clave>` (chips arriba del listado). Valores viejos con texto
+  libre se siguen mostrando tal cual.
+- Galería de fotos por novedad (`NewsImage`: epígrafe ES/EN y orden). La primera es la
+  portada de las tarjetas; con más de una, el detalle muestra un carrusel (JS propio,
+  flechas, puntos, teclado y swipe). Archivos en `static/img/news/<slug>/`.
+- Adjuntos (`NewsAttachment`: PDF, Office, ODF, ZIP) listados al pie del detalle, en
+  `static/img/news/<slug>/archivos/`. Límite de subida elevado a 25 MB por envío.
+- Fotos entre párrafos: en el contenido, `[foto N]` en una línea aparte inserta la foto N
+  de la galería con su epígrafe (se resuelve al mostrar, en `main._render_news_content`).
+- Migración `scripts/add_news_media.py` (crea tablas y pasa `news.image` a la galería),
+  agregada al entrypoint.
+
+**Ideas para después**: lightbox para ver las fotos en grande sin salir de la página;
+alineación de fotos intercaladas (izquierda/derecha); editor con vista previa.
+
+---
+
 ## 🔄 Harvesting de novedades desde redes sociales
 
 **Prioridad**: Alta  

@@ -35,28 +35,56 @@
 <!-- News Grid -->
 <section class="py-24 bg-background-light dark:bg-slate-950 transition-colors duration-300">
     <div class="container mx-auto px-6">
+        <!-- Filtro por categoría -->
+        <nav class="mb-12 flex items-center gap-2 flex-wrap" aria-label="{{ _('Filtrar por categoría') }}">
+            <a href="{{ url_for('main.novedades') }}"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-colors {% if not current_category %}bg-primary text-white{% else %}bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary{% endif %}">
+                {{ _('Todas') }}
+            </a>
+            {% for key, label in categories %}
+            <a href="{{ url_for('main.novedades', categoria=key) }}"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-colors {% if current_category == key %}bg-primary text-white{% else %}bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary{% endif %}">
+                {{ _(label) }}
+            </a>
+            {% endfor %}
+        </nav>
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% if pagination.total > 0 %}
             {% for item in news %}
             <article
                 class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 group">
                 <div class="h-48 overflow-hidden relative">
-                    {% if item.image %}
+                    {% if item.cover %}
                     <img alt="{{ loc(item, 'title') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        src="{{ url_for('static', filename='img/' ~ item.image) }}" />
+                        src="{{ url_for('static', filename='img/' ~ item.cover) }}" />
                     {% else %}
                     <div
                         class="w-full h-full bg-gradient-to-br from-primary to-[#004182] flex items-center justify-center">
                         <span class="material-symbols-outlined text-white/50 text-6xl">newspaper</span>
                     </div>
                     {% endif %}
-                    {% if item.category %}
+                    {% if item.category_label %}
                     <div class="absolute top-3 left-3">
                         <span
                             class="inline-flex items-center gap-1 px-2 py-1 bg-primary text-white text-xs font-medium rounded-md">
-                            {{ item.category }}
+                            {{ _(item.category_label) }}
                         </span>
+                    </div>
+                    {% endif %}
+                    {% if item.images|length > 1 or item.attachments %}
+                    <div class="absolute bottom-3 right-3 flex gap-1.5">
+                        {% if item.images|length > 1 %}
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-black/50 text-white text-xs rounded-md" title="{{ _('Galería de fotos') }}">
+                            <span class="material-symbols-outlined text-sm">photo_library</span>{{ item.images|length }}
+                        </span>
+                        {% endif %}
+                        {% if item.attachments %}
+                        <span class="inline-flex items-center gap-1 px-2 py-1 bg-black/50 text-white text-xs rounded-md" title="{{ _('Archivos adjuntos') }}">
+                            <span class="material-symbols-outlined text-sm">attach_file</span>{{ item.attachments|length }}
+                        </span>
+                        {% endif %}
                     </div>
                     {% endif %}
                     {% if item.source == 'facebook' %}
@@ -91,7 +119,7 @@
             {% else %}
             <div class="col-span-full text-center py-16 text-slate-400 dark:text-slate-500">
                 <span class="material-symbols-outlined text-5xl mb-4 block">newspaper</span>
-                <p>{{ _('No hay novedades aún.') }}</p>
+                <p>{% if current_category %}{{ _('No hay novedades en esta categoría.') }}{% else %}{{ _('No hay novedades aún.') }}{% endif %}</p>
             </div>
             {% endif %}
         </div>
@@ -100,7 +128,7 @@
         <!-- Paginación -->
         <nav class="mt-16 flex items-center justify-center gap-2 flex-wrap" aria-label="{{ _('Paginación') }}">
             {% if pagination.has_prev %}
-            <a href="{{ url_for('main.novedades', page=pagination.prev_num) }}"
+            <a href="{{ url_for('main.novedades', page=pagination.prev_num, categoria=current_category) }}"
                 class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary text-sm font-medium transition-colors">
                 <span class="material-symbols-outlined text-sm">chevron_left</span>
                 {{ _('Anterior') }}
@@ -111,7 +139,7 @@
             {% if p == pagination.page %}
             <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white text-sm font-bold">{{ p }}</span>
             {% else %}
-            <a href="{{ url_for('main.novedades', page=p) }}"
+            <a href="{{ url_for('main.novedades', page=p, categoria=current_category) }}"
                 class="w-10 h-10 flex items-center justify-center rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary text-sm font-medium transition-colors">{{ p }}</a>
             {% endif %}
             {% else %}
@@ -119,7 +147,7 @@
             {% endif %}
             {% endfor %}
             {% if pagination.has_next %}
-            <a href="{{ url_for('main.novedades', page=pagination.next_num) }}"
+            <a href="{{ url_for('main.novedades', page=pagination.next_num, categoria=current_category) }}"
                 class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-primary hover:border-primary text-sm font-medium transition-colors">
                 {{ _('Siguiente') }}
                 <span class="material-symbols-outlined text-sm">chevron_right</span>

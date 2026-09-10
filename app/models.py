@@ -200,13 +200,73 @@ class News(db.Model):
     excerpt_en = db.Column(db.String(500))
     content = db.Column(db.Text)
     content_en = db.Column(db.Text)
-    image = db.Column(db.String(255))
-    category = db.Column(db.String(100))
+    image = db.Column(db.String(255))   # legado: la portada ahora es images[0] (ver cover)
+    category = db.Column(db.String(100))  # clave de NEWS_CATEGORIES (app/news_meta.py)
     published_at = db.Column(db.DateTime)
     source = db.Column(db.String(20), default='manual')  # 'manual' | 'facebook'
-    
+
+    images = db.relationship('NewsImage', backref='news', cascade='all, delete-orphan',
+                             order_by='NewsImage.order', lazy='selectin')
+    attachments = db.relationship('NewsAttachment', backref='news', cascade='all, delete-orphan',
+                                  order_by='NewsAttachment.order', lazy='selectin')
+
+    @property
+    def cover(self):
+        """Ruta (bajo static/img/) de la imagen de portada: la primera de la galería."""
+        if self.images:
+            return self.images[0].path
+        return self.image
+
+    @property
+    def category_label(self):
+        from app.news_meta import category_label
+        return category_label(self.category)
+
     def __repr__(self):
         return f'<News {self.title[:50]}>'
+
+
+class NewsImage(db.Model):
+    """Foto de la galería de una novedad"""
+    __tablename__ = 'news_images'
+
+    id = db.Column(db.Integer, primary_key=True)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
+    path = db.Column(db.String(255), nullable=False)  # 'news/<slug>/<archivo>' bajo static/img/
+    caption = db.Column(db.String(300))
+    caption_en = db.Column(db.String(300))
+    order = db.Column(db.Integer, default=0)
+
+    def __repr__(self):
+        return f'<NewsImage {self.path}>'
+
+
+class NewsAttachment(db.Model):
+    """Archivo adjunto (PDF, documento, etc.) de una novedad"""
+    __tablename__ = 'news_attachments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
+    path = db.Column(db.String(255), nullable=False)  # 'news/<slug>/archivos/<archivo>' bajo static/img/
+    title = db.Column(db.String(200))       # nombre visible (por defecto, el del archivo)
+    size = db.Column(db.Integer, default=0)  # bytes
+    order = db.Column(db.Integer, default=0)
+
+    @property
+    def extension(self):
+        return self.path.rsplit('.', 1)[-1].lower() if '.' in self.path else ''
+
+    @property
+    def size_label(self):
+        size = self.size or 0
+        if size >= 1024 * 1024:
+            return f'{size / (1024 * 1024):.1f} MB'
+        if size >= 1024:
+            return f'{size // 1024} KB'
+        return f'{size} B'
+
+    def __repr__(self):
+        return f'<NewsAttachment {self.path}>'
 
 
 class SiteContent(db.Model):

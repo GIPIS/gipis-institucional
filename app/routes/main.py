@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from app.models import Member, Category, ResearchLine, ResearchSection, ResearchItem, News, SiteContent, MemberWork, Partner
 from app.i18n import LANGUAGES
@@ -197,19 +198,63 @@ def cooperacion():
 
 @bp.route('/novedades')
 def novedades():
-    """Listado de novedades, paginado"""
+    """Listado de novedades, paginado y filtrable por categoría (?categoria=clave)"""
+    from app.news_meta import NEWS_CATEGORIES, is_valid_category
     page = request.args.get('page', 1, type=int)
-    pagination = News.query.order_by(News.published_at.desc()).paginate(
+    category = request.args.get('categoria')
+    if not is_valid_category(category):
+        category = None
+    query = News.query
+    if category:
+        query = query.filter_by(category=category)
+    pagination = query.order_by(News.published_at.desc()).paginate(
         page=page, per_page=9, error_out=False)
     return render_template('pages/novedades.xhtml',
-                           news=pagination.items, pagination=pagination)
+                           news=pagination.items, pagination=pagination,
+                           categories=NEWS_CATEGORIES, current_category=category)
+
+
+_PHOTO_TOKEN = re.compile(
+    r'(?:<p>\s*)?\[\s*(?:foto|photo|imagen|image)\s+(\d+)\s*\](?:\s*</p>)?',
+    re.IGNORECASE)
+
+
+def _render_news_content(news_item, lang):
+    """Contenido HTML de la novedad con las marcas [foto N] reemplazadas
+    por la foto N de la galería (1 = primera) y su epígrafe. Una marca
+    que no corresponde a ninguna foto se elimina del texto."""
+    from markupsafe import escape
+    content = news_item.content_en if (lang == 'en' and news_item.content_en) else news_item.content
+    if not content:
+        return ''
+    images = news_item.images
+
+    def replace(match):
+        index = int(match.group(1)) - 1
+        if index < 0 or index >= len(images):
+            return ''
+        img = images[index]
+        caption = img.caption_en if (lang == 'en' and img.caption_en) else img.caption
+        src = url_for('static', filename='img/' + img.path)
+        figure = (f'<figure class="news-inline-photo not-prose my-8">'
+                  f'<a href="{src}" target="_blank" rel="noopener">'
+                  f'<img src="{src}" alt="{escape(caption or news_item.title)}" '
+                  f'class="w-full h-auto rounded-xl shadow-md" loading="lazy"/></a>')
+        if caption:
+            figure += (f'<figcaption class="mt-3 text-sm text-slate-500 dark:text-slate-400 '
+                       f'text-center">{escape(caption)}</figcaption>')
+        return figure + '</figure>'
+
+    return _PHOTO_TOKEN.sub(replace, content)
 
 
 @bp.route('/novedades/<slug>')
 def novedad_detalle(slug):
     """Detalle de una novedad"""
     news_item = News.query.filter_by(slug=slug).first_or_404()
-    return render_template('pages/novedad.xhtml', news=news_item)
+    lang = session.get('lang', 'es')
+    return render_template('pages/novedad.xhtml', news=news_item,
+                           content_html=_render_news_content(news_item, lang))
 
 
 # ==========================================

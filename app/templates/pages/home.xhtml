@@ -91,10 +91,10 @@
             <article
                 class="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-800 group">
                 <div class="h-48 overflow-hidden">
-                    {% if item.image %}
+                    {% if item.cover %}
                     <img alt="{{ loc(item, 'title') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        src="{{ url_for('static', filename='img/' ~ item.image) }}" />
+                        src="{{ url_for('static', filename='img/' ~ item.cover) }}" />
                     {% else %}
                     <div
                         class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -103,8 +103,7 @@
                     {% endif %}
                 </div>
                 <div class="p-6">
-                    <span class="text-xs font-bold text-primary uppercase mb-3 block tracking-wide">{{ item.category or
-                        'Investigación' }}</span>
+                    <span class="text-xs font-bold text-primary uppercase mb-3 block tracking-wide">{{ _(item.category_label) if item.category_label else _('Novedades') }}</span>
                     <h3
                         class="font-display text-xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-primary transition-colors">
                         {{ loc(item, 'title') }}</h3>

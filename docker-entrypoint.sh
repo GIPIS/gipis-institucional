@@ -52,6 +52,9 @@ else
     if [ -f /app/scripts/add_sitecontent_en.py ]; then
         python scripts/add_sitecontent_en.py
     fi
+    if [ -f /app/scripts/add_news_media.py ]; then
+        python scripts/add_news_media.py
+    fi
 fi
 
 echo "Starting server..."

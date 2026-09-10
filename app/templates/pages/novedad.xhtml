@@ -11,7 +11,7 @@
         "headline": {{ loc(news, 'title')|tojson }},
         {% if news.excerpt %}"description": {{ loc(news, 'excerpt')|tojson }},{% endif %}
         {% if news.published_at %}"datePublished": "{{ news.published_at.strftime('%Y-%m-%d') }}",{% endif %}
-        {% if news.image %}"image": "{{ url_for('static', filename='img/' ~ news.image, _external=True) }}",{% endif %}
+        {% if news.cover %}"image": "{{ url_for('static', filename='img/' ~ news.cover, _external=True) }}",{% endif %}
         "publisher": {
             "@type": "Organization",
             "name": "GIPIS - UNPSJB"
@@ -24,7 +24,7 @@
 <!-- Page Header -->
 <section class="bg-white dark:bg-slate-900 py-20 border-b border-slate-100 dark:border-slate-800">
     <div class="container mx-auto px-6">
-        <div class="max-w-3xl">
+        <div>
             <nav class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">
                 <a class="hover:text-primary transition-colors" href="{{ url_for('main.home') }}">{{ _('Inicio') }}</a>
                 <span class="material-symbols-outlined text-[10px]">chevron_right</span>
@@ -33,11 +33,11 @@
                 <span class="text-primary">{{ _('Detalle') }}</span>
             </nav>
             <div class="flex items-center gap-3 mb-4">
-                {% if news.category %}
-                <span
-                    class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary text-white text-xs font-medium rounded-full">
-                    {{ news.category }}
-                </span>
+                {% if news.category_label %}
+                <a href="{{ url_for('main.novedades', categoria=news.category) }}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1 bg-primary hover:bg-blue-600 text-white text-xs font-medium rounded-full transition-colors">
+                    {{ _(news.category_label) }}
+                </a>
                 {% endif %}
                 {% if news.source == 'facebook' %}
                 <span title="{{ _('Publicado en Facebook') }}"
@@ -52,9 +52,20 @@
                     <span class="material-symbols-outlined text-xs">calendar_today</span>
                     {{ format_date(news.published_at) }}
                 </span>
+                {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('admin.news') }}#news-{{ news.id }}"
+                    class="inline-flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-lg text-xs font-medium transition-all">
+                    <span class="material-symbols-outlined text-sm">edit_note</span>
+                    {{ _('Editar novedad') }}
+                </a>
+                {% endif %}
             </div>
             <h1 class="font-display text-4xl md:text-5xl font-bold text-slate-900 dark:text-white leading-tight">{{
                 loc(news, 'title') }}</h1>
+            {% if news.excerpt %}
+            <p class="mt-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-4xl">{{ loc(news, 'excerpt') }}</p>
+            {% endif %}
+        </div>
         </div>
     </div>
 </section>
@@ -63,18 +74,66 @@
 <section class="py-24 bg-background-light dark:bg-slate-950 transition-colors duration-300">
     <div class="container mx-auto px-6">
         <div class="max-w-3xl mx-auto">
-            {% if news.image %}
-            <div class="mb-12 rounded-2xl overflow-hidden shadow-lg">
-                <img src="{{ url_for('static', filename='img/' ~ news.image) }}" alt="{{ loc(news, 'title') }}"
-                    class="w-full h-auto object-cover" />
+            {% if news.images|length > 1 %}
+            <!-- Galería: carrusel -->
+            <div id="news-carousel" class="mb-12 rounded-2xl overflow-hidden shadow-lg bg-slate-900 relative select-none"
+                aria-roledescription="carousel" aria-label="{{ _('Galería de fotos') }}">
+                <div class="relative aspect-[16/10]">
+                    {% for img in news.images %}
+                    <figure class="news-slide absolute inset-0 m-0 transition-opacity duration-500{% if not loop.first %} opacity-0 pointer-events-none{% endif %}"
+                        data-index="{{ loop.index0 }}" aria-hidden="{{ 'false' if loop.first else 'true' }}">
+                        <a href="{{ url_for('static', filename='img/' ~ img.path) }}" target="_blank" rel="noopener"
+                            title="{{ _('Ver en tamaño completo') }}">
+                            <img src="{{ url_for('static', filename='img/' ~ img.path) }}"
+                                alt="{{ loc(img, 'caption') or loc(news, 'title') }}"
+                                class="w-full h-full object-cover"{% if not loop.first %} loading="lazy"{% endif %} />
+                        </a>
+                        {% if img.caption %}
+                        <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent text-white text-sm px-14 pt-10 pb-4 text-center">
+                            {{ loc(img, 'caption') }}
+                        </figcaption>
+                        {% endif %}
+                    </figure>
+                    {% endfor %}
+                </div>
+                <button type="button" class="news-prev absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 flex items-center justify-center shadow transition-colors"
+                    aria-label="{{ _('Foto anterior') }}">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button type="button" class="news-next absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 flex items-center justify-center shadow transition-colors"
+                    aria-label="{{ _('Foto siguiente') }}">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <div class="absolute top-3 right-3 px-2 py-1 rounded-md bg-black/50 text-white text-xs font-medium">
+                    <span class="news-counter">1</span> / {{ news.images|length }}
+                </div>
+                <div class="news-dots absolute bottom-3 inset-x-0 flex justify-center gap-2">
+                    {% for img in news.images %}
+                    <button type="button" data-index="{{ loop.index0 }}"
+                        class="w-2.5 h-2.5 rounded-full transition-colors {% if loop.first %}bg-white{% else %}bg-white/40 hover:bg-white/70{% endif %}"
+                        aria-label="{{ _('Foto') }} {{ loop.index }}"></button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% elif news.cover %}
+            <div class="mb-12 rounded-2xl overflow-hidden shadow-lg bg-slate-900">
+                <a href="{{ url_for('static', filename='img/' ~ news.cover) }}" target="_blank" rel="noopener"
+                    title="{{ _('Ver en tamaño completo') }}" class="block aspect-[16/10]">
+                    <img src="{{ url_for('static', filename='img/' ~ news.cover) }}"
+                        alt="{{ loc(news.images[0], 'caption') if news.images else loc(news, 'title') }}"
+                        class="w-full h-full object-cover" />
+                </a>
+                {% if news.images and news.images[0].caption %}
+                <p class="bg-white dark:bg-slate-900 text-sm text-slate-500 dark:text-slate-400 text-center px-6 py-3">{{ loc(news.images[0], 'caption') }}</p>
+                {% endif %}
             </div>
             {% endif %}
 
             <article
                 class="bg-white dark:bg-slate-900 rounded-2xl p-8 md:p-12 shadow-sm border border-slate-100 dark:border-slate-800">
                 <div class="prose prose-lg prose-slate dark:prose-invert max-w-none">
-                    {% if news.content %}
-                    {{ loc(news, 'content')|safe }}
+                    {% if content_html %}
+                    {{ content_html|safe }}
                     {% else %}
                     <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                         {{ loc(news, 'excerpt') or 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
@@ -89,6 +148,33 @@
                 </div>
             </article>
 
+            {% if news.attachments %}
+            <!-- Adjuntos -->
+            <div class="mt-8 bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+                <h2 class="font-display text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">attach_file</span>
+                    {{ _('Archivos adjuntos') }}
+                </h2>
+                <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+                    {% for att in news.attachments %}
+                    <li>
+                        <a href="{{ url_for('static', filename='img/' ~ att.path) }}" target="_blank" rel="noopener"
+                            class="flex items-center gap-4 py-3 group">
+                            <span class="w-11 h-11 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">{% if att.extension == 'pdf' %}picture_as_pdf{% elif att.extension == 'zip' %}folder_zip{% elif att.extension in ('xls', 'xlsx', 'ods') %}table_chart{% elif att.extension in ('ppt', 'pptx', 'odp') %}slideshow{% else %}description{% endif %}</span>
+                            </span>
+                            <span class="flex-1 min-w-0">
+                                <span class="block text-sm font-medium text-slate-900 dark:text-white group-hover:text-primary transition-colors truncate">{{ att.title or att.path.rsplit('/', 1)[-1] }}</span>
+                                <span class="block text-xs text-slate-400 uppercase">{{ att.extension }} · {{ att.size_label }}</span>
+                            </span>
+                            <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">download</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
             <!-- Navigation -->
             <div class="mt-8 flex justify-between items-center">
                 <a href="{{ url_for('main.novedades') }}"
@@ -100,4 +186,69 @@
         </div>
     </div>
 </section>
+{% if news.images|length > 1 %}
+<script>
+(function () {
+    var root = document.getElementById('news-carousel');
+    if (!root) { return; }
+    var slides = root.querySelectorAll('.news-slide');
+    var dots = root.querySelectorAll('.news-dots button');
+    var counter = root.querySelector('.news-counter');
+    var current = 0;
+
+    function show(index) {
+        current = (index + slides.length) % slides.length;
+        for (var i = 0; i < slides.length; i++) {
+            var active = i === current;
+            slides[i].classList.toggle('opacity-0', !active);
+            slides[i].classList.toggle('pointer-events-none', !active);
+            slides[i].setAttribute('aria-hidden', active ? 'false' : 'true');
+            dots[i].classList.toggle('bg-white', active);
+            dots[i].classList.toggle('bg-white/40', !active);
+        }
+        counter.textContent = current + 1;
+    }
+
+    // Pase automático cada 5 s; se pausa con el mouse encima y se
+    // reinicia el conteo después de una navegación manual.
+    var AUTOPLAY_MS = 5000;
+    var timer = null;
+    var paused = false;
+    var reducida = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function stopAuto() { if (timer) { clearInterval(timer); timer = null; } }
+    function startAuto() {
+        stopAuto();
+        if (reducida || paused) { return; }
+        timer = setInterval(function () { show(current + 1); }, AUTOPLAY_MS);
+    }
+    function manual(index) { show(index); startAuto(); }
+
+    root.addEventListener('mouseenter', function () { paused = true; stopAuto(); });
+    root.addEventListener('mouseleave', function () { paused = false; startAuto(); });
+    document.addEventListener('visibilitychange', function () {
+        if (document.hidden) { stopAuto(); } else { startAuto(); }
+    });
+
+    root.querySelector('.news-prev').addEventListener('click', function () { manual(current - 1); });
+    root.querySelector('.news-next').addEventListener('click', function () { manual(current + 1); });
+    for (var d = 0; d < dots.length; d++) {
+        dots[d].addEventListener('click', function () { manual(parseInt(this.getAttribute('data-index'), 10)); });
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowLeft') { manual(current - 1); }
+        if (e.key === 'ArrowRight') { manual(current + 1); }
+    });
+    startAuto();
+    var startX = null;
+    root.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', function (e) {
+        if (startX === null) { return; }
+        var dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) { manual(dx < 0 ? current + 1 : current - 1); }
+        startX = null;
+    }, { passive: true });
+})();
+</script>
+{% endif %}
 {% endblock %}

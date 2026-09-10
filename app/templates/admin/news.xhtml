@@ -2,6 +2,38 @@
 
 {% block title %}{{ _('Novedades') }} (admin){% endblock %}
 
+{% macro field_class() %}w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm{% endmacro %}
+{% macro file_class() %}text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium file:cursor-pointer{% endmacro %}
+
+{% macro category_select(selected) %}
+<select name="category" class="{{ field_class() }}">
+    <option value="">{{ _('Sin categoría') }}</option>
+    {% for key, label in categories %}
+    <option value="{{ key }}" {% if selected == key %}selected="selected"{% endif %}>{{ _(label) }}</option>
+    {% endfor %}
+</select>
+{% endmacro %}
+
+{% macro media_uploads(compact=False) %}
+<div class="md:col-span-2 grid md:grid-cols-2 gap-4">
+    <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Fotos') }}
+            <span class="text-slate-400 font-normal">({{ image_extensions|join(', ')|upper }})</span></label>
+        <input type="file" name="images" multiple="multiple" accept="{% for e in image_extensions %}.{{ e }}{% if not loop.last %},{% endif %}{% endfor %}"
+            class="{{ file_class() }}" />
+        <p class="text-xs text-slate-400 mt-1">{{ _('Podés elegir varias a la vez. La primera de la galería es la portada; con más de una se muestra un carrusel.') }}</p>
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Archivos adjuntos') }}
+            <span class="text-slate-400 font-normal">({{ attachment_extensions|join(', ')|upper }})</span></label>
+        <input type="file" name="attachments" multiple="multiple"
+            accept="{% for e in attachment_extensions %}.{{ e }}{% if not loop.last %},{% endif %}{% endfor %}"
+            class="{{ file_class() }}" />
+        <p class="text-xs text-slate-400 mt-1">{{ _('Se listan al pie de la novedad para descargar. Máximo 25 MB por envío.') }}</p>
+    </div>
+</div>
+{% endmacro %}
+
 {% block content %}
 <section class="py-24 bg-background-light dark:bg-slate-950 min-h-[70vh]">
     <div class="container mx-auto px-6">
@@ -39,37 +71,28 @@
                     class="grid md:grid-cols-2 gap-4">
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Título *') }}</label>
-                        <input type="text" name="title" required
-                            class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                        <input type="text" name="title" required="required" class="{{ field_class() }}" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Categoría') }}</label>
-                        <input type="text" name="category" placeholder="{{ _('Congresos, Proyectos, Publicaciones…') }}"
-                            class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                        {{ category_select(None) }}
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Fecha') }}</label>
-                        <input type="date" name="published_at" value="{{ today }}"
-                            class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                        <input type="date" name="published_at" value="{{ today }}" class="{{ field_class() }}" />
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Resumen') }}
                             <span class="text-slate-400 font-normal">{{ _('(se muestra en las tarjetas)') }}</span></label>
-                        <textarea name="excerpt" rows="2" maxlength="500"
-                            class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"></textarea>
+                        <textarea name="excerpt" rows="2" maxlength="500" class="{{ field_class() }}"></textarea>
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Contenido') }}
                             <span class="text-slate-400 font-normal">{{ _('(texto de la novedad; separá párrafos con una línea en blanco)') }}</span></label>
-                        <textarea name="content" rows="6"
-                            class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"></textarea>
+                        <textarea name="content" rows="6" class="{{ field_class() }}"></textarea>
+                        <p class="text-xs text-slate-400 mt-1">{{ _('Para intercalar una foto de la galería entre párrafos, escribí [foto 2] (el número según el orden de la galería) en una línea aparte.') }}</p>
                     </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{{ _('Imagen') }}
-                            <span class="text-slate-400 font-normal">{{ _('(opcional, PNG/JPG/WebP)') }}</span></label>
-                        <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp"
-                            class="text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium file:cursor-pointer" />
-                    </div>
+                    {{ media_uploads() }}
                     <details class="md:col-span-2 border border-slate-100 dark:border-slate-800 rounded-lg group/en">
                         <summary class="flex items-center justify-between p-4 cursor-pointer list-none text-sm font-medium text-slate-700 dark:text-slate-300">
                             <span class="flex items-center gap-2">
@@ -80,12 +103,9 @@
                         </summary>
                         <div class="px-4 pb-4 space-y-3">
                             <p class="text-xs text-slate-400">{{ _('Si se completa, los visitantes que usen el sitio en inglés verán esta versión; si no, se muestra el texto en español.') }}</p>
-                            <input type="text" name="title_en" placeholder="Title (English)"
-                                class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
-                            <textarea name="excerpt_en" rows="2" maxlength="500" placeholder="Summary (English)"
-                                class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"></textarea>
-                            <textarea name="content_en" rows="4" placeholder="Content (English)"
-                                class="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm"></textarea>
+                            <input type="text" name="title_en" placeholder="Title (English)" class="{{ field_class() }}" />
+                            <textarea name="excerpt_en" rows="2" maxlength="500" placeholder="Summary (English)" class="{{ field_class() }}"></textarea>
+                            <textarea name="content_en" rows="4" placeholder="Content (English)" class="{{ field_class() }}"></textarea>
                         </div>
                     </details>
                     <div>
@@ -101,10 +121,10 @@
             <!-- Listado -->
             <div class="space-y-4">
                 {% for n in news %}
-                <details class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 group">
+                <details id="news-{{ n.id }}" class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800 group scroll-mt-28">
                     <summary class="flex items-center gap-4 p-5 cursor-pointer list-none">
-                        {% if n.image %}
-                        <img src="{{ url_for('static', filename='img/' ~ n.image) }}" alt=""
+                        {% if n.cover %}
+                        <img src="{{ url_for('static', filename='img/' ~ n.cover) }}" alt=""
                             class="w-16 h-12 object-cover rounded-lg shrink-0" />
                         {% else %}
                         <div class="w-16 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
@@ -115,7 +135,9 @@
                             <p class="text-sm font-medium text-slate-900 dark:text-white truncate">{{ n.title }}</p>
                             <p class="text-xs text-slate-400 mt-1">
                                 {{ n.published_at.strftime('%d/%m/%Y') if n.published_at else _('Sin fecha') }}
-                                {% if n.category %} · {{ n.category }}{% endif %}
+                                {% if n.category_label %} · {{ _(n.category_label) }}{% endif %}
+                                {% if n.images %} · {{ n.images|length }} <span class="material-symbols-outlined text-xs align-middle">photo_library</span>{% endif %}
+                                {% if n.attachments %} · {{ n.attachments|length }} <span class="material-symbols-outlined text-xs align-middle">attach_file</span>{% endif %}
                             </p>
                         </div>
                         <a href="{{ url_for('main.novedad_detalle', slug=n.slug) }}" target="_blank"
@@ -129,24 +151,92 @@
                         <form method="post" action="{{ url_for('admin.edit_news', news_id=n.id) }}"
                             enctype="multipart/form-data" class="grid md:grid-cols-2 gap-3">
                             <div class="md:col-span-2">
-                                <input type="text" name="title" value="{{ n.title }}" required
-                                    class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                                <input type="text" name="title" value="{{ n.title }}" required="required" class="{{ field_class() }}" />
                             </div>
-                            <input type="text" name="category" value="{{ n.category or '' }}" placeholder="{{ _('Categoría') }}"
-                                class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                            <div>{{ category_select(n.category) }}</div>
                             <input type="date" name="published_at"
                                 value="{{ n.published_at.strftime('%Y-%m-%d') if n.published_at else '' }}"
-                                class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
+                                class="{{ field_class() }}" />
                             <div class="md:col-span-2">
                                 <textarea name="excerpt" rows="2" maxlength="500" placeholder="{{ _('Resumen') }}"
-                                    class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm">{{ n.excerpt or '' }}</textarea>
+                                    class="{{ field_class() }}">{{ n.excerpt or '' }}</textarea>
                             </div>
                             <div class="md:col-span-2">
                                 <textarea name="content" rows="6" placeholder="{{ _('Contenido') }}"
-                                    class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm">{{ n.content_text }}</textarea>
+                                    class="{{ field_class() }}">{{ n.content_text }}</textarea>
+                                <p class="text-xs text-slate-400 mt-1">{{ _('Para intercalar una foto de la galería entre párrafos, escribí [foto 2] (el número según el orden de la galería) en una línea aparte.') }}</p>
                             </div>
+
+                            {% if n.images %}
+                            <div class="md:col-span-2">
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-lg">photo_library</span>
+                                    {{ _('Galería') }}
+                                    <span class="text-slate-400 font-normal text-xs">{{ _('(orden 1 = portada; epígrafe opcional)') }}</span>
+                                </p>
+                                <div class="grid sm:grid-cols-2 gap-3">
+                                    {% for img in n.images %}
+                                    <div class="flex gap-3 p-3 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                                        <a href="{{ url_for('static', filename='img/' ~ img.path) }}" target="_blank" class="shrink-0">
+                                            <img src="{{ url_for('static', filename='img/' ~ img.path) }}" alt=""
+                                                class="w-24 h-20 object-cover rounded-md" />
+                                        </a>
+                                        <div class="flex-1 min-w-0 space-y-2">
+                                            <div class="flex items-center gap-2">
+                                                <label class="text-xs text-slate-500">{{ _('Orden') }}</label>
+                                                <input type="number" name="image_order_{{ img.id }}" value="{{ loop.index }}" min="1"
+                                                    class="w-16 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs" />
+                                                <label class="inline-flex items-center gap-1 text-xs text-red-500 cursor-pointer ml-auto">
+                                                    <input type="checkbox" name="image_remove_{{ img.id }}" value="1"
+                                                        class="rounded border-slate-300 text-red-500 focus:ring-red-400" />
+                                                    {{ _('Quitar') }}
+                                                </label>
+                                            </div>
+                                            <input type="text" name="image_caption_{{ img.id }}" value="{{ img.caption or '' }}"
+                                                placeholder="{{ _('Epígrafe') }}" maxlength="300"
+                                                class="w-full px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs" />
+                                            <input type="text" name="image_caption_en_{{ img.id }}" value="{{ img.caption_en or '' }}"
+                                                placeholder="Caption (English)" maxlength="300"
+                                                class="w-full px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs" />
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if n.attachments %}
+                            <div class="md:col-span-2">
+                                <p class="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-lg">attach_file</span>
+                                    {{ _('Archivos adjuntos') }}
+                                </p>
+                                <div class="space-y-2">
+                                    {% for att in n.attachments %}
+                                    <div class="flex items-center gap-3 p-2 rounded-lg border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+                                        <a href="{{ url_for('static', filename='img/' ~ att.path) }}" target="_blank"
+                                            class="inline-flex items-center gap-1 text-xs font-bold uppercase text-primary shrink-0 w-14">
+                                            <span class="material-symbols-outlined text-base">description</span>{{ att.extension }}
+                                        </a>
+                                        <input type="text" name="attachment_title_{{ att.id }}" value="{{ att.title or '' }}"
+                                            placeholder="{{ _('Nombre visible') }}" maxlength="200"
+                                            class="flex-1 min-w-0 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-xs" />
+                                        <span class="text-xs text-slate-400 shrink-0">{{ att.size_label }}</span>
+                                        <label class="inline-flex items-center gap-1 text-xs text-red-500 cursor-pointer shrink-0">
+                                            <input type="checkbox" name="attachment_remove_{{ att.id }}" value="1"
+                                                class="rounded border-slate-300 text-red-500 focus:ring-red-400" />
+                                            {{ _('Quitar') }}
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {{ media_uploads(compact=True) }}
+
                             <details class="md:col-span-2 border border-slate-100 dark:border-slate-800 rounded-lg group/en"
-                                {% if n.title_en or n.excerpt_en or n.content_en %}open{% endif %}>
+                                {% if n.title_en or n.excerpt_en or n.content_en %}open="open"{% endif %}>
                                 <summary class="flex items-center justify-between p-3 cursor-pointer list-none text-sm font-medium text-slate-700 dark:text-slate-300">
                                     <span class="flex items-center gap-2">
                                         <span class="material-symbols-outlined text-primary text-lg">translate</span>
@@ -155,25 +245,11 @@
                                     <span class="material-symbols-outlined text-slate-400 group-open/en:rotate-180 transition-transform">expand_more</span>
                                 </summary>
                                 <div class="px-3 pb-3 space-y-3">
-                                    <input type="text" name="title_en" value="{{ n.title_en or '' }}" placeholder="Title (English)"
-                                        class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm" />
-                                    <textarea name="excerpt_en" rows="2" maxlength="500" placeholder="Summary (English)"
-                                        class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm">{{ n.excerpt_en or '' }}</textarea>
-                                    <textarea name="content_en" rows="4" placeholder="Content (English)"
-                                        class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm">{{ n.content_text_en }}</textarea>
+                                    <input type="text" name="title_en" value="{{ n.title_en or '' }}" placeholder="Title (English)" class="{{ field_class() }}" />
+                                    <textarea name="excerpt_en" rows="2" maxlength="500" placeholder="Summary (English)" class="{{ field_class() }}">{{ n.excerpt_en or '' }}</textarea>
+                                    <textarea name="content_en" rows="4" placeholder="Content (English)" class="{{ field_class() }}">{{ n.content_text_en }}</textarea>
                                 </div>
                             </details>
-                            <div class="md:col-span-2 flex items-center gap-4 flex-wrap">
-                                <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp"
-                                    class="text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium file:cursor-pointer" />
-                                {% if n.image %}
-                                <label class="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 cursor-pointer">
-                                    <input type="checkbox" name="remove_image" value="1"
-                                        class="rounded border-slate-300 text-red-500 focus:ring-red-400" />
-                                    {{ _('Quitar imagen actual') }}
-                                </label>
-                                {% endif %}
-                            </div>
                             <div>
                                 <button type="submit"
                                     class="inline-flex items-center gap-1 bg-primary hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all">
@@ -197,4 +273,14 @@
         </div>
     </div>
 </section>
+<script>
+(function () {
+    // Llegando con #news-<id> (botón "Editar novedad" del sitio) se abre esa novedad
+    var hash = window.location.hash;
+    if (hash && hash.indexOf('#news-') === 0) {
+        var item = document.getElementById(hash.substring(1));
+        if (item) { item.open = true; item.scrollIntoView(); }
+    }
+})();
+</script>
 {% endblock %}

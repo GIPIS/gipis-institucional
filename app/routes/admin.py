@@ -7,7 +7,10 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_required, current_user
 
 from app import db
-from app.models import Member, Category, ResearchSection, ResearchItem, Partner, News
+from app.models import Member, Category, ResearchSection, ResearchItem, Partner, News, NewsImage, NewsAttachment
+from app.news_meta import (NEWS_CATEGORIES, NEWS_IMAGE_EXTENSIONS,
+                           NEWS_ATTACHMENT_EXTENSIONS, is_valid_category)
+from werkzeug.utils import secure_filename
 
 bp = Blueprint('admin', __name__, url_prefix='/auth/admin')
 
@@ -305,11 +308,9 @@ def partners():
 # Novedades
 # ==========================================
 
-NEWS_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
-
-
-def _news_upload_folder():
-    folder = os.path.join(current_app.static_folder, 'img', 'news')
+def _news_folder(news_item, *parts):
+    """Carpeta de archivos de una novedad: static/img/news/<slug>/[...]."""
+    folder = os.path.join(current_app.static_folder, 'img', 'news', news_item.slug, *parts)
     os.makedirs(folder, exist_ok=True)
     return folder
 
@@ -327,7 +328,8 @@ def _news_slug(title):
 
 def _news_content_html(raw):
     """Texto plano → párrafos HTML (novedad.xhtml renderiza content|safe).
-    Si el texto ya trae etiquetas HTML se guarda tal cual."""
+    Si el texto ya trae etiquetas HTML se guarda tal cual. Las marcas
+    [foto N] quedan en el texto y se resuelven al mostrar la novedad."""
     raw = (raw or '').strip()
     if not raw or '<' in raw:
         return raw or None
@@ -360,28 +362,114 @@ def _parse_published_at(value):
         return datetime.now()
 
 
-def _save_news_image(news_item):
-    """Guardar la imagen subida (si hay) y devolver True si hubo error de formato."""
-    image = request.files.get('image')
-    if not image or not image.filename:
-        return False
-    ext = image.filename.rsplit('.', 1)[-1].lower()
-    if ext not in NEWS_IMAGE_EXTENSIONS:
-        flash('Formato de imagen no permitido. Usá PNG, JPG o WebP.', 'error')
-        return True
-    _delete_news_image(news_item)
-    filename = f"{news_item.slug}.{ext}"
-    image.save(os.path.join(_news_upload_folder(), filename))
-    news_item.image = f"news/{filename}"
-    return False
+def _news_category(form):
+    key = (form.get('category') or '').strip()
+    return key if is_valid_category(key) else None
 
 
-def _delete_news_image(news_item):
+def _unique_filename(folder, base, ext):
+    """Nombre libre dentro de folder: base.ext, base-2.ext, ..."""
+    name = f"{base}.{ext}"
+    counter = 2
+    while os.path.exists(os.path.join(folder, name)):
+        name = f"{base}-{counter}.{ext}"
+        counter += 1
+    return name
+
+
+def _save_news_images(news_item):
+    """Guardar las fotos subidas (campo 'images', múltiple) al final de la
+    galería. Devuelve la cantidad de formatos rechazados."""
+    rejected = 0
+    next_order = max([img.order or 0 for img in news_item.images], default=-1) + 1
+    folder = _news_folder(news_item)
+    for upload in request.files.getlist('images'):
+        if not upload or not upload.filename:
+            continue
+        ext = upload.filename.rsplit('.', 1)[-1].lower() if '.' in upload.filename else ''
+        if ext not in NEWS_IMAGE_EXTENSIONS:
+            rejected += 1
+            continue
+        base = secure_filename(upload.filename.rsplit('.', 1)[0])[:40].lower() or 'foto'
+        filename = _unique_filename(folder, base, ext)
+        upload.save(os.path.join(folder, filename))
+        news_item.images.append(NewsImage(
+            path=f"news/{news_item.slug}/{filename}", order=next_order))
+        next_order += 1
+    if rejected:
+        flash(f'{rejected} archivo(s) de imagen no se subieron: usá PNG, JPG o WebP.', 'error')
+    return rejected
+
+
+def _save_news_attachments(news_item):
+    """Guardar los adjuntos subidos (campo 'attachments', múltiple)."""
+    rejected = 0
+    next_order = max([a.order or 0 for a in news_item.attachments], default=-1) + 1
+    folder = _news_folder(news_item, 'archivos')
+    for upload in request.files.getlist('attachments'):
+        if not upload or not upload.filename:
+            continue
+        original = upload.filename
+        ext = original.rsplit('.', 1)[-1].lower() if '.' in original else ''
+        if ext not in NEWS_ATTACHMENT_EXTENSIONS:
+            rejected += 1
+            continue
+        base = secure_filename(original.rsplit('.', 1)[0])[:60] or 'archivo'
+        filename = _unique_filename(folder, base, ext)
+        full_path = os.path.join(folder, filename)
+        upload.save(full_path)
+        news_item.attachments.append(NewsAttachment(
+            path=f"news/{news_item.slug}/archivos/{filename}",
+            title=original.rsplit('.', 1)[0][:200],
+            size=os.path.getsize(full_path),
+            order=next_order))
+        next_order += 1
+    if rejected:
+        flash(f'{rejected} adjunto(s) no se subieron. Formatos permitidos: '
+              + ', '.join(sorted(NEWS_ATTACHMENT_EXTENSIONS)).upper() + '.', 'error')
+    return rejected
+
+
+def _remove_static_file(rel_path):
+    path = os.path.join(current_app.static_folder, 'img', rel_path)
+    if os.path.exists(path):
+        os.remove(path)
+
+
+def _update_news_media(news_item):
+    """Aplicar epígrafes, orden y bajas de la galería y los adjuntos
+    según los campos del formulario de edición."""
+    form = request.form
+    for img in list(news_item.images):
+        if form.get(f'image_remove_{img.id}') == '1':
+            _remove_static_file(img.path)
+            news_item.images.remove(img)
+            continue
+        img.caption = form.get(f'image_caption_{img.id}', '').strip()[:300] or None
+        img.caption_en = form.get(f'image_caption_en_{img.id}', '').strip()[:300] or None
+        try:
+            img.order = int(form.get(f'image_order_{img.id}', img.order or 0))
+        except ValueError:
+            pass
+    for pos, img in enumerate(sorted(news_item.images, key=lambda i: (i.order or 0, i.id or 0))):
+        img.order = pos
+
+    for att in list(news_item.attachments):
+        if form.get(f'attachment_remove_{att.id}') == '1':
+            _remove_static_file(att.path)
+            news_item.attachments.remove(att)
+            continue
+        att.title = form.get(f'attachment_title_{att.id}', '').strip()[:200] or att.title
+
+
+def _delete_news_files(news_item):
+    """Borrar la carpeta de archivos de la novedad (galería + adjuntos + legado)."""
+    import shutil
     if news_item.image:
-        path = os.path.join(current_app.static_folder, 'img', news_item.image)
-        if os.path.exists(path):
-            os.remove(path)
-        news_item.image = None
+        _remove_static_file(news_item.image)
+    folder = os.path.join(current_app.static_folder, 'img', 'news', news_item.slug)
+    if os.path.isdir(folder):
+        shutil.rmtree(folder, ignore_errors=True)
 
 
 @bp.route('/news', methods=['GET', 'POST'])
@@ -397,15 +485,15 @@ def news():
             slug=_news_slug(title),
             title=title[:300],
             title_en=request.form.get('title_en', '').strip()[:300] or None,
-            category=request.form.get('category', '').strip()[:100] or None,
+            category=_news_category(request.form),
             excerpt=request.form.get('excerpt', '').strip()[:500] or None,
             excerpt_en=request.form.get('excerpt_en', '').strip()[:500] or None,
             content=_news_content_html(request.form.get('content')),
             content_en=_news_content_html(request.form.get('content_en')),
             published_at=_parse_published_at(request.form.get('published_at')),
         )
-        if _save_news_image(item):
-            return redirect(url_for('admin.news'))
+        _save_news_images(item)
+        _save_news_attachments(item)
         db.session.add(item)
         db.session.commit()
         flash(f'Novedad "{title}" publicada.', 'success')
@@ -417,6 +505,9 @@ def news():
         n.content_text = _news_content_text(n.content)
         n.content_text_en = _news_content_text(n.content_en)
     return render_template('admin/news.xhtml', news=all_news,
+                           categories=NEWS_CATEGORIES,
+                           image_extensions=sorted(NEWS_IMAGE_EXTENSIONS),
+                           attachment_extensions=sorted(NEWS_ATTACHMENT_EXTENSIONS),
                            today=date.today().isoformat())
 
 
@@ -426,17 +517,16 @@ def edit_news(news_id):
     item = News.query.get_or_404(news_id)
     item.title = request.form.get('title', item.title).strip()[:300] or item.title
     item.title_en = request.form.get('title_en', '').strip()[:300] or None
-    item.category = request.form.get('category', '').strip()[:100] or None
+    item.category = _news_category(request.form)
     item.excerpt = request.form.get('excerpt', '').strip()[:500] or None
     item.excerpt_en = request.form.get('excerpt_en', '').strip()[:500] or None
     item.content = _news_content_html(request.form.get('content'))
     item.content_en = _news_content_html(request.form.get('content_en'))
     if request.form.get('published_at'):
         item.published_at = _parse_published_at(request.form.get('published_at'))
-    if request.form.get('remove_image') == '1':
-        _delete_news_image(item)
-    if _save_news_image(item):
-        return redirect(url_for('admin.news'))
+    _update_news_media(item)
+    _save_news_images(item)
+    _save_news_attachments(item)
     db.session.commit()
     flash('Novedad actualizada.', 'success')
     return redirect(url_for('admin.news'))
@@ -446,7 +536,7 @@ def edit_news(news_id):
 @admin_required
 def delete_news(news_id):
     item = News.query.get_or_404(news_id)
-    _delete_news_image(item)
+    _delete_news_files(item)
     db.session.delete(item)
     db.session.commit()
     flash('Novedad eliminada.', 'success')
