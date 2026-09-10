@@ -9,7 +9,7 @@ los templates, así que las traducciones viven en app/i18n.py.
 NEWS_CATEGORIES = [
     ('cooperacion-academica', 'Cooperación académica'),
     ('cooperacion-cientifica', 'Cooperación científica'),
-    ('vinculacion-empresas', 'Vinculación con empresas'),
+    ('vinculacion-transferencia', 'Vinculación y transferencia'),
     ('comunicacion-publica', 'Comunicación pública de la ciencia'),
 ]
 

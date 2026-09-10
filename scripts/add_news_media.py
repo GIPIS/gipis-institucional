@@ -67,8 +67,9 @@ def migrate():
     legacy = {
         'cooperacion academica': 'cooperacion-academica',
         'cooperacion cientifica': 'cooperacion-cientifica',
-        'vinculacion con empresas': 'vinculacion-empresas',
-        'vinculacion y transferencia': 'vinculacion-empresas',
+        'vinculacion con empresas': 'vinculacion-transferencia',
+        'vinculacion y transferencia': 'vinculacion-transferencia',
+        'vinculacion-empresas': 'vinculacion-transferencia',  # clave usada brevemente el 2026-09-10
         'comunicacion publica de la ciencia': 'comunicacion-publica',
     }
     known = set(legacy.values())

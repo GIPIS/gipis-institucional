@@ -739,7 +739,7 @@ TRANSLATIONS = {
     'Paginación': 'Pagination',
     'Cooperación académica': 'Academic cooperation',
     'Cooperación científica': 'Scientific cooperation',
-    'Vinculación con empresas': 'Industry partnerships',
+    'Vinculación y transferencia': 'Partnerships and technology transfer',
     'Comunicación pública de la ciencia': 'Public science communication',
     'Filtrar por categoría': 'Filter by category',
     'Todas': 'All',

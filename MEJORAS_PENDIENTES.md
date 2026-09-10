@@ -16,7 +16,7 @@ de citas vía OpenAlex y botón "Citar (BibTeX)" por ítem.
 
 **Implementado**:
 - Categorías predefinidas (`app/news_meta.py`): Cooperación académica, Cooperación
-  científica, Vinculación con empresas, Comunicación pública de la ciencia. Se guardan
+  científica, Vinculación y transferencia, Comunicación pública de la ciencia. Se guardan
   por clave en `News.category`, selector en el admin y filtro por categoría en
   `/novedades?categoria=<clave>` (chips arriba del listado). Valores viejos con texto
   libre se siguen mostrando tal cual.
