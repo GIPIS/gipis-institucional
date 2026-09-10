@@ -218,6 +218,11 @@ class News(db.Model):
         return self.image
 
     @property
+    def cover_position(self):
+        """object-position de la portada (punto de foco de la primera foto)."""
+        return self.images[0].position if self.images else '50% 50%'
+
+    @property
     def category_label(self):
         from app.news_meta import category_label
         return category_label(self.category)
@@ -236,6 +241,16 @@ class NewsImage(db.Model):
     caption = db.Column(db.String(300))
     caption_en = db.Column(db.String(300))
     order = db.Column(db.Integer, default=0)
+    # Punto de foco (0-100 %) que se mantiene visible cuando la foto se recorta
+    focus_x = db.Column(db.Integer, default=50)
+    focus_y = db.Column(db.Integer, default=50)
+
+    @property
+    def position(self):
+        """Valor para CSS object-position."""
+        x = 50 if self.focus_x is None else self.focus_x
+        y = 50 if self.focus_y is None else self.focus_y
+        return f'{x}% {y}%'
 
     def __repr__(self):
         return f'<NewsImage {self.path}>'

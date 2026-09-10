@@ -984,6 +984,12 @@ TRANSLATIONS = {
     '(opcional, PNG/JPG/WebP/SVG, idealmente con fondo transparente)':
         '(optional, PNG/JPG/WebP/SVG, ideally with a transparent background)',
     'Orden': 'Order',
+    'Original': 'Original',
+    'Hacé clic en la parte de la foto que tiene que quedar siempre visible': 'Click the part of the photo that must always stay visible',
+    'Así se ve en el carrusel': 'How it looks in the carousel',
+    'Así se ve en la tarjeta': 'How it looks on the card',
+    'Vista previa: carrusel y tarjeta': 'Preview: carousel and card',
+    '(orden 1 = portada; clic en la foto para elegir qué parte queda visible al recortar)': '(order 1 = cover; click the photo to choose which part stays visible when cropped)',
     'Sitio web': 'Website',
     'Quitar logo': 'Remove logo',
     '¿Quitar': 'Remove',

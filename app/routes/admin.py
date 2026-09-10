@@ -451,6 +451,14 @@ def _update_news_media(news_item):
             img.order = int(form.get(f'image_order_{img.id}', img.order or 0))
         except ValueError:
             pass
+        focus = form.get(f'image_focus_{img.id}', '')
+        if ',' in focus:
+            try:
+                fx, fy = (int(float(v)) for v in focus.split(',', 1))
+                img.focus_x = min(100, max(0, fx))
+                img.focus_y = min(100, max(0, fy))
+            except ValueError:
+                pass
     for pos, img in enumerate(sorted(news_item.images, key=lambda i: (i.order or 0, i.id or 0))):
         img.order = pos
 

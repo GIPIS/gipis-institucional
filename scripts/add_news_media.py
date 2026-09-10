@@ -39,6 +39,14 @@ def migrate():
         )""")
     print("  ✓ Tablas news_images y news_attachments disponibles.")
 
+    for column in ('focus_x', 'focus_y'):
+        try:
+            cur.execute(f"ALTER TABLE news_images ADD COLUMN {column} INTEGER DEFAULT 50")
+            print(f"  ✓ Columna '{column}' agregada a news_images.")
+        except sqlite3.OperationalError as e:
+            if "duplicate column" not in str(e).lower():
+                raise
+
     moved = 0
     for news_id, image in cur.execute(
             "SELECT id, image FROM news WHERE image IS NOT NULL AND image != ''").fetchall():

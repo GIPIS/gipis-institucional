@@ -94,7 +94,7 @@
                     {% if item.cover %}
                     <img alt="{{ loc(item, 'title') }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        src="{{ url_for('static', filename='img/' ~ item.cover) }}" />
+                        src="{{ url_for('static', filename='img/' ~ item.cover) }}" style="object-position: {{ item.cover_position }};" />
                     {% else %}
                     <div
                         class="w-full h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">

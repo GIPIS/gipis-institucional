@@ -86,7 +86,7 @@
                             title="{{ _('Ver en tamaño completo') }}">
                             <img src="{{ url_for('static', filename='img/' ~ img.path) }}"
                                 alt="{{ loc(img, 'caption') or loc(news, 'title') }}"
-                                class="w-full h-full object-cover"{% if not loop.first %} loading="lazy"{% endif %} />
+                                class="w-full h-full object-cover" style="object-position: {{ img.position }};"{% if not loop.first %} loading="lazy"{% endif %} />
                         </a>
                         {% if img.caption %}
                         <figcaption class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent text-white text-sm px-14 pt-10 pb-4 text-center">
@@ -121,7 +121,7 @@
                     title="{{ _('Ver en tamaño completo') }}" class="block aspect-[16/10]">
                     <img src="{{ url_for('static', filename='img/' ~ news.cover) }}"
                         alt="{{ loc(news.images[0], 'caption') if news.images else loc(news, 'title') }}"
-                        class="w-full h-full object-cover" />
+                        class="w-full h-full object-cover" style="object-position: {{ news.cover_position }};" />
                 </a>
                 {% if news.images and news.images[0].caption %}
                 <p class="bg-white dark:bg-slate-900 text-sm text-slate-500 dark:text-slate-400 text-center px-6 py-3">{{ loc(news.images[0], 'caption') }}</p>
