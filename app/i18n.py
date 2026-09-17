@@ -838,6 +838,22 @@ TRANSLATIONS = {
     'Mi Producción': 'My Production',
     # Editar perfil
     'Editar Perfil': 'Edit Profile',
+    'Editar perfil': 'Edit profile',
+    'Editar perfil de': 'Edit profile of',
+    'Volver a Miembros': 'Back to Members',
+    'Estás editando este perfil como administrador. Los cambios se aplican directamente y el integrante no recibe aviso.':
+        'You are editing this profile as an administrator. Changes apply immediately and the member is not notified.',
+    'Datos administrativos': 'Administrative data',
+    'Email de acceso *': 'Sign-in email *',
+    'Con este email inicia sesión; también recibe ahí el enlace de recuperación de contraseña.':
+        'The member signs in with this email; password reset links are sent there too.',
+    'Orden': 'Order',
+    'Desempate dentro de la misma categoría y cargo (menor = más arriba).':
+        'Tie-breaker within the same category and position (lower = higher up).',
+    'El rol y el estado se cambian desde el listado de Miembros.':
+        'Role and status are changed from the Members list.',
+    'Alta de nuevos integrantes, edición de perfiles y gestión de roles.':
+        'Add new members, edit profiles and manage roles.',
     'Volver al dashboard': 'Back to dashboard',
     'Foto de perfil': 'Profile photo',
     'Hacé click o arrastrá una imagen': 'Click or drag an image',
@@ -931,7 +947,6 @@ TRANSLATIONS = {
     'Reemplaza tu biografía actual.': 'Replaces your current biography.',
     # Admin: miembros
     'Administrar Miembros': 'Manage Members',
-    'Alta de nuevos integrantes y gestión de roles.': 'Add new members and manage roles.',
     'Nuevo integrante': 'New member',
     'Contraseña inicial *': 'Initial password *',
     'El integrante puede cambiarla desde su perfil.': 'The member can change it from their profile.',

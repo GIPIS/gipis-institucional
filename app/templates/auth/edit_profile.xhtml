@@ -8,12 +8,20 @@
         <div class="max-w-2xl mx-auto">
             <!-- Header -->
             <div class="mb-8">
-                <a href="{{ url_for('auth.dashboard') }}"
+                <a href="{{ back_url }}"
                     class="inline-flex items-center gap-2 text-slate-500 hover:text-primary transition-colors text-sm mb-4">
                     <span class="material-symbols-outlined text-sm">arrow_back</span>
-                    {{ _('Volver al dashboard') }}
+                    {{ _('Volver a Miembros') if admin_mode else _('Volver al dashboard') }}
                 </a>
+                {% if admin_mode %}
+                <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white">{{ _('Editar perfil de') }} {{ member.name }}</h1>
+                <p class="mt-3 px-4 py-3 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800 text-sm flex items-start gap-2">
+                    <span class="material-symbols-outlined text-base mt-0.5">shield_person</span>
+                    <span>{{ _('Estás editando este perfil como administrador. Los cambios se aplican directamente y el integrante no recibe aviso.') }}</span>
+                </p>
+                {% else %}
                 <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white">{{ _('Editar Perfil') }}</h1>
+                {% endif %}
             </div>
 
             <!-- Flash messages -->
@@ -29,8 +37,54 @@
             {% endwith %}
 
             <!-- Edit Form -->
-            <form action="{{ url_for('auth.edit_profile') }}" method="post" enctype="multipart/form-data"
+            <form action="{{ form_action }}" method="post" enctype="multipart/form-data"
                 class="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-800">
+
+                {% if admin_mode %}
+                <!-- Datos administrativos (solo admin) -->
+                <h2 class="font-display text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">admin_panel_settings</span>
+                    {{ _('Datos administrativos') }}
+                </h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                            {{ _('Email de acceso *') }}
+                        </label>
+                        <input type="email" id="email" name="email" required value="{{ member.email or '' }}"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                        <p class="text-xs text-slate-400 mt-2">{{ _('Con este email inicia sesión; también recibe ahí el enlace de recuperación de contraseña.') }}</p>
+                    </div>
+                    <div>
+                        <label for="category_id" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                            {{ _('Categoría *') }}
+                        </label>
+                        <select id="category_id" name="category_id" required
+                            class="w-full px-4 py-3 rounded-lg border {% if not member.category %}border-amber-400{% else %}border-slate-200 dark:border-slate-700{% endif %} bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                            {% if not member.category %}<option value="" selected="selected">{{ _('— Elegir categoría —') }}</option>{% endif %}
+                            {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if member.category and cat.id == member.category.id %}selected="selected"{% endif %}>{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <p class="text-xs text-slate-400 mt-2">{{ _('Determina en qué bloque aparece en la página del grupo.') }}</p>
+                    </div>
+                    <div>
+                        <label for="order" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                            {{ _('Orden') }}
+                        </label>
+                        <input type="number" id="order" name="order" min="0" value="{{ member.order or 0 }}"
+                            class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
+                        <p class="text-xs text-slate-400 mt-2">{{ _('Desempate dentro de la misma categoría y cargo (menor = más arriba).') }}</p>
+                    </div>
+                    <div class="text-sm text-slate-500 dark:text-slate-400 md:pt-9">
+                        {{ _('Rol') }}: <strong>{{ 'Admin' if member.is_admin else _('Miembro') }}</strong> ·
+                        {{ _('Estado') }}: <strong>{{ _('Activo') if member.is_active else _('Inactivo') }}</strong>
+                        <p class="text-xs text-slate-400 mt-1">{{ _('El rol y el estado se cambian desde el listado de Miembros.') }}</p>
+                    </div>
+                </div>
+
+                <hr class="border-slate-100 dark:border-slate-800 my-8" />
+                {% endif %}
 
                 <!-- Photo Upload -->
                 <h2 class="font-display text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
@@ -43,9 +97,9 @@
                         <!-- Current Photo Preview -->
                         <div class="flex-shrink-0">
                             <div id="photo-preview-container" class="w-28 h-28 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 relative group">
-                                {% if current_user.photo %}
-                                <img id="photo-preview" src="{{ url_for('static', filename='img/profiles/' ~ current_user.photo) }}"
-                                    alt="{{ current_user.name }}" class="w-full h-full object-cover"
+                                {% if member.photo %}
+                                <img id="photo-preview" src="{{ url_for('static', filename='img/profiles/' ~ member.photo) }}"
+                                    alt="{{ member.name }}" class="w-full h-full object-cover"
                                     onerror="this.style.display='none'; document.getElementById('photo-placeholder').style.display='flex';" />
                                 <div id="photo-placeholder" class="w-full h-full items-center justify-center hidden">
                                     <span class="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">account_circle</span>
@@ -72,7 +126,7 @@
                             </label>
                             <input type="file" id="photo" name="photo" accept="image/png,image/jpeg,image/webp" class="hidden" />
 
-                            {% if current_user.photo %}
+                            {% if member.photo %}
                             <label class="flex items-center gap-3 mt-3 cursor-pointer select-none group">
                                 <input type="checkbox" name="remove_photo" value="1" id="remove_photo"
                                     class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-red-500 focus:ring-red-500/30 cursor-pointer" />
@@ -99,14 +153,14 @@
                         <label for="name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                             {{ _('Nombre completo *') }}
                         </label>
-                        <input type="text" id="name" name="name" required value="{{ current_user.name }}"
+                        <input type="text" id="name" name="name" required value="{{ member.name }}"
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                     </div>
                     <div>
                         <label for="degree" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                             {{ _('Título / Grado académico') }}
                         </label>
-                        <input type="text" id="degree" name="degree" value="{{ current_user.degree or '' }}"
+                        <input type="text" id="degree" name="degree" value="{{ member.degree or '' }}"
                             placeholder="{{ _('Ej: Dr. en Ingeniería') }}"
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                     </div>
@@ -116,7 +170,7 @@
                     <label for="position" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         {{ _('Cargo / Posición') }}
                     </label>
-                    <input type="text" id="position" name="position" value="{{ current_user.position or '' }}"
+                    <input type="text" id="position" name="position" value="{{ member.position or '' }}"
                         placeholder="{{ _('Ej: Investigador Principal') }}"
                         class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                 </div>
@@ -127,7 +181,7 @@
                     </label>
                     <textarea id="bio" name="bio" rows="4"
                         placeholder="{{ _('Contanos sobre tu trayectoria, áreas de interés, etc.') }}"
-                        class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none">{{ current_user.bio or '' }}</textarea>
+                        class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none">{{ member.bio or '' }}</textarea>
                 </div>
 
                 <div class="mb-8">
@@ -137,7 +191,7 @@
                     </label>
                     <textarea id="bio_en" name="bio_en" rows="4"
                         placeholder="Optional English version of your bio; shown to visitors using the site in English."
-                        class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none">{{ current_user.bio_en or '' }}</textarea>
+                        class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none">{{ member.bio_en or '' }}</textarea>
                     <p class="text-xs text-slate-400 mt-2">{{ _('Si la dejás vacía, los visitantes en inglés ven tu biografía en español.') }}</p>
                 </div>
 
@@ -145,7 +199,7 @@
                     <label for="linkedin" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         {{ _('LinkedIn (URL completa)') }}
                     </label>
-                    <input type="url" id="linkedin" name="linkedin" value="{{ current_user.linkedin or '' }}"
+                    <input type="url" id="linkedin" name="linkedin" value="{{ member.linkedin or '' }}"
                         placeholder="https://linkedin.com/in/tu-perfil"
                         class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                 </div>
@@ -154,7 +208,7 @@
                     <label for="orcid" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                         ORCID iD
                     </label>
-                    <input type="text" id="orcid" name="orcid" value="{{ current_user.orcid or '' }}"
+                    <input type="text" id="orcid" name="orcid" value="{{ member.orcid or '' }}"
                         placeholder="0000-0000-0000-0000"
                         class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                     <p class="text-xs text-slate-400 mt-2">{{ _('Tu identificador de') }} <a href="https://orcid.org" target="_blank"
@@ -169,7 +223,7 @@
                     {{ _('Emails de contacto') }}
                 </h2>
                 <p class="text-sm text-slate-400 mb-6">{{ _('Podés elegir qué emails se muestran en tu perfil público y con cuáles podés iniciar sesión (tu email de acceso original') }}
-                    <strong>{{ current_user.email }}</strong> {{ _('siempre funciona).') }}</p>
+                    <strong>{{ member.email }}</strong> {{ _('siempre funciona).') }}</p>
 
                 <div class="space-y-6 mb-8">
                     <!-- Email Personal -->
@@ -177,12 +231,12 @@
                         <label for="personal_email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                             {{ _('Email personal') }}
                         </label>
-                        <input type="email" id="personal_email" name="personal_email" value="{{ current_user.personal_email or '' }}"
+                        <input type="email" id="personal_email" name="personal_email" value="{{ member.personal_email or '' }}"
                             placeholder="tu.email@personal.com"
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                         <label class="flex items-center gap-3 mt-3 cursor-pointer select-none group">
                             <input type="checkbox" name="personal_email_public" value="1"
-                                {% if current_user.personal_email_public %}checked{% endif %}
+                                {% if member.personal_email_public %}checked{% endif %}
                                 class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary/30 cursor-pointer" />
                             <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
@@ -191,7 +245,7 @@
                         </label>
                         <label class="flex items-center gap-3 mt-2 cursor-pointer select-none group">
                             <input type="checkbox" name="personal_email_login" value="1"
-                                {% if current_user.personal_email_login %}checked{% endif %}
+                                {% if member.personal_email_login %}checked{% endif %}
                                 class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary/30 cursor-pointer" />
                             <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-sm">key</span>
@@ -205,12 +259,12 @@
                         <label for="institutional_email" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                             {{ _('Email institucional') }}
                         </label>
-                        <input type="email" id="institutional_email" name="institutional_email" value="{{ current_user.institutional_email or '' }}"
+                        <input type="email" id="institutional_email" name="institutional_email" value="{{ member.institutional_email or '' }}"
                             placeholder="tu.email@universidad.edu.ar"
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                         <label class="flex items-center gap-3 mt-3 cursor-pointer select-none group">
                             <input type="checkbox" name="institutional_email_public" value="1"
-                                {% if current_user.institutional_email_public %}checked{% endif %}
+                                {% if member.institutional_email_public %}checked{% endif %}
                                 class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary/30 cursor-pointer" />
                             <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
@@ -219,7 +273,7 @@
                         </label>
                         <label class="flex items-center gap-3 mt-2 cursor-pointer select-none group">
                             <input type="checkbox" name="institutional_email_login" value="1"
-                                {% if current_user.institutional_email_login %}checked{% endif %}
+                                {% if member.institutional_email_login %}checked{% endif %}
                                 class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary/30 cursor-pointer" />
                             <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-sm">key</span>
@@ -234,12 +288,12 @@
                         <label for="phone" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                             {{ _('Teléfono de contacto') }}
                         </label>
-                        <input type="tel" id="phone" name="phone" value="{{ current_user.phone or '' }}"
+                        <input type="tel" id="phone" name="phone" value="{{ member.phone or '' }}"
                             placeholder="+54 297 4550000"
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary" />
                         <label class="flex items-center gap-3 mt-3 cursor-pointer select-none group">
                             <input type="checkbox" name="phone_public" value="1"
-                                {% if current_user.phone_public %}checked{% endif %}
+                                {% if member.phone_public %}checked{% endif %}
                                 class="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-primary focus:ring-primary/30 cursor-pointer" />
                             <span class="text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors flex items-center gap-1.5">
                                 <span class="material-symbols-outlined text-sm">visibility</span>
@@ -353,7 +407,7 @@
                         <span class="material-symbols-outlined">save</span>
                         {{ _('Guardar cambios') }}
                     </button>
-                    <a href="{{ url_for('auth.dashboard') }}"
+                    <a href="{{ back_url }}"
                         class="px-6 py-3 text-slate-500 hover:text-slate-700 font-medium transition-colors">
                         {{ _('Cancelar') }}
                     </a>

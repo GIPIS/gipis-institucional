@@ -92,85 +92,104 @@ def dashboard():
     return render_template('auth/dashboard.xhtml')
 
 
+def _save_photo(member, photo):
+    """Guardar la foto subida como <slug>.<ext>, borrando la anterior si cambia de extensión."""
+    ext = photo.filename.rsplit('.', 1)[1].lower()
+    filename = f"{member.slug}.{ext}"
+    if member.photo and member.photo != filename:
+        old_path = os.path.join(get_upload_folder(), member.photo)
+        if os.path.exists(old_path):
+            os.remove(old_path)
+    photo.save(os.path.join(get_upload_folder(), filename))
+    member.photo = filename
+
+
+def _remove_photo(member):
+    if member.photo:
+        old_path = os.path.join(get_upload_folder(), member.photo)
+        if os.path.exists(old_path):
+            os.remove(old_path)
+        member.photo = None
+
+
+def apply_profile_form(member, form, files):
+    """Volcar el formulario de perfil sobre `member` (sin commit).
+
+    Lo usan el miembro para su propio perfil y el administrador para
+    editar a cualquier integrante. Devuelve None si todo fue bien o un
+    mensaje de error para mostrar con flash (en ese caso no hay que
+    commitear).
+    """
+    member.name = form.get('name', member.name).strip() or member.name
+    member.degree = form.get('degree', member.degree)
+    member.position = form.get('position', member.position)
+    member.bio = form.get('bio', member.bio)
+    member.bio_en = form.get('bio_en', '').strip() or None
+    member.linkedin = form.get('linkedin', member.linkedin)
+
+    orcid_raw = form.get('orcid', '').strip()
+    if orcid_raw:
+        from app.orcid import normalize_orcid_id
+        orcid_id = normalize_orcid_id(orcid_raw)
+        if not orcid_id:
+            return ('El ORCID iD no es válido. Copialo del perfil en orcid.org '
+                    '(formato 0000-0000-0000-0000).')
+        member.orcid = orcid_id
+    else:
+        member.orcid = None
+
+    # Emails con visibilidad y habilitación de login
+    member.personal_email = form.get('personal_email', member.personal_email)
+    member.personal_email_public = 'personal_email_public' in form
+    member.institutional_email = form.get('institutional_email', member.institutional_email)
+    member.institutional_email_public = 'institutional_email_public' in form
+
+    for field, flag in (('personal_email', 'personal_email_login'),
+                        ('institutional_email', 'institutional_email_login')):
+        wanted = flag in form
+        value = getattr(member, field)
+        if wanted and value and _login_email_taken(member, value):
+            flash(f'El email {value} ya lo usa otro miembro para iniciar '
+                  'sesión, no se puede habilitar.', 'error')
+            wanted = False
+        setattr(member, flag, wanted and bool(value))
+    member.phone = form.get('phone', member.phone)
+    member.phone_public = 'phone_public' in form
+
+    # Foto de perfil
+    photo = files.get('photo')
+    if photo and photo.filename:
+        if not allowed_file(photo.filename):
+            return 'Formato de imagen no permitido. Usá PNG, JPG o WebP.'
+        _save_photo(member, photo)
+    if form.get('remove_photo') == '1':
+        _remove_photo(member)
+
+    # Contraseña (opcional)
+    new_password = form.get('new_password')
+    if new_password:
+        member.set_password(new_password)
+    return None
+
+
 @bp.route('/profile/edit', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     """Editar perfil del miembro"""
     if request.method == 'POST':
-        current_user.name = request.form.get('name', current_user.name)
-        current_user.degree = request.form.get('degree', current_user.degree)
-        current_user.position = request.form.get('position', current_user.position)
-        current_user.bio = request.form.get('bio', current_user.bio)
-        current_user.bio_en = request.form.get('bio_en', '').strip() or None
-        current_user.linkedin = request.form.get('linkedin', current_user.linkedin)
-
-        orcid_raw = request.form.get('orcid', '').strip()
-        if orcid_raw:
-            from app.orcid import normalize_orcid_id
-            orcid_id = normalize_orcid_id(orcid_raw)
-            if not orcid_id:
-                flash('El ORCID iD no es válido. Copialo de tu perfil en orcid.org '
-                      '(formato 0000-0000-0000-0000).', 'error')
-                return redirect(url_for('auth.edit_profile'))
-            current_user.orcid = orcid_id
-        else:
-            current_user.orcid = None
-        
-        # Manejar emails con visibilidad y habilitación de login
-        current_user.personal_email = request.form.get('personal_email', current_user.personal_email)
-        current_user.personal_email_public = 'personal_email_public' in request.form
-        current_user.institutional_email = request.form.get('institutional_email', current_user.institutional_email)
-        current_user.institutional_email_public = 'institutional_email_public' in request.form
-
-        for field, flag in (('personal_email', 'personal_email_login'),
-                            ('institutional_email', 'institutional_email_login')):
-            wanted = flag in request.form
-            value = getattr(current_user, field)
-            if wanted and value and _login_email_taken(current_user, value):
-                flash(f'El email {value} ya lo usa otro miembro para iniciar '
-                      'sesión, no se puede habilitar.', 'error')
-                wanted = False
-            setattr(current_user, flag, wanted and bool(value))
-        current_user.phone = request.form.get('phone', current_user.phone)
-        current_user.phone_public = 'phone_public' in request.form
-        
-        # Manejar foto de perfil
-        photo = request.files.get('photo')
-        if photo and photo.filename and allowed_file(photo.filename):
-            ext = photo.filename.rsplit('.', 1)[1].lower()
-            filename = f"{current_user.slug}.{ext}"
-            filepath = os.path.join(get_upload_folder(), filename)
-            
-            # Eliminar foto anterior si tiene otra extensión
-            if current_user.photo and current_user.photo != filename:
-                old_path = os.path.join(get_upload_folder(), current_user.photo)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
-            
-            photo.save(filepath)
-            current_user.photo = filename
-        elif photo and photo.filename and not allowed_file(photo.filename):
-            flash('Formato de imagen no permitido. Usá PNG, JPG o WebP.', 'error')
+        error = apply_profile_form(current_user, request.form, request.files)
+        if error:
+            db.session.rollback()
+            flash(error, 'error')
             return redirect(url_for('auth.edit_profile'))
-        
-        # Manejar eliminación de foto
-        if request.form.get('remove_photo') == '1':
-            if current_user.photo:
-                old_path = os.path.join(get_upload_folder(), current_user.photo)
-                if os.path.exists(old_path):
-                    os.remove(old_path)
-                current_user.photo = None
-        
-        # Manejar cambio de contraseña
-        new_password = request.form.get('new_password')
-        if new_password:
-            current_user.set_password(new_password)
-        
         db.session.commit()
         flash('Perfil actualizado correctamente', 'success')
         return redirect(url_for('auth.dashboard'))
 
-    return render_template('auth/edit_profile.xhtml')
+    return render_template('auth/edit_profile.xhtml', member=current_user,
+                           admin_mode=False,
+                           form_action=url_for('auth.edit_profile'),
+                           back_url=url_for('auth.dashboard'))
 
 
 # ==========================================

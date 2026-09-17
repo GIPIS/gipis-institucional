@@ -91,6 +91,51 @@ def members():
     return render_template('admin/members.xhtml', members=all_members, categories=categories)
 
 
+@bp.route('/members/<int:member_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_member(member_id):
+    """Editar el perfil completo de un integrante (mismo formulario que
+    usa cada miembro para su perfil, más los datos administrativos)."""
+    from app.routes.auth import apply_profile_form, _login_email_taken
+    member = Member.query.get_or_404(member_id)
+    categories = Category.query.order_by(Category.order).all()
+
+    if request.method == 'POST':
+        error = None
+
+        email = request.form.get('email', '').strip().lower()
+        if not email:
+            error = 'El email de acceso es obligatorio.'
+        elif email != (member.email or '').lower() and _login_email_taken(member, email):
+            error = f'Ya existe un miembro con el email {email}.'
+
+        category_id = request.form.get('category_id', type=int)
+        category = Category.query.get(category_id) if category_id else None
+        if not error and not category:
+            error = ('Elegí una categoría: los miembros sin categoría no aparecen '
+                     'en la página del grupo.')
+
+        if not error:
+            member.email = email
+            member.category_id = category.id
+            member.order = request.form.get('order', type=int) or 0
+            error = apply_profile_form(member, request.form, request.files)
+
+        if error:
+            db.session.rollback()
+            flash(error, 'error')
+            return redirect(url_for('admin.edit_member', member_id=member.id))
+
+        db.session.commit()
+        flash(f'Perfil de {member.name} actualizado.', 'success')
+        return redirect(url_for('admin.members'))
+
+    return render_template('auth/edit_profile.xhtml', member=member,
+                           admin_mode=True, categories=categories,
+                           form_action=url_for('admin.edit_member', member_id=member.id),
+                           back_url=url_for('admin.members'))
+
+
 @bp.route('/members/<int:member_id>/role', methods=['POST'])
 @admin_required
 def toggle_role(member_id):

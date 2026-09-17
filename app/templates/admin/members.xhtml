@@ -9,7 +9,7 @@
             <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
                 <div>
                     <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ _('Miembros') }}</h1>
-                    <p class="text-slate-500 dark:text-slate-400">{{ _('Alta de nuevos integrantes y gestión de roles.') }}</p>
+                    <p class="text-slate-500 dark:text-slate-400">{{ _('Alta de nuevos integrantes, edición de perfiles y gestión de roles.') }}</p>
                 </div>
                 <a href="{{ url_for('auth.dashboard') }}"
                     class="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition-all">
@@ -135,8 +135,13 @@
                                 </td>
                                 <td class="py-3 pr-4 text-slate-600 dark:text-slate-400">{{ _('Activo') if m.is_active else _('Inactivo') }}</td>
                                 <td class="py-3">
+                                    <div class="flex gap-2 items-center">
+                                        <a href="{{ url_for('auth.edit_profile') if m.id == current_user.id else url_for('admin.edit_member', member_id=m.id) }}"
+                                            title="{{ _('Editar perfil') }}"
+                                            class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-lg">edit</span>
+                                        </a>
                                     {% if m.id != current_user.id %}
-                                    <div class="flex gap-2">
                                         <form method="post" action="{{ url_for('admin.toggle_role', member_id=m.id) }}">
                                             <button type="submit" title="{{ _('Quitar admin') if m.is_admin else _('Hacer admin') }}"
                                                 class="text-slate-400 hover:text-primary transition-colors">
@@ -156,10 +161,10 @@
                                                 <span class="material-symbols-outlined text-lg">key</span>
                                             </button>
                                         </form>
-                                    </div>
                                     {% else %}
                                     <span class="text-xs text-slate-400">{{ _('(vos)') }}</span>
                                     {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                             {% endfor %}
