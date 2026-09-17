@@ -1,6 +1,6 @@
 import os
 import re
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
@@ -300,22 +300,46 @@ KIND_DEFAULT_SECTION = {
 }
 
 
+def _target_member():
+    """Miembro sobre cuya producción se opera: uno mismo o, para un
+    administrador, el indicado en `member_id` (query string o formulario)."""
+    member_id = request.values.get('member_id', type=int)
+    if not member_id or member_id == current_user.id:
+        return current_user
+    if not current_user.is_admin:
+        abort(403)
+    return Member.query.get_or_404(member_id)
+
+
+def _works_url(member):
+    """URL de la página de producción de `member` (propia o como admin)."""
+    if member.id == current_user.id:
+        return url_for('auth.works')
+    return url_for('auth.works', member_id=member.id)
+
+
+def _works_context(member):
+    return dict(member=member, admin_mode=member.id != current_user.id,
+                works_url=_works_url(member))
+
+
 @bp.route('/works', methods=['GET', 'POST'])
 @login_required
 def works():
-    """Producción personal del miembro"""
+    """Producción personal del miembro (o de otro integrante, para un admin)"""
+    member = _target_member()
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
         if not title:
             flash('El título es obligatorio.', 'error')
-            return redirect(url_for('auth.works'))
+            return redirect(_works_url(member))
 
         kind = request.form.get('kind', 'publication')
         if kind not in MemberWork.KINDS:
             kind = 'publication'
 
         db.session.add(MemberWork(
-            member_id=current_user.id,
+            member_id=member.id,
             kind=kind,
             title=title,
             authors=request.form.get('authors', '').strip() or None,
@@ -323,20 +347,21 @@ def works():
             detail=request.form.get('detail', '').strip() or None,
         ))
         db.session.commit()
-        flash('Trabajo agregado a tu producción.', 'success')
-        return redirect(url_for('auth.works'))
+        flash('Trabajo agregado a la producción.', 'success')
+        return redirect(_works_url(member))
 
-    my_works = current_user.works.order_by(
+    my_works = member.works.order_by(
         MemberWork.kind, MemberWork.year.desc()).all()
     sections = ResearchSection.query.order_by(ResearchSection.order).all()
     return render_template('auth/works.xhtml', works=my_works, sections=sections,
-                           kinds=MemberWork.KINDS, default_sections=KIND_DEFAULT_SECTION)
+                           kinds=MemberWork.KINDS, default_sections=KIND_DEFAULT_SECTION,
+                           **_works_context(member))
 
 
 def _own_work_or_404(work_id):
+    """Obra propia; un administrador puede operar sobre la de cualquiera."""
     work = MemberWork.query.get_or_404(work_id)
-    if work.member_id != current_user.id:
-        from flask import abort
+    if work.member_id != current_user.id and not current_user.is_admin:
         abort(403)
     return work
 
@@ -360,7 +385,7 @@ def edit_work(work_id):
         work.shared_item.abstract = work.detail
     db.session.commit()
     flash('Trabajo actualizado.', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(_works_url(work.member))
 
 
 def _release_shared_item(work):
@@ -380,11 +405,12 @@ def _release_shared_item(work):
 @login_required
 def delete_work(work_id):
     work = _own_work_or_404(work_id)
+    back = _works_url(work.member)
     _release_shared_item(work)
     db.session.delete(work)
     db.session.commit()
     flash('Trabajo eliminado.', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(back)
 
 
 @bp.route('/works/<int:work_id>/share', methods=['POST'])
@@ -392,14 +418,16 @@ def delete_work(work_id):
 def share_work(work_id):
     """Publicar un trabajo personal en la sección de Investigación elegida"""
     work = _own_work_or_404(work_id)
+    back = _works_url(work.member)
     if work.shared_item:
         flash('Este trabajo ya está compartido en el sitio.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
-    section = ResearchSection.query.get(request.form.get('section_id', type=int))
+    section_id = request.form.get('section_id', type=int)
+    section = ResearchSection.query.get(section_id) if section_id else None
     if not section:
         flash('Elegí una sección válida.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     # Evitar duplicados: mismo título (sin distinguir mayúsculas) en la sección
     existing = ResearchItem.query.filter(
@@ -409,8 +437,8 @@ def share_work(work_id):
     if existing:
         work.shared_item_id = existing.id
         db.session.commit()
-        flash('Ya existía un ítem igual en esa sección; se vinculó tu trabajo a ese ítem.', 'success')
-        return redirect(url_for('auth.works'))
+        flash('Ya existía un ítem igual en esa sección; se vinculó el trabajo a ese ítem.', 'success')
+        return redirect(back)
 
     slug_base = re.sub(r'[^a-z0-9]+', '-', work.title.lower()).strip('-')[:40] or 'item'
     slug = slug_base
@@ -432,7 +460,7 @@ def share_work(work_id):
     work.shared_item_id = item.id
     db.session.commit()
     flash(f'Trabajo publicado en "{section.title}".', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(back)
 
 
 # ==========================================
@@ -443,10 +471,12 @@ def share_work(work_id):
 @login_required
 def sigeva_parse():
     """Analizar el PDF de SIGEVA y mostrar la pantalla de revisión"""
+    member = _target_member()
+    back = _works_url(member)
     pdf = request.files.get('pdf')
     if not pdf or not pdf.filename.lower().endswith('.pdf'):
         flash('Subí un archivo PDF exportado de SIGEVA.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     try:
         from app.sigeva import parse_sigeva
@@ -454,14 +484,14 @@ def sigeva_parse():
     except Exception:
         current_app.logger.exception('Error parseando PDF de SIGEVA')
         flash('No se pudo leer el PDF. ¿Es el CV exportado de SIGEVA?', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     if not result['items'] and not result['profile']:
         flash('No se encontró información reconocible en el PDF.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     # Marcar los que ya existen en la producción del miembro para no preseleccionarlos
-    existing = {w.title.lower() for w in current_user.works}
+    existing = {w.title.lower() for w in member.works}
     for item in result['items']:
         item['duplicate'] = item['title'].lower() in existing
 
@@ -475,6 +505,7 @@ def sigeva_parse():
         profile=result['profile'],
         groups=groups,
         payload=json.dumps({'profile': result['profile'], 'items': result['items']}),
+        **_works_context(member),
     )
 
 
@@ -483,16 +514,18 @@ def sigeva_parse():
 def sigeva_import():
     """Guardar los elementos seleccionados en la revisión"""
     import json
+    member = _target_member()
+    back = _works_url(member)
     try:
         payload = json.loads(request.form.get('payload', '{}'))
     except ValueError:
         flash('Datos de importación inválidos. Volvé a subir el PDF.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     items = payload.get('items', [])
     selected = {int(i) for i in request.form.getlist('item') if i.isdigit()}
 
-    existing = {w.title.lower() for w in current_user.works}
+    existing = {w.title.lower() for w in member.works}
     imported = skipped = 0
     for idx in sorted(selected):
         if idx >= len(items):
@@ -508,7 +541,7 @@ def sigeva_import():
         if kind not in MemberWork.KINDS:
             kind = 'publication'
         db.session.add(MemberWork(
-            member_id=current_user.id,
+            member_id=member.id,
             kind=kind,
             title=title[:500],
             authors=(item.get('authors') or '')[:500] or None,
@@ -522,10 +555,10 @@ def sigeva_import():
     profile = payload.get('profile', {})
     profile_updates = []
     if request.form.get('profile_degree') and profile.get('degree'):
-        current_user.degree = profile['degree'][:100]
+        member.degree = profile['degree'][:100]
         profile_updates.append('título')
     if request.form.get('profile_bio') and profile.get('bio'):
-        current_user.bio = profile['bio']
+        member.bio = profile['bio']
         profile_updates.append('biografía')
 
     db.session.commit()
@@ -536,7 +569,7 @@ def sigeva_import():
     if profile_updates:
         parts.append(f'perfil actualizado ({", ".join(profile_updates)})')
     flash('. '.join(parts) + '.', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(back)
 
 
 # ==========================================
@@ -573,39 +606,42 @@ def orcid_fetch():
     """Consultar la API pública de ORCID y mostrar la pantalla de revisión"""
     from app.orcid import normalize_orcid_id, fetch_orcid_works, OrcidError
 
+    member = _target_member()
+    back = _works_url(member)
     # Permite pasar el iD en el formulario (y de paso guardarlo en el perfil)
     orcid_raw = request.form.get('orcid', '').strip()
     if orcid_raw:
         orcid_id = normalize_orcid_id(orcid_raw)
         if not orcid_id:
-            flash('El ORCID iD no es válido. Copialo de tu perfil en orcid.org '
+            flash('El ORCID iD no es válido. Copialo del perfil en orcid.org '
                   '(formato 0000-0000-0000-0000).', 'error')
-            return redirect(url_for('auth.works'))
-        if current_user.orcid != orcid_id:
-            current_user.orcid = orcid_id
+            return redirect(back)
+        if member.orcid != orcid_id:
+            member.orcid = orcid_id
             db.session.commit()
     else:
-        orcid_id = current_user.orcid
+        orcid_id = member.orcid
 
     if not orcid_id:
-        flash('Cargá tu ORCID iD para poder importar tus publicaciones.', 'error')
-        return redirect(url_for('auth.works'))
+        flash('Cargá el ORCID iD para poder importar las publicaciones.', 'error')
+        return redirect(back)
 
     try:
         result = fetch_orcid_works(orcid_id)
     except OrcidError as e:
         flash(str(e), 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
     except Exception:
         current_app.logger.exception('Error consultando ORCID')
         flash('Ocurrió un error inesperado consultando ORCID.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     if not result['items']:
         flash('El registro ORCID no tiene trabajos públicos para importar.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     return _render_import_review(
+        member,
         result['items'],
         source='orcid',
         source_label='ORCID',
@@ -616,9 +652,9 @@ def orcid_fetch():
     )
 
 
-def _render_import_review(items, source, source_label, intro):
+def _render_import_review(member, items, source, source_label, intro):
     """Pantalla de revisión compartida por las importaciones ORCID/OpenAlex"""
-    existing = {w.title.lower() for w in current_user.works}
+    existing = {w.title.lower() for w in member.works}
     for item in items:
         item['duplicate'] = item['title'].lower() in existing
 
@@ -635,6 +671,7 @@ def _render_import_review(items, source, source_label, intro):
         intro=Markup(intro),
         groups=groups,
         payload=json.dumps({'items': items}),
+        **_works_context(member),
     )
 
 
@@ -644,31 +681,34 @@ def openalex_fetch():
     """Buscar en OpenAlex publicaciones indexadas para el ORCID del miembro"""
     from app.openalex import fetch_openalex_works, OpenAlexError
 
-    if not current_user.orcid:
-        flash('Cargá tu ORCID iD en el perfil para poder buscar en OpenAlex.', 'error')
-        return redirect(url_for('auth.works'))
+    member = _target_member()
+    back = _works_url(member)
+    if not member.orcid:
+        flash('Cargá el ORCID iD en el perfil para poder buscar en OpenAlex.', 'error')
+        return redirect(back)
 
     try:
-        result = fetch_openalex_works(current_user.orcid)
+        result = fetch_openalex_works(member.orcid)
     except OpenAlexError as e:
         flash(str(e), 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
     except Exception:
         current_app.logger.exception('Error consultando OpenAlex')
         flash('Ocurrió un error inesperado consultando OpenAlex.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     if not result['items']:
-        flash('OpenAlex no tiene trabajos indexados para tu ORCID iD.', 'error')
-        return redirect(url_for('auth.works'))
+        flash('OpenAlex no tiene trabajos indexados para el ORCID iD.', 'error')
+        return redirect(back)
 
     return _render_import_review(
+        member,
         result['items'],
         source='openalex',
         source_label='OpenAlex',
-        intro=(f'Esto es lo que OpenAlex tiene indexado para tu ORCID '
-               f'{current_user.orcid}, ordenado por citas. Puede incluir '
-               f'trabajos que no están en tu perfil de ORCID — y también '
+        intro=(f'Esto es lo que OpenAlex tiene indexado para el ORCID '
+               f'{member.orcid}, ordenado por citas. Puede incluir '
+               f'trabajos que no están en el perfil de ORCID — y también '
                f'atribuciones erróneas: revisá antes de importar.'),
     )
 
@@ -681,11 +721,13 @@ IMPORT_SOURCES = {'orcid', 'openalex'}
 def works_import():
     """Guardar los trabajos seleccionados en la pantalla de revisión"""
     import json
+    member = _target_member()
+    back = _works_url(member)
     try:
         payload = json.loads(request.form.get('payload', '{}'))
     except ValueError:
         flash('Datos de importación inválidos. Volvé a hacer la búsqueda.', 'error')
-        return redirect(url_for('auth.works'))
+        return redirect(back)
 
     source = request.form.get('source', 'orcid')
     if source not in IMPORT_SOURCES:
@@ -694,7 +736,7 @@ def works_import():
     items = payload.get('items', [])
     selected = {int(i) for i in request.form.getlist('item') if i.isdigit()}
 
-    existing = {w.title.lower() for w in current_user.works}
+    existing = {w.title.lower() for w in member.works}
     imported = skipped = 0
     for idx in sorted(selected):
         if idx >= len(items):
@@ -710,7 +752,7 @@ def works_import():
         if kind not in MemberWork.KINDS:
             kind = 'publication'
         db.session.add(MemberWork(
-            member_id=current_user.id,
+            member_id=member.id,
             kind=kind,
             title=title[:500],
             authors=(item.get('authors') or '')[:500] or None,
@@ -728,7 +770,7 @@ def works_import():
     if skipped:
         parts.append(f'{skipped} ya existían')
     flash('. '.join(parts) + '.', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(back)
 
 
 @bp.route('/works/<int:work_id>/unshare', methods=['POST'])
@@ -739,5 +781,5 @@ def unshare_work(work_id):
         _release_shared_item(work)
         db.session.commit()
         flash('El trabajo ya no se muestra en la página de Investigación.', 'success')
-    return redirect(url_for('auth.works'))
+    return redirect(_works_url(work.member))
 

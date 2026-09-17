@@ -9,7 +9,7 @@
             <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
                 <div>
                     <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ _('Miembros') }}</h1>
-                    <p class="text-slate-500 dark:text-slate-400">{{ _('Alta de nuevos integrantes, edición de perfiles y gestión de roles.') }}</p>
+                    <p class="text-slate-500 dark:text-slate-400">{{ _('Alta de nuevos integrantes, edición de perfiles y producción, y gestión de roles.') }}</p>
                 </div>
                 <a href="{{ url_for('auth.dashboard') }}"
                     class="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition-all">
@@ -140,6 +140,11 @@
                                             title="{{ _('Editar perfil') }}"
                                             class="text-slate-400 hover:text-primary transition-colors">
                                             <span class="material-symbols-outlined text-lg">edit</span>
+                                        </a>
+                                        <a href="{{ url_for('auth.works') if m.id == current_user.id else url_for('auth.works', member_id=m.id) }}"
+                                            title="{{ _('Producción científica') }}"
+                                            class="text-slate-400 hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-lg">library_books</span>
                                         </a>
                                     {% if m.id != current_user.id %}
                                         <form method="post" action="{{ url_for('admin.toggle_role', member_id=m.id) }}">

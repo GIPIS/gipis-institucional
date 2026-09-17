@@ -852,8 +852,14 @@ TRANSLATIONS = {
         'Tie-breaker within the same category and position (lower = higher up).',
     'El rol y el estado se cambian desde el listado de Miembros.':
         'Role and status are changed from the Members list.',
-    'Alta de nuevos integrantes, edición de perfiles y gestión de roles.':
-        'Add new members, edit profiles and manage roles.',
+    'Alta de nuevos integrantes, edición de perfiles y producción, y gestión de roles.':
+        'Add new members, edit profiles and production, and manage roles.',
+    'Producción científica': 'Scientific production',
+    'Producción de': 'Production of',
+    'Publicaciones, proyectos y direcciones de este integrante. Lo que se comparta aparece también en la página de Investigación del sitio.':
+        "This member's publications, projects and supervisions. Whatever is shared also appears on the site's Research page.",
+    'Estás editando la producción de este integrante como administrador. Los cambios se aplican directamente y el integrante no recibe aviso.':
+        "You are editing this member's production as an administrator. Changes apply immediately and the member is not notified.",
     'Volver al dashboard': 'Back to dashboard',
     'Foto de perfil': 'Profile photo',
     'Hacé click o arrastrá una imagen': 'Click or drag an image',

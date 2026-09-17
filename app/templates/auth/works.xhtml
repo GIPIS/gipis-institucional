@@ -1,6 +1,6 @@
 {% extends "base.xhtml" %}
 
-{% block title %}{{ _('Mi Producción') }}{% endblock %}
+{% block title %}{% if admin_mode %}{{ _('Producción de') }} {{ member.name }}{% else %}{{ _('Mi Producción') }}{% endif %}{% endblock %}
 
 {% block content %}
 <section class="py-24 bg-background-light dark:bg-slate-950 min-h-[70vh]">
@@ -8,15 +8,27 @@
         <div class="max-w-5xl mx-auto">
             <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
                 <div>
+                    {% if admin_mode %}
+                    <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ _('Producción de') }} {{ member.name }}</h1>
+                    <p class="text-slate-500 dark:text-slate-400">{{ _('Publicaciones, proyectos y direcciones de este integrante. Lo que se comparta aparece también en la página de Investigación del sitio.') }}</p>
+                    {% else %}
                     <h1 class="font-display text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ _('Mi Producción') }}</h1>
                     <p class="text-slate-500 dark:text-slate-400">{{ _('Tus publicaciones, proyectos y direcciones. Lo que compartas aparece también en la página de Investigación del sitio.') }}</p>
+                    {% endif %}
                 </div>
-                <a href="{{ url_for('auth.dashboard') }}"
+                <a href="{{ url_for('admin.members') if admin_mode else url_for('auth.dashboard') }}"
                     class="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-lg text-sm font-medium transition-all">
                     <span class="material-symbols-outlined text-sm">arrow_back</span>
-                    {{ _('Volver al panel') }}
+                    {{ _('Volver a Miembros') if admin_mode else _('Volver al panel') }}
                 </a>
             </div>
+
+            {% if admin_mode %}
+            <p class="mb-6 px-4 py-3 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800 text-sm flex items-start gap-2">
+                <span class="material-symbols-outlined text-base mt-0.5">shield_person</span>
+                <span>{{ _('Estás editando la producción de este integrante como administrador. Los cambios se aplican directamente y el integrante no recibe aviso.') }}</span>
+            </p>
+            {% endif %}
 
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -41,6 +53,7 @@
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ _('Subí el PDF de tu CV exportado de SIGEVA (Banco de datos → Imprimir CV). Vas a poder revisar y elegir qué importar antes de guardar.') }}</p>
                 <form method="post" action="{{ url_for('auth.sigeva_parse') }}" enctype="multipart/form-data"
                     class="flex gap-4 flex-wrap items-center">
+                    {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                     <input type="file" name="pdf" accept=".pdf" required
                         class="text-sm text-slate-600 dark:text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary/10 file:text-primary file:font-medium file:cursor-pointer" />
                     <button type="submit"
@@ -59,11 +72,12 @@
                     </svg>
                     {{ _('Importar desde ORCID') }}
                 </h2>
-                {% if current_user.orcid %}
-                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ _('Vamos a buscar los trabajos públicos de tu registro') }} <a href="https://orcid.org/{{ current_user.orcid }}" target="_blank" rel="noopener"
-                        class="text-primary hover:underline font-medium">{{ current_user.orcid }}</a>.
+                {% if member.orcid %}
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ _('Vamos a buscar los trabajos públicos de tu registro') }} <a href="https://orcid.org/{{ member.orcid }}" target="_blank" rel="noopener"
+                        class="text-primary hover:underline font-medium">{{ member.orcid }}</a>.
                     {{ _('Vas a poder revisar y elegir qué importar antes de guardar.') }}</p>
                 <form method="post" action="{{ url_for('auth.orcid_fetch') }}">
+                    {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                     <button type="submit"
                         class="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-all">
                         <span class="material-symbols-outlined">manage_search</span>
@@ -73,6 +87,7 @@
                 {% else %}
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ _('Ingresá tu ORCID iD (o la URL de tu perfil en orcid.org) para buscar tus trabajos públicos. Se guarda en tu perfil para la próxima vez.') }}</p>
                 <form method="post" action="{{ url_for('auth.orcid_fetch') }}" class="flex gap-4 flex-wrap items-center">
+                    {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                     <input type="text" name="orcid" required placeholder="0000-0000-0000-0000"
                         class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm w-64" />
                     <button type="submit"
@@ -90,9 +105,10 @@
                     <span class="material-symbols-outlined text-amber-500">travel_explore</span>
                     {{ _('Descubrir publicaciones (OpenAlex)') }}
                 </h2>
-                {% if current_user.orcid %}
+                {% if member.orcid %}
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">{{ _('OpenAlex indexa publicaciones de toda la literatura académica, incluso las que no cargaste en ORCID. Buscamos por tu ORCID iD y te mostramos lo que encuentre, con su cantidad de citas. Ojo: puede traer atribuciones erróneas — revisá antes de importar.') }}</p>
                 <form method="post" action="{{ url_for('auth.openalex_fetch') }}">
+                    {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                     <button type="submit"
                         class="inline-flex items-center gap-2 bg-primary hover:bg-blue-600 text-white px-6 py-2 rounded-lg font-medium transition-all">
                         <span class="material-symbols-outlined">manage_search</span>
@@ -115,6 +131,7 @@
                 </summary>
                 <form method="post" action="{{ url_for('auth.works') }}" class="grid md:grid-cols-2 gap-4 px-8 pb-8"
                     id="add-work-form">
+                    {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                     <div class="md:col-span-2 p-4 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
                         <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                             {{ _('¿Tenés el DOI? Completá los campos automáticamente') }}

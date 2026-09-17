@@ -14,6 +14,7 @@
 
             <form method="post" action="{{ url_for('auth.sigeva_import') }}">
                 <input type="hidden" name="payload" value="{{ payload }}" />
+                {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
 
                 {% if profile %}
                 <div class="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-sm border border-slate-100 dark:border-slate-800 mb-8">
@@ -28,8 +29,8 @@
                                 class="mt-1 rounded border-slate-300 text-primary focus:ring-primary" />
                             <span class="text-sm text-slate-700 dark:text-slate-300">
                                 <strong>{{ _('Título/Grado') }}:</strong> {{ profile.degree }}
-                                {% if current_user.degree %}
-                                <span class="block text-xs text-slate-400">{{ _('Reemplaza tu valor actual:') }} "{{ current_user.degree }}"</span>
+                                {% if member.degree %}
+                                <span class="block text-xs text-slate-400">{{ _('Reemplaza tu valor actual:') }} "{{ member.degree }}"</span>
                                 {% endif %}
                             </span>
                         </label>
@@ -37,11 +38,11 @@
                         {% if profile.bio %}
                         <label class="flex items-start gap-3 cursor-pointer">
                             <input type="checkbox" name="profile_bio" value="1"
-                                {% if not current_user.bio %}checked="checked"{% endif %}
+                                {% if not member.bio %}checked="checked"{% endif %}
                                 class="mt-1 rounded border-slate-300 text-primary focus:ring-primary" />
                             <span class="text-sm text-slate-700 dark:text-slate-300">
                                 <strong>{{ _('Biografía (resumen de experticia):') }}</strong> {{ profile.bio|truncate(300) }}
-                                {% if current_user.bio %}
+                                {% if member.bio %}
                                 <span class="block text-xs text-slate-400">{{ _('Reemplaza tu biografía actual.') }}</span>
                                 {% endif %}
                             </span>
@@ -85,7 +86,7 @@
                         <span class="material-symbols-outlined">download_done</span>
                         {{ _('Importar seleccionados') }}
                     </button>
-                    <a href="{{ url_for('auth.works') }}"
+                    <a href="{{ works_url }}"
                         class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium transition-colors">
                         {{ _('Cancelar') }}
                     </a>

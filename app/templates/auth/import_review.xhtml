@@ -14,6 +14,7 @@
 
             <form method="post" action="{{ url_for('auth.works_import') }}">
                 <input type="hidden" name="payload" value="{{ payload }}" />
+                {% if admin_mode %}<input type="hidden" name="member_id" value="{{ member.id }}" />{% endif %}
                 <input type="hidden" name="source" value="{{ source }}" />
 
                 {% for group_name, group_items in groups.items() %}
@@ -59,7 +60,7 @@
                         <span class="material-symbols-outlined">download_done</span>
                         {{ _('Importar seleccionados') }}
                     </button>
-                    <a href="{{ url_for('auth.works') }}"
+                    <a href="{{ works_url }}"
                         class="inline-flex items-center gap-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-medium transition-colors">
                         {{ _('Cancelar') }}
                     </a>
